@@ -1,0 +1,446 @@
+[[tx_fees]]
+== 交易手续费
+
+++++
+<p class="fix_tracking">
+我们在 <a data-type="xref" href="#c_signatures">#c_signatures</a> 中看到的 Alice 创建的数字签名仅证明她
+知道自己的私钥，并对一笔向 Bob 付款的交易做出了承诺。她同样可以创建另一个签名，对一笔
+向 Carol 付款的交易做出承诺——这笔交易花费的是她之前用于支付 Bob 的同一笔输出（比特币）。
+此时这两笔交易就成为<em>冲突交易（conflicting transactions）</em>，因为对于某一特定输出
+来说，只有一笔花费它的交易能被包含在累积了最多工作量证明的有效区块链中——而全节点正是
+依据这条链来判定哪些密钥掌握着哪些比特币。
+</p>
+++++
+
+为了((("conflicting transactions")))((("transactions", "conflicts in")))防范冲突交易，Bob 明智的做法是等待 Alice 的交易被包含在区块链中
+达到足够的深度后，再把收到的钱视为自己可以花费的资金（参见 <<confirmations>>）。
+要让 Alice 的交易进入区块链，它必须被打包进一个交易 _block_ 中。在给定时间内能产生的((("blocks", "transactions in")))((("transactions", "in blocks", secondary-sortas="blocks")))
+区块数量有限，每个区块的容量也有限。只有创建该区块的矿工才能选择包含哪些交易。
+矿工可以按任意标准挑选交易，包括完全不打包任何交易。
+
+++++
+<div data-type="note">
+<p class="fix_tracking"> 在本章中我们提到"交易"时，指的是区块中除第一笔交易之外的所有交易。区块中的
+第一笔交易是 <em>coinbase 交易</em>，详见
+<a data-type="xref" href="#coinbase_transactions">#coinbase_transactions</a>，
+它允许该区块的矿工领取出块奖励。与其他交易不同，coinbase 交易不花费此前任何交易的输出，
+它也是其他若干规则的例外。coinbase 交易不支付手续费、不需要被费率提升、也不受交易钉死
+（transaction pinning）影响，在接下来关于手续费的讨论中基本无关紧要——因此本章中我们
+将忽略它。
+</p>
+</div>
+++++
+
+
+几乎所有矿工挑选交易打包进区块所使用的标准都是收益最大化。Bitcoin 在设计上专门为此提供
+了一种机制，让交易可以付钱给把它打包进区块的矿工。我们把这种机制称为 _transaction fees_
+（交易手续费），尽管它并不是通常意义上的"费用"。它不是协议或任何特定矿工设定的金额——
+它更像是一场拍卖中的出价。所拍卖的"商品"就是该交易将占用的区块有限空间中的一部分。
+矿工会选择那一组出价能让自己获得最大收益的交易。
+
+本章将探讨这些出价——交易手续费——的方方面面，以及它们如何影响比特币交易的创建与管理。
+
+=== 谁来支付交易手续费？
+
+大多数((("transaction fees", "responsibility for", id="fees-responsibility")))((("payments", "transaction fees", see="transaction fees")))((("fees", see="transaction fees")))支付系统都涉及某种形式的交易费用，但对普通买家来说这些费用通常是隐藏的。
+例如，商家可能对同一商品标注同样的价格，无论你用现金还是信用卡付款，尽管支付处理商
+向商家收取的信用卡手续费可能高于银行向商家收取的现金存款费用。
+
+在 Bitcoin 中，每一次花费比特币都必须经过认证（通常是签名），因此一笔交易不可能在花费
+者未授权的情况下支付手续费。一笔交易的收款方可以在另一笔交易里支付手续费——稍后我们
+会看到这种用法——但如果我们希望一笔交易自己支付自己的手续费，那么这笔手续费必须由花费
+者认可。它无法被隐藏。
+
+Bitcoin 交易在设计上使得花费者承诺手续费金额不需要额外的交易空间。这意味着，虽然可以
+在另一笔交易里支付手续费，但在单笔交易里支付手续费才是最高效（也因此最便宜）的做法。
+
+在 Bitcoin 中，手续费是一种出价，所支付的金额会影响交易需要多久才能确认。一笔支付的
+花费方与收款方通常都希望它尽快确认，因此只让花费者来决定费率有时会成为问题；我们将在
+<<cpfp>> 看到针对这一问题的解决方案。然而，在许多常见的支付场景中，最希望交易尽快
+确认——也就是最愿意支付更高手续费——的一方就是花费者。
+
+出于上述技术和现实层面的原因，Bitcoin 中习惯上由花费者支付交易手续费。也存在例外，
+例如接受未确认交易的商家，以及那些不在签名后立即广播 [.keep-together]#交易# 的协议
+（这种情况下花费者无法基于当前市场为交易选择合适的费率）。这些例外我们稍后会((("transaction fees", "responsibility for", startref="fees-responsibility")))讨论。
+
+=== 手续费与费率
+
+每笔((("transaction fees", "fee rates", id="fees-rates")))((("fee rates", id="fee-rate")))交易只支付一笔手续费——无论交易有多大。然而，交易越大，矿工能在一个区块里
+容纳的交易就越少。因此矿工评估交易的方式，就像你在市场上对若干等价商品进行比价：
+用价格除以数量。
+
+正如你可能会用几袋不同大小的米的价格除以重量来找出单位重量最便宜的（性价比最高），
+矿工则用一笔交易的手续费除以它的大小（也叫 weight），来找出每单位重量手续费最高的
+（收入最高）。在 Bitcoin 中，我们用 _fee rate_（费率）这个术语来表示交易手续费除以
+大小（weight）所得的值。由于 Bitcoin 多年来的演进，费率可以用不同单位表示：
+
+- BTC/Bytes（一种很少再使用的旧单位）
+- BTC/Kilobytes（一种很少再使用的旧单位）
+- BTC/Vbytes（很少使用）
+- BTC/Kilo-vbyte（主要在 Bitcoin Core 中使用）
+- Satoshi/Vbyte（如今最常用的单位）
+- Satoshi/Weight（如今也常用）
+
+我们建议用 sat/vbyte 或 sat/weight 来显示费率。
+
+[WARNING]
+====
+在接受用户输入的费率时要十分小心((("absurd fees")))((("excessive fees")))((("transaction fees", "overpaying")))((("overpaying transaction fees")))。如果用户把以某个分母为单位打印出来的费率
+复制粘贴到使用另一种分母的输入框，他们可能会多支付 1,000 倍的手续费。如果他们换错了
+分子，理论上甚至可能多支付 100,000,000 倍。钱包应该让用户难以支付过高的费率，并且
+对于不是由钱包自身基于可信数据源生成的费率，可以要求用户进行确认。
+
+过高的手续费，也称为 _absurd fee_（荒谬费率），是指明显高于费率估算器当前预期使交易在
+下一个区块确认所需的费率。需要注意的是，钱包不应完全阻止用户选择过高的费率——只应让
+用户难以在无意中使用这样的费率。在极少数情况下，用户多付手续费是有正当理由的。
+====
+
+=== 估算合理的费率
+
+我们((("estimating fee rates", id="estimate-fee-rate")))已经知道，如果你愿意等更久让交易确认，就可以支付更低的费率，但代价是：
+费率过低可能导致交易永远无法确认。由于费率是对区块空间的公开拍卖出价，因此无法完美
+预测要让交易在某个时间之前确认应该支付多少费率。不过，我们可以基于近期其他交易支付
+的费率，给出大致的估算。
+
+全节点可以为它看到的每笔交易记录三项信息：第一次收到该交易时的时间（区块高度）、该交易
+被确认时的区块高度，以及该交易支付的费率。通过把抵达时间相近、被确认高度相近、并且
+费率相近的交易归为一组，我们可以计算出支付某个费率的交易需要多少个区块才能被确认。
+然后可以假设现在支付类似费率的交易将需要类似数量的区块来确认。Bitcoin Core 内置了
+一个使用上述原则的费率估算器，可通过 `estimatesmartfee` RPC 调用，参数指定你愿意等待
+多少个区块以使交易极有可能被确认（例如 144 个区块约为 1 天）：
+
+----
+$ bitcoin-cli -named estimatesmartfee conf_target=144
+{
+  "feerate": 0.00006570,
+  "blocks": 144
+}
+----
+
+许多基于 Web 的服务也以 API 形式提供费率估算。当前列表请参见 https://oreil.ly/TB6IN。
+
+如前所述，费率估算永远做不到完美。一个常见问题是基本面的需求可能发生变化，从而改变
+均衡价格，让费率（手续费）攀升到新的高度，或者跌至最低水平。如果费率下降，那么此前
+支付了普通费率的交易，可能现在变成支付高费率，从而比预期更早确认。你已经发送出去的
+交易没办法降低费率，所以只能接受这笔较高的费率。但当费率上升时，就需要某种方法来
+提高这些已发出交易的费率，这被称为 _fee bumping_（费率提升）。Bitcoin 中常用的费率
+提升方法有两种：replace by fee（RBF）和 child pays for ((("fee rates", startref="fee-rate")))((("transaction fees", "fee rates", startref="fees-rates")))parent
+（CPFP）。
+
+[[rbf]]
+=== Replace By Fee（RBF）费率提升
+
+要((("transaction fees", "fee bumping", "RBF (replace by fee)", id="transaction-fees-bump-rbf")))((("fee bumping", "RBF (replace by fee)", id="fee-bump-rbf")))((("RBF (replace by fee) fee bumping", id="rbf-ch9")))使用 RBF 提升一笔交易的手续费，你需要创建该交易的一个冲突版本，并让它支付
+更高的手续费。如果两笔或更多交易中只有一笔能被包含在有效区块链中，从而迫使矿工只能
+从中选一笔，那么这些交易就被称为((("conflicting transactions")))((("transactions", "conflicts in")))_conflicting transactions_（冲突交易）。
+当两笔或多笔交易都试图花费同一个 UTXO，即它们都包含一个引用相同 outpoint（指向某笔
+此前交易的输出）的输入时，就会出现冲突。
+
+为了防止有人通过创建数量无上限的冲突交易并通过转发型全节点网络传播来消耗大量带宽，
+Bitcoin Core 及其他支持交易替换的全节点要求每一笔替换交易必须支付比被替换交易更高
+的费率。Bitcoin Core 目前还要求替换交易支付的总手续费高于原始交易，但这一要求带来
+了一些不良副作用，在本书撰写时开发者正在寻找移除它的办法。
+
+Bitcoin Core((("Bitcoin Core", "RBF variants", id="bitcoin-core-rbf"))) 目前支持两种 RBF 变体：
+
+Opt-in RBF::
+  一笔未确认的交易可以向矿工和全节点发出信号，表示交易的创建者允许它被一笔更高费率
+  的版本替换。这一信号及其使用规则在 BIP125 中规定。在本书撰写时，Bitcoin Core
+  默认启用此功能已有数年。
+
+Full RBF::
+  任何未确认的交易都可以被一个更高费率的版本替换。在本书撰写时，可在 Bitcoin Core
+  中可选地启用（但默认是关闭的）。
+
+.为什么 RBF 有两种变体？
+****
+之所以存在两种 RBF，是因为 full RBF 一直存在争议。早期版本的 Bitcoin 允许交易替换，
+但这一行为在若干版本中被禁用。在那段时间里，使用现在被称为 Bitcoin Core 的软件的
+矿工或全节点不会用任何不同版本去替换它们最先收到的那一版未确认交易。一些商家逐渐
+形成了这样的预期：任何支付了合适费率的有效未确认交易最终都会被确认，于是他们在
+收到这样的未确认交易后不久就提供商品或服务。
+
+然而，Bitcoin 协议无法保证任何未确认交易最终一定会被确认。如本章前面所述，每个矿工
+都可以自行选择想要确认哪些交易——包括选择这些交易的哪个版本。Bitcoin Core 是开源
+软件，任何拿到源码的人都可以添加（或移除）交易替换功能。即便 Bitcoin Core 不是开源
+软件，Bitcoin 也是一个开放协议，足够能干的程序员完全可以从零重新实现，并自由决定
+是否包含交易替换。
+
+交易替换打破了某些商家"任何合理的未确认交易最终都会被确认"的假设。一笔交易的替代
+版本可以支付与原始交易相同的输出，但并不强制必须支付这些输出。如果一笔未确认交易的
+第一个版本支付了某商家，那么第二个版本可能就不会向其支付。如果商家根据第一个版本
+提供了商品或服务，但最终被确认的是第二个版本，那么商家就拿不到对其成本的付款。
+
+一些商家以及支持他们的人请求 Bitcoin Core 不要重新启用交易替换。另一些人则指出
+交易替换能带来好处，包括能够对最初费率过低的交易进行费率提升。
+
+最终，Bitcoin Core 的开发者实现了一种折中：不允许每一笔未确认交易都可被替换（full
+RBF），而是只允许那些明确发出"愿意被替换"信号的交易被替换（opt-in RBF）。商家可以
+检查自己收到的交易是否带有 opt-in 信号，并对带有信号和不带信号的交易区别对待。
+
+这并未改变根本的担忧：任何人仍可以修改自己的 Bitcoin Core，或重新实现一份，以支持
+full RBF——一些开发者确实做了这种事，但似乎使用其软件的人不多。
+
+数年后，Bitcoin Core 的开发者对折中方案略作调整：在默认保留 opt-in RBF 的基础上，
+新增了一个允许用户启用 full RBF 的选项。如果有足够多的挖矿哈希率和转发型全节点启用
+该选项，任何未确认交易最终都将可能被一个更高费率的版本替换。在本书撰写时，尚不清楚
+这种情况是否已经((("Bitcoin Core", "RBF variants", startref="bitcoin-core-rbf")))发生。
+****
+
+作为用户，如果你打算使用 RBF 费率提升，需要先选一个支持 RBF 的钱包，比如
+https://oreil.ly/IhMzx 上列出的具备 "Sending support" 的某款钱包。
+
+作为开发者，如果你打算实现 RBF 费率提升，需要先决定使用 opt-in RBF 还是 full RBF。
+在本书撰写时，opt-in RBF 是唯一确定可用的方式。即便 full RBF 将来变得可靠，opt-in
+交易的替换被确认的速度仍可能在数年内略快于 full-RBF 的替换。如果你选择 opt-in RBF，
+你的钱包需要按照 BIP125 中规定的方式发信号，这只需要简单地修改交易里某个 sequence
+字段（参见 <<sequence>>）。如果你选择 full RBF，则不需要在交易里加入任何信号。
+其余与 RBF 相关的内容两种方式完全相同。
+
+当你需要对一笔交易进行费率提升时，只需创建一笔新交易，让它至少花费原交易使用的某一个
+UTXO。你通常会希望保留原交易中支付给收款方（或多个收款方）的同样输出。你可以通过
+减少找零输出的金额或在交易里增加更多输入来支付额外的手续费。开发者应当为用户提供
+一个能完成所有这些工作的费率提升界面，并且只需向用户询问（或建议）应当将费率提高
+多少。
+
+[WARNING]
+====
+对同一笔交易创建多个替换版本时要格外小心。你必须确保所有版本的交易都相互冲突。如果
+它们并不全都冲突，就可能出现多个不同版本同时被确认的情况，导致你向收款方多付钱。
+例如：
+
+- 交易版本 0 包含输入 _A_。
+- 交易版本 1 包含输入 _A_ 和 _B_（例如，你为了支付更多手续费而加入了输入 _B_）。
+- 交易版本 2 包含输入 _B_ 和 _C_（例如，你加入输入 _C_ 来支付更多手续费，并且因为
+  _C_ 足够大而不再需要输入 _A_）。
+
+在这个场景中，任何保留了版本 0 的矿工都可以同时确认版本 0 和版本 2 这两笔交易。
+如果这两个版本都支付给相同的收款方，他们就会被支付两次（而矿工也会从两笔独立的
+交易中收取手续费）。
+
+避免这个问题的一种简单方法是：让替换交易始终包含与上一版本完全相同的所有输入。
+====
+
+RBF 费率提升相对于其他费率提升方式的优点是非常节省区块空间。替换交易通常与被替换的
+交易大小相同。即使更大，也往往与用户一开始就直接以更高费率创建的交易大小相同。
+
+RBF 费率提升的根本缺点是它通常只能由交易的创建者来执行——即必须提供该交易签名或其他
+认证数据的那一方或多方。一个例外是那些通过 sighash 标志（参见 <<sighash_types>>）
+设计为允许追加输入的交易，但这也带来了它自身的挑战。一般来说，如果你是某笔未确认
+交易的收款方，希望让它更快确认（或干脆能被确认），就无法使用 RBF 费率提升；你需要
+其他方法。
+
+RBF 还有一些额外的问题，我们将在 <<transaction_pinning>> 中((("transaction fees", "fee bumping", "RBF (replace by fee)", startref="transaction-fees-bump-rbf")))((("fee bumping", "RBF (replace by fee)", startref="fee-bump-rbf")))((("RBF (replace by fee) fee bumping", startref="rbf-ch9")))探讨。
+
+[[cpfp]]
+=== Child Pays for Parent（CPFP）费率提升
+
+任何((("transaction fees", "fee bumping", "CPFP (child pays for parent)", id="transaction-fees-bump-cpfp")))((("fee bumping", "CPFP (child pays for parent)", id="fee-bump-cpfp")))((("CPFP (child pays for parent) fee bumping", id="cpfp-ch9")))收到了某笔未确认交易输出的人，都可以通过花费这一输出来激励矿工确认该交易。
+你希望被确认的那笔交易称为 _parent transaction_（父交易），花费父交易某个输出的
+交易称为 _child transaction_（子交易）。
+
+正如我们在 <<outpoints>> 中所学，已确认交易中的每一个输入都必须引用区块链中较早出现
+的某笔交易的未花费输出（无论是同一区块中较前的交易，还是更早区块中的交易）。这意味着
+想要确认子交易的矿工必须同时确保父交易也被确认。如果父交易尚未被确认，但子交易支付
+足够高的手续费，矿工就可以评估在同一个区块中同时确认它们是否有利可图。
+
+为了评估同时挖出父交易和子交易的盈利能力，矿工会把它们视为一个 _package of
+transactions_（交易包），算出其聚合大小与聚合手续费，再用手续费除以大小得到((("package fee rate")))
+_package fee rate_（包费率）。矿工随后可以按费率对其所知的所有单笔交易和交易包排序，
+将收入最高的那些纳入自己正在尝试挖出的区块，直到达到区块允许的最大大小（weight）。
+为了发现更多可能有利可图的交易包，矿工还可以跨多代关系评估交易包（例如，将一笔未
+确认的父交易与其子交易和孙交易组合起来）。这就是((("ancestor fee rate mining")))((("CPFP (child pays for parent) fee bumping", "ancestor fee rate mining")))所谓的 _ancestor fee rate
+mining_（祖先费率挖矿）。
+
+Bitcoin Core 多年前就已经实现了祖先费率挖矿，在本书撰写时，普遍认为几乎所有矿工都
+在使用这一特性。这意味着钱包完全可以利用它，通过子交易来为父交易付费（CPFP），从而
+对一笔进账交易进行费率提升。
+
+相对于 RBF，CPFP 有几项优点。任何收到一笔交易输出的人都可以使用 CPFP——包括收款方
+和花费方（如果花费方包含了找零输出）。它也不需要替换原始交易，相对 RBF 对某些商家
+来说扰动更小。
+
+CPFP 相对 RBF 的主要缺点是 CPFP 通常会占用更多的区块空间。在 RBF 中，费率提升交易
+往往与被替换的交易大小相同；而在 CPFP 中，费率提升相当于多加了一整笔单独的交易。
+多占用的区块空间需要在费率提升本身的成本之外支付额外的手续费。
+
+CPFP 还存在若干挑战，其中一些我们将在 <<transaction_pinning>> 中探讨。还有一个需要
+特别提到的问题是最低中继费率问题，它由((("transaction fees", "fee bumping", "CPFP (child pays for parent)", startref="transaction-fees-bump-cpfp")))((("fee bumping", "CPFP (child pays for parent)", startref="fee-bump-cpfp")))((("CPFP (child pays for parent) fee bumping", startref="cpfp-ch9")))包中继（package relay）来解决。
+
+=== 包中继（Package Relay）
+
+早期版本的((("transaction fees", "package relay", id="transaction-fee-package-relay")))((("package relay", id="package-relay"))) Bitcoin Core 对其 mempool（参见 <<mempool>>）中保存以便后续转发与
+挖出的未确认交易数量没有任何限制。当然，计算机有物理上限，无论是内存（RAM）还是
+磁盘空间——全节点不可能存储数量无限的未确认交易。后来的 Bitcoin Core 版本将 mempool
+大小限制为大约保存一天的交易量，只保留费率最高的交易或交易包。
+
+这对大多数情况都很有效，但带来了一个依赖问题。为了计算一个交易包的费率，我们需要
+同时拿到父交易和后代交易——但如果父交易支付的费率不够高，它就不会被保留在节点的
+mempool 中。如果某个节点收到了子交易但又无法访问到其父交易，它对该子交易就无能为力。
+
+解决该问题的方法是将交易作为包一起中继的能力，称为 _package relay_（包中继），让
+接收节点在对其中任何单笔交易采取行动之前先评估整个包的费率。在本书撰写时，Bitcoin
+Core 的开发者已经在包中继的实现上取得了显著进展，到本书出版时也许已经有一个有限的
+早期版本可用。
+
+包中继对那些基于时间敏感、预先签名交易的协议尤为重要，比如 Lightning Network（LN）。
+在非合作场景下，某些预签名交易无法通过 RBF 提升费率，只能依赖 CPFP。在这些协议中，
+有些交易可能在需要被广播前很久就已被创建出来，几乎不可能估算出合适的费率。如果一笔
+预签名交易支付的费率低于进入节点 mempool 所需的水平，就无法通过子交易来提升费率。
+如果这导致交易未能及时确认，诚实的用户就可能蒙受损失。包中继正是这一关键问题的
+解决方案。
+
+[[transaction_pinning]]
+=== 交易钉死（Transaction Pinning）
+
+++++
+<p class="fix_tracking">
+尽管在我们前面描述的基本场景下 RBF 和 CPFP 费率提升都能工作，但与这两种方法相关的
+规则还存在一些针对矿工和转发型全节点拒绝服务攻击的防护设计。这些规则的一个不幸副作用
+是它们有时会让人无法使用费率提升。让一笔交易无法或难以被费率提升的现象被称为
+<em>transaction pinning</em>（交易钉死）。</p>
+++++
+
+主要((("transaction fees", "fee bumping", "transaction pinning", id="transaction-fee-bump-pin")))((("fee bumping", "transaction pinning", id="fee-bump-pin")))((("transaction pinning", id="transaction-pin")))((("RBF (replace by fee) fee bumping", "transaction pinning", id="rbf-pin")))((("CPFP (child pays for parent) fee bumping", "transaction pinning", id="cpfp-pin")))的拒绝服务隐患之一与交易之间的关联效应有关。每当一笔交易的输出被花费时，
+该交易的标识（txid）都会被子交易引用。然而当一笔交易被替换后，替换版本会有不同的
+txid。如果该替换交易被确认，那么原交易的所有后代交易都无法被包含在同一条区块链中。
+虽然这些后代交易可以被重新创建并重新签名，但并不保证一定会发生。这一点对 RBF 和 CPFP
+都有影响，但表现形式不同：
+
+- 在 RBF 的语境中，当 Bitcoin Core 接受一笔替换交易时，为简化处理，它会忘掉原始
+  交易及所有依赖原始交易的后代交易。为了确保矿工接受替换在经济上更划算，Bitcoin
+  Core 只在替换交易支付的手续费大于所有将被遗忘的交易之和时才接受该替换。
++
+这种做法的缺点是：Alice 可以创建一笔小交易支付给 Bob，然后 Bob 用他的输出创建一笔
+非常大的子交易。如果 Alice 之后想替换她的原始交易，她就需要支付一笔比她和 Bob 原本
+所付总和更高的手续费。例如，假设 Alice 的原始交易约 100 vbyte，Bob 的交易约
+100,000 vbyte，且两者费率相同，那么 Alice 要用 RBF 提升她的交易，需要支付的金额
+就要比她原来的高 1,000 倍以上。
+
+- 在 CPFP 的语境中，每当节点考虑把某个交易包纳入区块时，就必须把该包中的交易从其
+  他想要纳入同一区块的交易包里移除。例如，如果一个子交易为 25 个祖先支付，而这些
+  祖先每个又都有另外 25 个子交易，那么把该包纳入区块就需要更新大约 625 个交易包
+  （25^2^）。同样地，如果一笔有 25 个后代的交易被从节点的 mempool 中移除（例如被
+  打包进了某个区块），而这些后代每个又有另外 25 个祖先，那么又需要更新 625 个交易
+  包。每当我们把参数翻倍（例如从 25 增至 50），节点需要做的工作量就会翻 4 倍。
++
+此外，一旦某笔交易的另一个版本被挖出，原交易及其所有后代长期保留在 mempool 里就
+  毫无意义——除非发生罕见的区块链重组，这些交易都不再可能被确认。Bitcoin Core
+  会把所有再也无法在当前区块链上被确认的交易从 mempool 中移除。最坏情况下，这会
+  浪费节点大量带宽，甚至可能被用来阻止交易的正常传播。
++
+为防止这些问题以及其他相关问题，Bitcoin Core 限制一笔父交易在 mempool 中最多
+  只能有 25 个祖先或后代，并限制这些交易的总大小不超过 100,000 vbyte。这种做法
+  的副作用是：如果一笔交易已经有过多的后代（或者它与后代的总大小过大），用户就
+  无法再为它创建 CPFP 费率提升。
+
+交易钉死可能因偶然原因发生，但它对像 LN 这类多方时间敏感的协议来说也是严重的安全
+漏洞。如果你的对手方能阻止你的某笔交易在截止时间前被确认，他们就可能从你那里偷走
+钱。
+
+协议开发者们多年来一直在缓解交易钉死问题。其中一种部分解决方案在 <<cpfp_carve_out>>
+中描述。还有若干其他方案被提出，本书撰写时至少有一个正在被((("transaction fees", "fee bumping", "transaction pinning", startref="transaction-fee-bump-pin")))((("fee bumping", "transaction pinning", startref="fee-bump-pin")))((("transaction pinning", startref="transaction-pin")))((("RBF (replace by fee) fee bumping", "transaction pinning", startref="rbf-pin")))((("CPFP (child pays for parent) fee bumping", "transaction pinning", startref="cpfp-pin")))((("transaction fees", "fee bumping", "CPFP carve outs", id="transaction-fee-bump-carveout")))((("fee bumping", "CPFP carve outs", id="fee-bump-carveout")))((("carve outs (CPFP)", id="carveout")))((("CPFP (child pays for parent) fee bumping", "carve outs", id="cpfp-carveout")))积极开发——
+https://oreil.ly/300dv[ephemeral anchors]。
+
+[[cpfp_carve_out]]
+=== CPFP Carve Out 与 Anchor Outputs
+
+++++
+<p class="fix_tracking2">
+2018 年，开发 LN 的人员遇到了一个问题。他们的协议使用的是需要两方签名的交易。双方
+都不想信任对方，所以会在协议里某个不需要信任的时间点签好交易，让任一方都能够在
+未来对方可能不愿意（或无法）履约时，将其中一笔交易广播出去。这种做法的问题在于：
+这些交易可能会在某个未知的、遥远的未来才被广播，远远超出我们为这些交易合理估算
+费率的能力。</p>
+++++
+
+理论上，开发者们本可以把交易设计成支持用 RBF（借助特殊的 sighash 标志）或 CPFP
+来费率提升，但这两种协议都易受交易钉死的攻击。鉴于所涉及的交易是时间敏感的，允许
+对手方使用交易钉死来拖延一笔交易的确认，很容易演变成可复现的攻击套路，恶意方借此
+从诚实方那里窃取资金。
+
+LN 开发者 Matt Corallo 提出了一种解决方案：为 CPFP 费率提升规则设置一个特殊例外，
+称为 _CPFP carve out_。CPFP 的正常规则禁止追加任何会让父交易拥有 26 个或更多
+后代、或者让父交易及其所有后代总大小超过 100,000 vbyte 的后代交易。在 CPFP
+carve out 规则下，只要这笔追加的交易是某笔没有未确认祖先的未确认交易的直接子代，
+就允许在交易包中再额外加入一笔不超过 1,000 vbyte 的交易，即便这样做会突破其他
+限制。
+
+++++
+<p class="fix_tracking">
+例如，Bob 和 Mallory 共同签署了一笔有两个输出的交易，每人对应一个输出。Mallory
+广播了这笔交易并用她那个输出连上要么 25 笔子交易，要么任何数量更少但总大小达到
+100,000 vbyte 的子交易。如果没有 carve-out，Bob 就无法再把另一笔子交易挂在他自己
+的输出上做 CPFP 费率提升。有了 carve-out，他可以花费这笔交易里属于自己的那个输出，
+只要他的子交易大小小于 1,000 vbyte 即可（这点空间应该绰绰有余）。</p>
+++++
+
+不允许多次使用 CPFP carve-out，因此它仅适用于两方协议。曾有人提议将其扩展到涉及
+更多参与者的协议，但相关需求不大，且开发者更专注于构建针对交易钉死攻击的更通用的
+解决方案。
+
+在本书撰写时，大多数流行的 LN 实现使用一种名为 _anchor outputs_ 的交易模板，它的
+设计就是为了配合 CPFP((("anchor outputs (CPFP)")))((("transaction fees", "fee bumping", "CPFP carve outs", startref="transaction-fee-bump-carveout")))((("fee bumping", "CPFP carve outs", startref="fee-bump-carveout")))((("carve outs (CPFP)", startref="carveout")))((("CPFP (child pays for parent) fee bumping", "carve outs", startref="cpfp-carveout")))
+carve out 一起使用。
+
+=== 为交易添加手续费
+
+交易((("transaction fees", "change outputs and")))((("change output", "transaction fees and")))((("outputs", "transaction fees and")))((("inputs", "transaction fees and")))的数据结构中并没有专门表示手续费的字段。手续费是通过输入总和与输出总和
+之间的差额隐式表达的。在所有输出从所有输入中扣除后剩下的任何金额，就是矿工要收取的
+手续费：
+
+[latexmath]
+++++
+\begin{equation}
+{Fees = Sum(Inputs) - Sum(Outputs)}
+\end{equation}
+++++
+
+
+这是交易里一个略显费解的地方，也是需要理解的重要一点：如果你在自己构造交易，必须
+确保不会因为输入"少花"了而无意中支付过高的手续费。也就是说，你必须把所有输入都
+考虑进去，必要时通过创建找零来处理，否则就会给矿工留下一笔大额"小费"！
+
+例如，如果你花费一个 20-bitcoin 的 UTXO 进行 1-bitcoin 的支付，你就必须包含一笔
+19-bitcoin 的找零输出返回到自己的钱包。否则这 19 个比特币的"剩余"就会被算作交易
+手续费，由把你的交易打包进区块的矿工获得。虽然这会让你的交易获得优先处理并让某位
+矿工非常开心，但这多半不是你的本意。
+
+[WARNING]
+====
+如果你在手工构造的交易中忘记加入找零输出，你就是在把找零作为交易手续费支付出去。
+"不用找零了！"恐怕并不是你想表达的意思。
+====
+
+[[fee_sniping]]
+=== 用 Timelock 防御 Fee Sniping
+
+Fee sniping((("transaction fees", "fee sniping", id="transaction-fee-sniping")))((("fee sniping", id="fee-snipe")))((("timelocks", "fee sniping and", id="timelock-fee-snipe")))((("lock time", "fee sniping and", id="lock-time-fee-snipe")))是一种理论上的攻击场景：试图重写过去区块的矿工从未来区块中"狙击"
+高手续费的交易以最大化自己的[.keep-together]#收益#。
+
+例如，假设当前最高区块是 #100,000。如果某些矿工不去尝试挖区块 #100,001 来延长链，
+而是尝试重新挖出 #100,000。这些矿工可以在他们的候选 #100,000 区块里选择任何尚未
+被挖出的有效交易。他们不必用相同的交易来重新挖这个区块。事实上，他们有动机选择
+最赚钱的交易（每 kB 手续费最高）放进自己的区块。他们既可以包含"旧"的 #100,000
+区块里的任何交易，也可以包含当前 mempool 里的任何交易。本质上，他们可以在重新创建
+#100,000 区块时把"现在"的交易拉到被重写的"过去"中去。
+
+如今这种攻击的收益并不高，因为出块补贴远高于每个区块的总手续费。但在未来某个时刻，
+交易手续费会成为收益的大头（甚至是全部收益）。到那时，这种情形将不可避免。
+
+为此一些钱包通过给交易设置一个 lock time 来抑制 fee sniping，限制这些交易只能被
+打包进下一个区块或更晚的区块。在我们的场景中，钱包会给它创建的每一笔交易把 lock
+time 设置为 100,001。在正常情况下，这个 lock time 没有任何效果——这些交易反正也
+只能被打包进 #100,001，因为这就是下一个区块。
+
+但在重组攻击下，矿工就无法从 mempool 拉取高手续费交易，因为所有这些交易都被
+timelock 限定到了 #100,001。他们只能用当时有效的交易来重新挖出 #100,000，
+本质上得不到任何新的手续费收入。
+
+这并不能完全杜绝 fee sniping，但在某些情况下能让它无利可图，并有助于在出块补贴
+减少时维持比特币网络的稳定性。我们建议所有钱包，只要不与 lock time 字段的其他
+用途冲突，都应实现抗 fee sniping 的设计。
+
+随着 Bitcoin 不断成熟、出块补贴持续下降，手续费对 Bitcoin 用户将变得越来越重要，
+无论是在让交易尽快确认的日常使用中，还是在为矿工持续以新的工作量证明保护比特币
+交易提供激励方面。

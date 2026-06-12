@@ -1,0 +1,844 @@
+//FIXME:reduce difficulty / we ramp up too quick Lesmes feedback
+[[ch05_wallets]]
+== 钱包恢复
+
+创建公私钥对是比特币钱包能够接收和花费比特币的关键环节。但一旦丢失对私钥的访问，任何人都将永远无法花费收到对应公钥下的比特币。多年来，钱包与协议的开发者们一直致力于设计一种系统，让用户能够在出现问题后恢复对其比特币的访问，同时不会在其他时间损害安全性。
+
+In((("wallets", "key generation", "independent", id="wallet-keygen-independent")))((("key generation", "independent", id="keygen-independent")))((("independent key generation", id="independent-keygen")))((("public key cryptography", "wallet recovery key generation", see="key generation"))) 本章中，我们将考察钱包为了防止数据丢失变成资金损失而采用的一些不同方法。有些解决方案几乎没有缺点，已被现代钱包普遍采用，我们会直接将其推荐为最佳实践。另一些解决方案则同时存在优点和缺点，因此不同钱包的作者会做出不同的权衡。在这种情况下，我们会介绍各种可选方案。
+
+=== 独立密钥生成
+
+++++
+<p class="fix_tracking2">
+实物现金钱包里装的就是现金，
+因此许多人误以为比特币钱包里装的就是比特币，这并不奇怪。事实上，许多人所说的
+比特币钱包——我们称之为<em>钱包数据库</em>，以便与钱包应用区分开——
+里面只包含密钥。这些密钥与区块链上记录的比特币相关联。通过向比特币全节点证明
+你掌控这些密钥，你就可以花费相应的比特币。
+</p>
+++++
+
+简单的钱包数据库既包含用于接收比特币的公钥，也包含用于创建授权花费这些比特币所需签名的私钥。其他钱包的数据库可能只包含公钥，或者只包含授权一笔花费交易所需的部分私钥。它们的钱包应用通过与外部工具（例如硬件签名设备或多重签名方案中的其他钱包）协作，来生成所需的签名。
+
+钱包应用可以独立生成它后续打算使用的每一把密钥，如 <<Type0_wallet>> 所示。早期所有的比特币钱包应用都是这样做的，但这要求用户在每次生成并分发新密钥时都备份钱包数据库——而生成新密钥的频率可能高达每收一笔款就生成一个新地址。如果未能及时备份钱包数据库，用户就会失去对那些尚未备份的密钥所接收资金的访问权。
+
+对每个独立生成的密钥，用户都需要备份大约 32 字节，外加一些额外开销。一些用户和钱包应用试图通过只使用一把密钥来最小化需要备份的数据量。虽然这样做可以是安全的，但会严重削弱该用户以及与其交易的所有人的隐私性。重视自己和同伴隐私的人会为每笔交易创建新的密钥对，由此产生的钱包数据库基本上只能用数字介质来备份。
+
+[[Type0_wallet]]
+[role="width-60"]
+.非确定性密钥生成：钱包数据库中存放着一组独立生成的密钥。
+image::images/mbc3_0501.png["Non-Deterministic Wallet"]
+
+现代钱包应用不再独立生成密钥，而是使用一种可重复的（确定性的）算法，从单个随机种子派生出所有密钥 ((("wallets", "key generation", "independent", startref="wallet-keygen-independent")))((("key generation", "independent", startref="keygen-independent")))((("independent key generation", startref="independent-keygen"))) 。
+
+==== 确定性密钥生成
+
+哈希函数 ((("wallets", "key generation", "deterministic", id="wallet-keygen-determine")))((("key generation", "deterministic", id="keygen-determine")))((("deterministic key generation", id="determine-keygen")))((("hash functions", "deterministic key generation", id="hash-determine"))) 在输入相同时总会产生相同的输出，但只要输入有哪怕极小的变化，输出就会不同。如果哈希函数在密码学上是安全的，那么任何人都无法预测新的输出——即使他们知道新的输入也不行。
+
+这使我们能够将一个随机值转换为几乎无限多个看似随机的值。更有用的是，之后用同样的哈希函数再次对同样的输入（称为 _种子_ ((("seeds")))）进行运算，会产生同样的、看似随机的值：
+
+----
+# Collect some entropy (randomness)
+$ dd if=/dev/random count=1 status=none | sha256sum
+f1cc3bc03ef51cb43ee7844460fa5049e779e7425a6349c8e89dfbb0fd97bb73  -
+
+# Set our seed to the random value
+$ seed=f1cc3bc03ef51cb43ee7844460fa5049e779e7425a6349c8e89dfbb0fd97bb73
+
+# Deterministically generate derived values
+$ for i in {0..2} ; do echo "$seed + $i" | sha256sum ; done
+50b18e0bd9508310b8f699bad425efdf67d668cb2462b909fdb6b9bd2437beb3  -
+a965dbcd901a9e3d66af11759e64a58d0ed5c6863e901dfda43adcd5f8c744f3  -
+19580c97eb9048599f069472744e51ab2213f687d4720b0efc5bb344d624c3aa  -
+----
+
+如果我们把派生出的值用作私钥，那么之后只要用我们的种子配合之前所用的算法，就能再次生成完全相同的私钥。使用确定性密钥生成的用户，只需记录其种子以及所用确定性算法的引用，就能备份钱包中的所有密钥。例如，即使 Alice 在一百万个不同地址上收到了一百万枚比特币，要日后恢复对这些比特币的访问，她需要备份的也只是：
+
+----
+f1cc 3bc0 3ef5 1cb4 3ee7 8444 60fa 5049
+e779 e742 5a63 49c8 e89d fbb0 fd97 bb73
+----
+
+基本的顺序式确定性密钥生成的逻辑示意图如 <<Type1_wallet>> 所示。然而，现代钱包应用采用了更巧妙的方法来实现这一点，可以将公钥的派生与对应私钥的派生分开，从而使私钥可以比公钥更安全地存储 ((("wallets", "key generation", "deterministic", startref="wallet-keygen-determine")))((("key generation", "deterministic", startref="keygen-determine")))((("deterministic key generation", startref="determine-keygen")))((("hash functions", "deterministic key generation", startref="hash-determine"))) 。
+
+[[Type1_wallet]]
+[role="width-70"]
+.确定性密钥生成：根据种子为钱包数据库派生出的确定性密钥序列。
+image::images/mbc3_0502.png["Deterministic Wallet"]
+
+
+[[public_child_key_derivation]]
+==== 公开子密钥派生
+
+在 <<public_key_derivation>> 中，我们学习了 ((("wallets", "key generation", "public child key derivation", id="wallet-keygen-public-child")))((("key generation", "public child key derivation", id="keygen-public-child")))((("public child key derivation", id="public-child-derive")))((("child key pair derivation", id="child-key-pair"))) 如何使用椭圆曲线密码学（ECC）从一个私钥创建公钥。尽管椭圆曲线上的运算并不直观，但它们类似于普通算术中使用的加法、减法和乘法。换句话说，可以对公钥进行加减或乘运算。回想我们在 <<public_key_derivation>> 中用生成元 _G_ 从私钥 _k_ 生成公钥 _K_ 的运算：
+
+[latexmath]
+++++
+\begin{equation}
+{K = k \times G}
+\end{equation}
+++++
+
+通过在等式两边同时加上同一个值，就可以创建一对派生密钥，称为子密钥对：
+
+////
+[latexmath]
+++++
+\begin{equation}
+K + (123 \times G) =\!\!\!= (k + 123) \times G
+\end{equation}
+++++
+////
+
+++++
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" alttext="upper K plus left-parenthesis 123 times upper G right-parenthesis equals equals left-parenthesis k plus 123 right-parenthesis times upper G" display="block">
+  <mrow>
+    <mi>K</mi>
+    <mo>+</mo>
+    <mo>(</mo>
+    <mn>123</mn>
+    <mo>×</mo>
+    <mi>G</mi>
+    <mo>)</mo>
+    <mo>==</mo>
+    <mo>(</mo>
+    <mi>k</mi>
+    <mo>+</mo>
+    <mn>123</mn>
+    <mo>)</mo>
+    <mo>×</mo>
+    <mi>G</mi>
+  </mrow>
+</math>
+</div>
+++++
+
+
+[TIP]
+====
+在本书的方程中，对于 _K_ = _k_ × _G_ 这类用来计算某个变量值的运算，我们使用单等号。我们用双等号来表示等式两边相等，或者表示如果两边不相等运算应当返回 false（而非 true）。
+====
+
+由此带来的一个有趣后果是：对公钥加上 123 这件事可以完全用公开信息来完成。例如，Alice 生成公钥 _K_ 并交给 Bob。Bob 不知道私钥，但他知道全局常量 _G_，所以他可以在公钥上加上任意值，产生一个派生的公开子密钥。如果他随后把自己加到公钥上的那个值告诉 Alice，她就可以把同样的值加到私钥上，从而得到与 Bob 所创建的公开子密钥相对应的派生私有子密钥。
+
+换句话说，即使你对父私钥一无所知，也可以创建子公钥。加到公钥上的值被称为 _key tweak_ ((("key tweaks"))) 。如果使用确定性算法来生成 key tweak，那么不知道私钥的人就可以从一个公开的父密钥派生出本质上无限的公开子密钥序列。掌握父私钥的人随后可以用相同的 key tweak 创建所有对应的私有子密钥。
+
+这种技术常用于将钱包应用的前端（不需要私钥）与签名操作（需要私钥）分离。例如，Alice 的前端把她的公钥分发给想要支付给她的人。之后，当她要花费收到的钱时，她可以把所用的 key tweak 提供给一个安全保管原始私钥的 _hardware signing device_（有时容易混淆地称为 _hardware wallet_）((("hardware signing devices"))) 。硬件签名器用这些 tweak 派生出所需的子私钥，并用它们对交易进行签名，再把已签名的交易返回给安全性较低的前端，由其广播到比特币网络。
+
+公开子密钥派生可以产生一个类似于前面所见 <<Type1_wallet>> 的线性密钥序列，但现代钱包应用还用了一个额外的技巧，可以提供一棵密钥树而不是单一序列，详见下一节 ((("wallets", "key generation", "public child key derivation", startref="wallet-keygen-public-child")))((("key generation", "public child key derivation", startref="keygen-public-child")))((("public child key derivation", startref="public-child-derive")))((("child key pair derivation", startref="child-key-pair"))) 。
+
+[[hd_wallets]]
+==== 分层确定性（HD）密钥生成（BIP32）
+
+我们所知的每一个 ((("wallets", "key generation", "HD (hierarchical deterministic)")))((("key generation", "HD (hierarchical deterministic)")))((("HD (hierarchical deterministic) key generation")))((("BIP32 HD (hierarchical deterministic) key generation", primary-sortas="BIP032"))) 现代比特币钱包都默认使用分层确定性（HD）密钥生成。该标准定义于 BIP32，使用确定性密钥生成以及可选的公开子密钥派生，配合一个能产生密钥树的算法。在这棵树中，任何一把密钥都可以作为一个子密钥序列的父密钥，而这些子密钥中的任何一把又可以成为另一段子密钥序列的父密钥（即原密钥的孙密钥）。树的深度没有任意限制。这种树结构如 <<Type2_wallet>> 所示。
+
+[[Type2_wallet]]
+.HD 钱包：从单个种子生成的一棵密钥树。
+image::images/mbc3_0503.png["HD wallet"]
+
+这种树结构可以用来表达额外的组织含义，例如：某一特定子密钥分支用于接收进来的付款，而另一个分支用于接收外发付款的找零。密钥分支也可以用于企业场景，将不同分支分配给不同部门、子公司、特定职能或会计科目。
+
+我们将在 <<hd_wallet_details>> 中对 HD 钱包做详细的探讨。
+
+==== 种子与恢复码
+
+HD 钱包 ((("wallets", "recovery codes", id="wallet-recovery2")))((("recovery codes", id="recovery-code2"))) 是一种非常强大的机制，可以管理由单一种子派生出的大量密钥。如果你的钱包数据库出现损坏或丢失，你可以用你原始的种子重新生成钱包中的所有私钥 ((("seeds"))) 。但如果别人拿到了你的种子，他们同样能够生成所有的私钥，从而可以从单签名钱包中盗走全部比特币，并降低多重签名钱包中比特币的安全性。本节我们将介绍几种 _recovery code_（恢复码），它们的设计目的是让备份更简单、更安全。
+
+虽然种子本质上是很大的随机数，通常是 128 到 256 位，但大多数恢复码使用人类语言的单词。使用单词的一个主要动机是让恢复码易于记忆。例如，参见 <<hex_seed_vs_recovery_words>> 中分别用十六进制和单词编码的恢复码。
+
+[[hex_seed_vs_recovery_words]]
+.分别用十六进制和英文单词编码的种子
+====
+----
+Hex-encoded:
+0C1E 24E5 9177 79D2 97E1 4D45 F14E 1A1A
+
+Word-encoded:
+army van defense carry jealous true
+garbage claim echo media make crunch
+----
+====
+
+在某些情况下，能记住恢复码可能是一种很强大的功能 ((("memorizing recovery codes"))) ，例如当你无法在不被第三方扣押或检查（从而可能盗走你比特币）的情况下携带实物（如写在纸上的恢复码）时。然而大多数情况下，仅依赖记忆是危险的：
+
+- 如果你忘记了恢复码，又失去了对原始钱包数据库的访问，你的比特币就永远丢失了。
+
+- 如果你死亡或重伤，而你的继承人无法访问你原始的钱包数据库，他们将无法继承你的比特币。
+
+- 如果有人认为你记住了某个能让他们拿到比特币的恢复码，他们可能会试图胁迫你交出这串码。截至本文撰写时，比特币贡献者 Jameson Lopp 已经
+  https://oreil.ly/aw5XM[记录]
+  了 100 多起针对比特币及其他数字资产疑似持有者的实体攻击事件，其中至少三人死亡，还有许多受害者被酷刑、被劫持，或家人受到威胁。
+
+[TIP]
+====
+即使你使用的是为便于记忆而设计的恢复码，我们也强烈建议你考虑把它写下来。
+====
+
+截至本文撰写时，几种 ((("wallets", "recovery codes", "types of", id="wallet-recovery-type")))((("recovery codes", "types of", id="recovery-code-type"))) 不同类型的恢复码被广泛使用：
+
+BIP39::
+  过去十年中最流行的恢复码生成方法 ((("BIP39 recovery codes", primary-sortas="BIP039"))) ，BIP39 涉及生成一个随机字节序列，添加校验和，并把数据编码为 12 至 24 个单词（可以本地化为用户的母语）。这些单词（加上一个可选的密码短语）会经过一个 _key-stretching function_（密钥扩展函数），其输出用作种子。BIP39 恢复码有几处不足，后来的方案试图加以解决。
+
+Electrum v2::
+  用于 Electrum 钱包（2.0 及以上版本）的 ((("Electrum v2 recovery codes"))) 这种基于单词的恢复码相比 BIP39 有若干优势。它不依赖一个必须由每个兼容程序的每个版本都实现的全局词表，而且其恢复码包含一个版本号，能提高可靠性和效率。与 BIP39 类似，它支持可选的密码短语（Electrum 称之为 _seed extension_），并使用相同的密钥扩展函数。
+
+Aezeed::
+  用于 LND 钱包的 ((("Aezeed recovery codes"))) 另一种基于单词的恢复码，相比 BIP39 有所改进。它包含两个版本号：一个是内部的，可以消除升级钱包应用时的若干问题（类似 Electrum v2 的版本号）；另一个是外部的，可以通过递增来改变恢复码底层的密码学特性。它还在恢复码中包含一个 _wallet birthday_，即一个指向用户创建钱包数据库日期的引用。这允许恢复过程查找与钱包相关的所有资金时无需扫描整条区块链，对注重隐私的轻量级客户端尤其有用。它支持在不需要把资金转移到新种子的情况下更改密码短语或修改恢复码的其他方面——用户只需备份新的恢复码即可。与 Electrum v2 相比的一个缺点是：和 BIP39 一样，它依赖于备份方和恢复方的软件支持相同的词表。
+
+[role="less_space pagebreak-before"]
+Muun::
+  用于 Muun 钱包 ((("Muun recovery codes"))) 的恢复码，该钱包默认要求花费交易由多把密钥签名。这是一种非单词形式的码，必须附带额外信息（Muun 目前以 PDF 形式提供）。这种恢复码与种子无关，而是用来解密 PDF 中所包含的私钥 [.keep-together]# # 。虽然与 BIP39、Electrum v2 和 Aezeed 的恢复码相比显得笨重，但它支持新钱包中越来越常见的新技术与标准，如 Lightning Network（LN）支持、output script descriptor 和 miniscript。
+
+SLIP39::
+  作为 BIP39 的后继者 ((("SLIP39 recovery codes"))) ，与 BIP39 有部分相同的作者，SLIP39 允许把单个种子用多个恢复码分发，分别存放在不同地点（或交给不同的人）保管。创建恢复码时，你可以指定恢复种子所需的恢复码数量。例如，你创建五个恢复码，但只需要其中三个就能恢复种子。SLIP39 支持可选密码短语，依赖全局词表，且没有直接提供版本管理。
+
+[NOTE]
+====
+本书撰写期间还提出了一种新的恢复码分发系统 ((("Codex32 recovery codes"))) ，与 SLIP39 有相似之处。Codex32 允许仅借助打印的说明、剪刀、精密刀、铜钉和一支笔——再加上隐私环境和几个小时空闲时间——就能创建和验证恢复码。或者，信任计算机的人也可以用数字设备上的软件即时创建恢复码。你最多可以创建 31 个恢复码存放在不同位置，并指定恢复种子所需的码的数量。作为一项新提案，Codex32 的细节在本书出版前可能会发生重大变化，因此我们鼓励所有对分布式恢复码感兴趣的读者了解其 https://oreil.ly/Xx_Zq[最新进展] ((("wallets", "recovery codes", "types of", startref="wallet-recovery-type")))((("recovery codes", "types of", startref="recovery-code-type"))) 。
+====
+
+.恢复码密码短语
+****
+BIP39、((("wallets", "recovery codes", "passphrases", id="wallet-recovery-passphrase")))((("recovery codes", "passphrases", id="recovery-code-passphrase")))((("passphrases (for recovery codes)", id="passphrase"))) Electrum v2、Aezeed 和 SLIP39 这几种方案都可以与可选的密码短语配合使用。如果你只把这条密码短语保存在记忆中，其优缺点与记忆恢复码完全相同。然而，与恢复码使用密码短语的方式相关，还存在另一组特有的权衡。
+
+这几种方案中有三种（BIP39、Electrum v2 和 SLIP39）不会把可选的密码短语纳入用来防止录入错误的校验和。每一种密码短语（包括不使用密码短语）都会为 BIP32 密钥树生成一个种子，但树并不相同。不同的密码短语会生成不同的密钥。这一点从不同角度看可以是优点也可以是缺点：
+
+- 从正面看，如果有人拿到了你的恢复码（但没拿到密码短语），他们看到的将是一棵合法的 BIP32 密钥树。如果你为这种情形做了准备，并向不带密码短语的那棵树发送了一些比特币，他们就会盗走这些钱。虽然丢失部分比特币通常是坏事，但这也可以让你及时获知恢复码已经泄露，便于你调查并采取补救措施。能针对同一个恢复码创建多个看起来都合法的密码短语，是一种 _plausible deniability_（合理推诿）。
+
+- 从负面看，如果你被胁迫向攻击者交出恢复码（无论是否带密码短语），而对方没有得到他们预期数量的比特币，他们可能会继续胁迫你，直到你交出能解锁更多比特币的另一个密码短语。为合理推诿而设计就意味着你无法向攻击者证明你已经交出了全部信息，因此即使你把所有比特币都给了他们，他们仍可能继续施压。
+
+- 另一个缺点是错误检测能力下降。如果你在从备份恢复时输入了略有错误的密码短语，钱包无法对此发出警告。如果你预期有余额，当钱包应用在重建的密钥树上显示零余额时，你会知道哪里出了问题。然而新手用户可能会以为自己的钱永远丢失了，并做出愚蠢的举动，比如放弃并把恢复码扔掉。又或者，如果你本就预期是零余额，那你可能会在使用钱包应用多年之后，下一次用正确的密码短语恢复时才看到零余额。除非你能想起自己之前打错了哪个字，否则你的资金就此消失。
+
+与其他方案不同，Aezeed 的种子加密方案会对可选密码短语进行认证，如果你提供的值不正确就会返回错误。这消除了合理推诿，增加了错误检测，并使证明密码短语已被披露成为可能。
+
+许多用户和开发者对哪种方法更好意见不一，一些人强烈支持合理推诿，另一些人则更倾向于错误检测带给新手和受胁迫用户的安全性提升。我们认为只要恢复码继续被广泛使用 ((("wallets", "recovery codes", startref="wallet-recovery2")))((("recovery codes", startref="recovery-code2")))((("passphrases (for recovery codes)", startref="passphrase")))((("wallets", "recovery codes", "passphrases", startref="wallet-recovery-passphrase")))((("recovery codes", "passphrases", startref="recovery-code-passphrase"))) ，这场争论就会持续下去。
+****
+
+==== 备份非密钥数据
+
+钱包数据库 ((("wallets", "nonkey data, backing up", id="wallet-nonkey-backups")))((("nonkey data, backing up", id="nonkey-backups")))((("backing up", "nonkey data", id="backup-nonkey"))) 中最重要的数据是它的私钥。如果你失去对私钥的访问，你就失去了花费比特币的能力。确定性密钥派生和恢复码为备份和恢复你的密钥及其所控制的比特币提供了一个相当稳健的方案。但是，必须考虑到许多钱包数据库存储的不仅仅是密钥——它们还存储了用户为每笔收发交易自己添加的信息。
+
+例如，当 Bob 在向 Alice 发送发票时创建一个新地址时，他会为生成的地址添加一个 _label_ ((("labels, backing up", id="label-backup"))) ，以便把她的付款与他收到的其他付款区分开来。出于同样的原因，当 Alice 向 Bob 的地址付款时，她会把这笔交易标注为支付给 Bob。一些钱包还会在交易中添加其他有用信息，例如当前汇率，这在某些司法辖区计算税款时很有用。这些标签完全保存在各自的钱包中——不会共享到网络中——既保护了隐私，也避免让不必要的个人数据进入区块链。例子可参见 <<alice_tx_labels>>。
+
+++++
+<table id="alice_tx_labels">
+<caption>Alice 的交易历史，每笔交易都有标签</caption>
+<thead>
+<tr>
+<th>日期</th>
+<th>标签</th>
+<th>BTC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>2023-01-01</p></td>
+<td><p>从 Joe 处购买比特币</p></td>
+<td><p>+0.00100</p></td>
+</tr>
+<tr>
+<td><p>2023-01-02</p></td>
+<td><p>支付给 Bob 的播客费</p></td>
+<td><p>−0.00075</p></td>
+</tr>
+</tbody>
+</table>
+++++
+
+然而，由于地址和交易标签只保存在各个用户自己的钱包数据库中，并且它们不是确定性的，因此无法仅凭恢复码恢复。如果恢复方式仅基于种子，那么用户能看到的只有一份大致的交易时间和比特币金额清单。这会让你很难弄清楚自己过去是如何使用资金的。想象一下查看一年前的银行或信用卡账单，上面有每笔交易的日期和金额，但"描述"一栏一片空白。
+
+钱包应该为用户提供一种便捷的方式来备份标签数据。这看上去理所当然，但有不少被广泛使用的钱包应用，虽然能轻松地创建和使用恢复码，却根本没有提供备份或恢复标签数据的途径。
+
+此外，钱包应用如果能提供一种标准化的标签导出格式，以便在其他应用（例如会计软件）中使用，可能会非常有用。BIP329 提出了一种这样的格式标准。
+
+实现了基本比特币支持之外协议的钱包应用可能还需要或希望存储其他数据。例如，截至 2023 年，越来越多的应用增加了通过 Lightning Network（LN）收发交易的支持。虽然 LN 协议提供了一种在数据丢失时恢复资金的方法，称为 _static channel backups_，但它不能保证一定成功。如果你钱包连接的节点意识到你丢失了数据，它可能就能从你这里盗走比特币。如果它在你丢失数据库的同时也丢失了自己的钱包数据库，而你们双方都没有充分的备份，那么双方都会损失资金。
+
+这再次说明，用户和钱包应用都需要做的不止是备份一个恢复码。
+
+少数钱包应用采用的一种解决方案是频繁地、自动地用从种子派生的某把密钥来加密钱包数据库，并创建完整备份。比特币密钥必须不可猜测，现代加密算法被认为非常安全，因此除了能生成种子的人之外，应该没有人能打开加密备份。这样就可以安全地把备份存放在不受信任的计算机上，比如云托管服务，甚至随机的网络节点上。
+
+之后，如果原始钱包数据库丢失，用户可以把恢复码输入钱包应用以恢复种子。然后应用就可以取回最新的备份文件，重新生成加密密钥，解密备份，并恢复用户所有的标签和其他协议相关数据 ((("wallets", "nonkey data, backing up", startref="wallet-nonkey-backups")))((("nonkey data, backing up", startref="nonkey-backups")))((("backing up", "nonkey data", startref="backup-nonkey"))) 。
+
+==== 备份密钥派生路径
+
+在一棵 ((("wallets", "key generation", "backing up derivation paths", id="wallet-keygen-backups")))((("key generation", "backing up derivation paths", id="keygen-backups")))((("backing up", "key derivation paths", id="backup-key-derive"))) BIP32 密钥树中，大约有四十亿把第一层密钥；其中每一把都可以再有自己的四十亿个子密钥，每个子密钥又可能各自有四十亿个子密钥，依此类推。钱包应用不可能生成 BIP32 树中所有密钥的哪怕一小部分，这意味着从数据丢失中恢复不仅需要知道恢复码、获取种子的算法（如 BIP39）和确定性密钥派生算法（如 BIP32），还需要知道你的钱包应用在密钥树中使用了哪些路径来生成它分发出去的具体密钥。
+
+这个问题有两种被采用的解决方案。第一种是使用标准路径。每当钱包应用想生成的地址类型发生变化时，就会有人创建一个 BIP 来规定要使用的密钥派生路径。例如，BIP44 把 `m/44'/0'/0'` 定义为用于 P2PKH 脚本（一种 legacy 地址）密钥的路径。实现该标准的钱包应用在初次启动以及从恢复码恢复后，都会使用该路径下的密钥。我们把这种方案称为 _implicit paths_（隐式路径）((("implicit paths", id="implicit-path"))) 。BIP 定义的若干常见隐式路径见 <<bip_implicit_paths>>。
+
+++++
+<table id="bip_implicit_paths">
+<caption>各 BIP 定义的隐式脚本路径</caption>
+<thead>
+<tr>
+<th>标准</th>
+<th>脚本</th>
+<th>BIP32 路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>BIP44</p></td>
+<td><p>P2PKH</p></td>
+<td><p><code>m/44'/0'/0'</code></p></td>
+</tr>
+<tr>
+<td><p>BIP49</p></td>
+<td><p>Nested P2WPKH</p></td>
+<td><p><code>m/49'/1'/0'</code></p></td>
+</tr>
+<tr>
+<td><p>BIP84</p></td>
+<td><p>P2WPKH</p></td>
+<td><p><code>m/84'/0'/0'</code></p></td>
+</tr>
+<tr>
+<td><p>BIP86</p></td>
+<td><p>P2TR Single-key</p></td>
+<td><p><code>m/86'/0'/0'</code></p></td>
+</tr>
+</tbody>
+</table>
+++++
+
+[role="less_space pagebreak-before"]
+第二种方案是把路径信息和恢复码一起备份，明确指出哪个路径用于哪种脚本。我们把这种方案称为 _explicit paths_（显式路径）((("explicit paths", id="explicit-path"))) 。
+
+隐式路径的优点是用户无需记录自己使用了哪些路径。如果用户把恢复码输入到之前使用的同一款钱包应用（同版本或更高版本），它会自动为先前使用过的路径重新生成密钥。
+
+隐式脚本的缺点是不够灵活。输入恢复码时，钱包应用必须为它支持的每一条路径都生成密钥，并扫描区块链上涉及这些密钥的交易，否则可能会找不到用户的全部交易。对于支持很多功能、每个功能都有自己路径的钱包，如果用户只用过其中少数几项功能，这种做法是浪费的。
+
+对于不包含版本号的隐式路径恢复码（如 BIP39 和 SLIP39），当某个钱包应用的新版本不再支持某条旧路径时，它无法在恢复过程中向用户警告：你的部分资金可能找不到。反过来同样有这个问题：如果用户把恢复码输入到旧版软件中，旧软件就找不到新路径，而用户可能正是在这些新路径上接收过资金。包含版本信息的恢复码（如 Electrum v2 和 Aezeed）能检测到用户输入的是旧版还是新版恢复码，并将其引导到合适的资源。
+
+隐式路径的最后一个后果是：它只能包含通用信息（如标准化路径）或可从种子派生出的信息（如密钥）。对特定用户重要的非确定性信息无法通过恢复码来恢复。例如，Alice、Bob 和 Carol 收到的资金只能由其中两人签名才能花费。虽然 Alice 只需要 Bob 或 Carol 中一人的签名就能花费，但她需要他们两人的公钥才能在区块链上找到他们的联合资金。这意味着他们每个人都必须备份三个人全部的公钥。随着多重签名和其他高级脚本在比特币上变得越来越普遍，隐式路径的不灵活性也变得愈发突出。
+
+显式路径的优点是能够准确地描述哪些密钥应当与哪些脚本一起使用。无需支持过时脚本，没有前向或后向兼容性问题，任何额外信息（如其他用户的公钥）都可以直接包含进来。其缺点是要求用户在恢复码之外备份额外的信息。这些额外信息通常不会危及用户的安全性，因此不需要像恢复码那样高强度的保护，不过它可能会降低用户隐私，仍需要一定程度的保护。
+
+[role="less_space pagebreak-before"]
+截至本文撰写时，几乎所有使用显式路径的钱包应用都使用 _output script descriptors_ 标准（简称 _descriptors_），其规范见 BIP 380、381、382、383、384、385、386 和 389。Descriptor 描述了一个脚本，以及与该脚本一起使用的密钥（或密钥路径）。一些示例 descriptor 参见 <<sample_descriptors>>。
+
+++++
+<table id="sample_descriptors">
+<caption>来自 Bitcoin Core 文档的示例 descriptor（有省略）</caption>
+<thead>
+<tr>
+<th>Descriptor</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p><code>pkh(02c6…​9ee5)</code></p></td>
+<td><p>使用给定公钥的 P2PKH 脚本</p></td>
+</tr>
+<tr>
+<td><p><code>sh(multi(2,022f…​2a01,03ac…​ccbe))</code></p></td>
+<td><p>P2SH 多重签名，要求这两把密钥对应的两个签名</p></td>
+</tr>
+<tr>
+<td><p><code>pkh([d34db33f/44'/0'/0']xpub6ERA…​RcEL/1/*)</code></p></td>
+<td><p>BIP32 指纹为 <code>d34db33f</code> 的 P2PKH 脚本，其位于路径 <code>M/44'/0'/0'</code> 的扩展公钥（xpub）为 <code>xpub6ERA…​RcEL</code>，使用该 xpub 下 <code>M/1/*</code> 路径的密钥</p></td>
+</tr>
+</tbody>
+</table>
+++++
+
+
+长期以来，只为单签名脚本设计的钱包应用倾向于使用隐式路径。为多重签名或其他高级脚本设计的钱包应用则越来越多地采用基于 descriptor 的显式路径。两者兼顾的应用通常会同时遵循隐式路径的标准并提供 descriptor 支持 ((("wallets", "key generation", "backing up derivation paths", startref="wallet-keygen-backups")))((("key generation", "backing up derivation paths", startref="keygen-backups")))((("backing up", "key derivation paths", startref="backup-key-derive")))((("implicit paths", startref="implicit-path")))((("explicit paths", startref="explicit-path"))) 。
+
+=== 钱包技术栈详解
+
+现代钱包开发者可以从多种不同技术中选择，帮助用户创建和使用备份——而新的方案每年都在出现。我们不再对本章前面介绍的各个选项一一细述，本章余下部分将聚焦于截至 2023 年初我们认为在钱包中使用最广泛的一套技术栈：
+
+- BIP39 恢复码
+- BIP32 HD 密钥派生
+- BIP44 风格的隐式路径
+
+所有这些标准都从 2014 年或更早就开始存在，要找到使用它们的更多资源不会有任何困难。不过，如果你乐于尝鲜，我们鼓励你研究更现代的标准，它们可能提供额外的功能或更高的安全性。
+
+[[recovery_code_words]]
+==== BIP39 恢复码
+
+BIP39 ((("wallets", "recovery codes", id="wallet-recovery-bip39")))((("recovery codes", id="recovery-code-bip39")))((("BIP39 recovery codes", primary-sortas="BIP039", id="bip39-recovery"))) 恢复码是一种单词序列，用于表示（编码）一个用作种子来派生确定性钱包的随机数。该单词序列足以重新生成种子，进而重新生成所有派生出的密钥。实现基于 BIP39 恢复码的确定性钱包的钱包应用，会在首次创建钱包时向用户展示 12 到 24 个单词的序列。这一单词序列就是钱包备份，可以用来在同一款或任意兼容的钱包应用中恢复并重新生成所有密钥。恢复码使得用户更容易备份，因为它们易于阅读和准确誊写。
+
+[TIP]
+====
+恢复码 ((("brainwallets"))) 经常被人与"brainwallet"混淆。两者并不一样。主要区别在于 brainwallet 由用户自己选择单词，而恢复码是由钱包随机创建后展示给用户的。这个重要区别使得恢复码安全得多，因为人类是非常糟糕的随机性来源。
+====
+
+请注意，BIP39 只是恢复码标准的一种实现。BIP39 由 Trezor 硬件钱包背后的公司提出，与许多（虽然并非全部）其他钱包应用兼容。
+
+BIP39 定义了恢复码和种子的创建过程，我们在这里用九个步骤进行描述。为清晰起见，过程分为两部分：步骤 1 到 6 见 <<generating_recovery_words>>，步骤 7 到 9 见 <<recovery_to_seed>>。
+
+[[generating_recovery_words]]
+===== 生成恢复码
+
+恢复码 ((("wallets", "recovery codes", "generating", id="wallet-recovery-bip39-generate")))((("recovery codes", "generating", id="recovery-code-bip39-generate")))((("BIP39 recovery codes", "generating", primary-sortas="BIP039", id="bip39-recovery-generate")))((("entropy", "recovery code generation", id="entropy-recovery-generate"))) 由钱包应用按照 BIP39 定义的标准化流程自动生成。钱包从一个熵源开始，添加校验和，然后将熵映射到词表：
+
+1. 创建一个 128 到 256 位的随机序列（熵）。
+
+2. 计算该随机序列的 SHA256 哈希，取其前 (熵长度/32) 位作为校验和。
+
+3. 把校验和添加到随机序列的末尾。
+
+4. 把结果分割成 11 位长度的片段。
+
+5. 把每个 11 位的值映射到预定义的 2048 词词表中的一个单词。
+
+6. 恢复码就是这一单词序列。
+
+<<generating_entropy_and_encoding>> 展示了如何使用熵生成 BIP39 恢复码。
+
+[[generating_entropy_and_encoding]]
+.生成熵并编码为恢复码。
+image::images/mbc3_0504.png["Generating entropy and encoding as a recovery code"]
+
+<<table_4-5>> 展示了熵数据大小与恢复码单词数量之间的关系 ((("wallets", "recovery codes", "generating", startref="wallet-recovery-bip39-generate")))((("recovery codes", "generating", startref="recovery-code-bip39-generate")))((("BIP39 recovery codes", "generating", primary-sortas="BIP039", startref="bip39-recovery-generate")))((("entropy", "recovery code generation", startref="entropy-recovery-generate"))) 。
+
+++++
+<table id="table_4-5">
+<caption>BIP39：熵与单词长度</caption>
+<thead>
+<tr>
+<th>熵（位）</th>
+<th>校验和（位）</th>
+<th>熵 <strong>+</strong> 校验和（位）</th>
+<th>恢复码单词数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>128</p></td>
+<td><p>4</p></td>
+<td><p>132</p></td>
+<td><p>12</p></td>
+</tr>
+<tr>
+<td><p>160</p></td>
+<td><p>5</p></td>
+<td><p>165</p></td>
+<td><p>15</p></td>
+</tr>
+<tr>
+<td><p>192</p></td>
+<td><p>6</p></td>
+<td><p>198</p></td>
+<td><p>18</p></td>
+</tr>
+<tr>
+<td><p>224</p></td>
+<td><p>7</p></td>
+<td><p>231</p></td>
+<td><p>21</p></td>
+</tr>
+<tr>
+<td><p>256</p></td>
+<td><p>8</p></td>
+<td><p>264</p></td>
+<td><p>24</p></td>
+</tr>
+</tbody>
+</table>
+++++
+
+[role="less_space pagebreak-before"]
+[[recovery_to_seed]]
+===== 从恢复码到种子
+
+恢复码 ((("wallets", "recovery codes", "seed generation", id="wallet-recovery-bip39-seed")))((("recovery codes", "seed generation", id="recovery-code-bip39-seed")))((("BIP39 recovery codes", "seed generation", primary-sortas="BIP039", id="bip39-recovery-seed")))((("entropy", "seed generation", id="entropy-seed-generate")))((("seeds", "generating", id="seed-generate")))((("key-stretching functions", id="key-stretch"))) 表示长度为 128 到 256 位的熵。然后再通过
+https://oreil.ly/6lwbd[key-stretching function PBKDF2] 把这段熵派生为一个更长的（512 位）种子。生成的种子用于构建确定性钱包并派生其密钥。
+
+key-stretching 函数接收两个参数：熵和一个 _salt_ ((("salt"))) 。salt 在 key-stretching 函数中的作用是增加构建查找表以进行暴力破解攻击的难度。在 BIP39 标准中，salt 还有另一个用途——它允许引入一个密码短语，作为保护种子的额外安全因子，我们将在 <<recovery_passphrase>> 中详细介绍。
+
+[TIP]
+====
+该 key-stretching 函数有 2048 轮哈希，使得用软件暴力破解恢复码略微更难一些。专用硬件受到的影响并不显著。对于需要猜出用户整条恢复码的攻击者来说，恢复码的长度（最少 128 位）已经提供了远超充裕的安全性。但在攻击者可能获知用户一小部分恢复码的情况下，key-stretching 通过减慢攻击者验证不同恢复码组合的速度，增加了一些安全性。BIP39 的参数即使在它差不多十年前首次发布时，按现代标准也算偏弱，这很可能是为了与配备低性能 CPU 的硬件签名设备兼容而妥协的结果。BIP39 的一些替代方案采用了更强的 key-stretching 参数，例如 Aezeed 使用更复杂的 Scrypt 算法做 32,768 轮哈希，尽管这样在硬件签名设备上运行起来可能不那么方便。
+====
+
+步骤 7 到 9 描述的过程承接 <<generating_recovery_words>> 中先前描述的过程：
+
+++++
+<ol start="7">
+  <li>PBKDF2 key-stretching 函数的第一个参数是步骤 6 产生的
+  <em>熵</em>。</li>
+
+  <li>PBKDF2 key-stretching 函数的第二个参数是
+  <em>salt</em>。salt 由常量字符串
+  "<code>mnemonic</code>" 与用户提供的可选密码短语字符串拼接而成。</li>
+
+  <li>PBKDF2 用 HMAC-SHA512 算法对恢复码和 salt 参数进行 2048
+  轮哈希扩展，最终输出一个 512 位的值。这个 512 位的值就是种子。</li>
+</ol>
+++++
+
+<<fig_5_7>> 展示了如何用恢复码生成种子。
+
+[[fig_5_7]]
+.从恢复码到种子。
+image::images/mbc3_0505.png["From recovery code to seed"]
+
+
+pass:[<a data-type="xref" href="#bip39_128_no_pass"
+data-xrefstyle="select: labelnumber">#bip39_128_no_pass</a>]、
+pass:[<a data-type="xref" href="#bip39_128_w_pass"
+data-xrefstyle="select: labelnumber">#bip39_128_w_pass</a>] 和
+pass:[<a data-type="xref" href="#bip39_256_no_pass"
+data-xrefstyle="select: labelnumber">#bip39_256_no_pass</a>] 几张表展示了一些恢复码示例及其生成的种子 ((("key-stretching functions", startref="key-stretch"))) 。
+
+++++
+<table id="bip39_128_no_pass">
+<caption>128 位熵的 BIP39 恢复码，无密码短语，所得种子</caption>
+<tbody>
+<tr>
+<td><p><strong>熵输入（128 位）</strong></p></td>
+<td><p><code>0c1e24e5917779d297e14d45f14e1a1a</code></p></td>
+</tr>
+<tr>
+<td><p><strong>恢复码（12 个单词）</strong></p></td>
+<td><p><code>army van defense carry jealous true garbage claim echo media make crunch</code></p></td>
+</tr>
+<tr>
+<td><p><strong>密码短语</strong></p></td>
+<td><p>（无）</p></td>
+</tr>
+<tr>
+<td><p><strong>种子（512 位）</strong></p></td>
+<td><p><code>5b56c417303faa3fcba7e57400e120a0ca83ec5a4fc9ffba757fbe63fbd77a89a1a3be4</code>
+<code>c67196f57c39a88b76373733891bfaba16ed27a813ceed498804c0570</code></p></td>
+</tr>
+</tbody>
+</table>
+
+<table id="bip39_128_w_pass" class="pagebreak-before less_space">
+<caption>128 位熵的 BIP39 恢复码，带密码短语，所得种子</caption>
+<tbody>
+<tr>
+<td><p><strong>熵输入（128 位）</strong></p></td>
+<td><p><code>0c1e24e5917779d297e14d45f14e1a1a</code></p></td>
+</tr>
+<tr>
+<td><p><strong>恢复码（12 个单词）</strong></p></td>
+<td><p><code>army van defense carry jealous true garbage claim echo media make crunch</code></p></td>
+</tr>
+<tr>
+<td><p><strong>密码短语</strong></p></td>
+<td><p>SuperDuperSecret</p></td>
+</tr>
+<tr>
+<td><p><strong>种子（512 位）</strong></p></td>
+<td><p><code>3b5df16df2157104cfdd22830162a5e170c0161653e3afe6c88defeefb0818c793dbb28</code>
+<code>ab3ab091897d0715861dc8a18358f80b79d49acf64142ae57037d1d54</code></p></td>
+</tr>
+</tbody>
+</table>
+<table id="bip39_256_no_pass">
+<caption>256 位熵的 BIP39 恢复码，无密码短语，所得种子</caption>
+<tbody>
+<tr>
+<td><p><strong>熵输入（256 位）</strong></p></td>
+<td><p><code>2041546864449caff939d32d574753fe684d3c947c3346713dd8423e74abcf8c</code></p></td>
+</tr>
+<tr>
+<td><p><strong>恢复码（24 个单词）</strong></p></td>
+<td><p><code>cake apple borrow silk endorse fitness top denial coil riot stay wolf
+luggage oxygen faint major edit measure invite love trap field dilemma oblige</code></p></td>
+</tr>
+<tr>
+<td><p><strong>密码短语</strong></p></td>
+<td><p>（无）</p></td>
+</tr>
+<tr>
+<td><p><strong>种子（512 位）</strong></p></td>
+<td><p><code>3269bce2674acbd188d4f120072b13b088a0ecf87c6e4cae41657a0bb78f5315b33b3</code>
+<code>a04356e53d062e55f1e0deaa082df8d487381379df848a6ad7e98798404</code></p></td>
+</tr>
+</tbody>
+</table>
+++++
+
+
+.你需要多少熵？
+****
+BIP32 允许种子长度从 128 到 512 位。BIP39 接受 128 到 256 位的熵；Electrum v2 接受 132 位熵；Aezeed 接受 128 位熵；SLIP39 接受 128 或 256 位。这些数字的差异让人搞不清究竟需要多少熵才安全。我们来把这件事讲清楚。
+
+BIP32 扩展私钥由一个 256 位的密钥和一个 256 位的链码组成，共 512 位。这意味着扩展私钥的可能取值最多有 2^512^ 种。如果你以超过 512 位的熵开始，你最终仍然只能得到一个包含 512 位熵的扩展私钥——所以即使前面提到的任何标准允许使用超过 512 位，也没有意义。
+
+不过，尽管扩展私钥有 2^512^ 种不同取值，但常规私钥的数量只有（略少于）2^256^ ——而真正保护你比特币的，是这些常规私钥。这意味着，如果你为种子使用超过 256 位的熵，你得到的私钥仍然只包含 256 位熵。未来可能会出现新的比特币相关协议，其中扩展密钥中的额外熵能提供额外安全性，但目前并非如此。
+
+比特币公钥的安全强度为 128 位。一台经典计算机（截至本文撰写时唯一可用于实际攻击的类型）的攻击者，要找到另一个用户公钥对应的私钥，需要在比特币椭圆曲线上执行约 2^128^ 次运算。128 位安全强度意味着：使用超过 128 位熵看来没有明显好处（不过你需要确保你生成的私钥是从整个 2^256^ 私钥范围内均匀选取的）。
+
+更高熵还有一个额外好处：如果你恢复码的固定比例部分（但不是整条码）被攻击者看到，熵越高，他们就越难猜出未看到的部分。例如，如果攻击者看到了 128 位码的一半（64 位），他们暴力破解剩下 64 位是可能的。如果他们看到了 256 位码的一半（128 位），暴力破解另一半就不可能了。我们不建议依赖这一点防御——要么把恢复码保护得非常严密，要么使用 SLIP39 这样的方案，让你能把恢复码分散到多个地点存放，而不必依赖单一码的安全性。
+
+截至 2023 年，大多数现代钱包为其恢复码生成 128 位熵（或接近 128 位的值，如 Electrum v2 的 132 位 ((("wallets", "recovery codes", "seed generation", startref="wallet-recovery-bip39-seed")))((("recovery codes", "seed generation", startref="recovery-code-bip39-seed")))((("BIP39 recovery codes", "seed generation", primary-sortas="BIP039", startref="bip39-recovery-seed")))((("entropy", "seed generation", startref="entropy-seed-generate")))((("seeds", "generating", startref="seed-generate"))) ）。
+****
+
+[[recovery_passphrase]]
+===== BIP39 中的可选密码短语
+
+BIP39 ((("wallets", "recovery codes", "passphrases", id="wallet-recovery-bip39-passphrase")))((("recovery codes", "passphrases", id="recovery-code-bip39-passphrase")))((("BIP39 recovery codes", "passphrases", primary-sortas="BIP039", id="bip39-recovery-passphrase")))((("passphrases (for recovery codes)", id="passphrase-optional"))) 标准允许在派生种子时使用一个可选密码短语。如果不使用密码短语，则恢复码会与常量字符串 +"mnemonic"+ 组成的 salt 一起进行扩展，对于任一给定的恢复码都会生成一个特定的 512 位种子。如果使用密码短语，扩展函数会从同一条恢复码生成一个 _不同的_ 种子。事实上，对于一条给定的恢复码，每一种可能的密码短语都会得到一个不同的种子。本质上不存在"错误的"密码短语。所有密码短语都是合法的，并且都会得到不同的种子，构成数量极其庞大的、尚未初始化的可能钱包集合。这个集合的规模（2^512^）如此之大，以至于实际上不可能通过暴力破解或意外猜中其中正在使用的某个钱包。
+
+[TIP]
+====
+在 BIP39 中没有"错误的"密码短语。每一条密码短语都对应某个钱包，除非该钱包曾被使用，否则就是空的。
+====
+
+可选密码短语带来两个重要特性：
+
+- 第二因子（你所记忆的东西），使得恢复码单凭自身没有用处，从而保护恢复码免受随机窃贼的破坏。要防范精通技术的窃贼，你需要使用一条非常强的密码短语。
+
+- 一种合理推诿或"胁迫钱包（duress wallet）"机制：选定的某个密码短语对应一个只装有少量资金的钱包，用以转移攻击者的注意力，使其偏离那个装着大部分资金的"真正"钱包。
+
+需要注意的是，使用密码短语也会带来丢失资金的风险：
+
+* 如果钱包持有者丧失行为能力或死亡，且没有他人知道密码短语，那么种子就毫无用处，钱包中存放的全部资金都将永久丢失。
+
+* 反之，如果持有者把密码短语和种子备份在同一个地方，就违背了第二因子的初衷 ((("wallets", "recovery codes", startref="wallet-recovery-bip39")))((("recovery codes", startref="recovery-code-bip39")))((("BIP39 recovery codes", primary-sortas="BIP039", startref="bip39-recovery")))((("wallets", "recovery codes", "passphrases", startref="wallet-recovery-bip39-passphrase")))((("recovery codes", "passphrases", startref="recovery-code-bip39-passphrase")))((("BIP39 recovery codes", "passphrases", primary-sortas="BIP039", startref="bip39-recovery-passphrase")))((("passphrases (for recovery codes)", startref="passphrase-optional"))) 。
+
+++++
+<p class="fix_tracking2">
+密码短语非常有用，但应该只在结合精心规划的备份与恢复流程时使用，
+要考虑到持有者去世后，让其家人能够恢复加密货币遗产的情形。
+</p>
+++++
+
+[[hd_wallet_details]]
+==== 从种子创建 HD 钱包
+
+HD 钱包 ((("wallets", "key generation", "HD (hierarchical deterministic)", id="wallet-keygen-hd")))((("key generation", "HD (hierarchical deterministic)", id="keygen-hd")))((("HD (hierarchical deterministic) key generation", id="hd-keygen")))((("BIP32 HD (hierarchical deterministic) key generation", primary-sortas="BIP032", id="bip32")))((("seeds", "HD wallet creation", id="seed-hdwallet"))) 由一个 _root seed_（根种子）((("root seeds"))) 创建，根种子是一个 128 位、256 位或 512 位的随机数。最常见的做法是，这个种子由上一节所述的恢复码生成或解密而来。
+
+HD 钱包中的每一把密钥都是从这个根种子确定性地派生出来的，因此可以在任何兼容的 HD 钱包中由该种子重新生成整个 HD 钱包。这使得备份、恢复、导出和导入包含数千甚至上百万把密钥的 HD 钱包变得很容易——只需传递推导出根种子的恢复码即可。为 HD 钱包创建主密钥和主链码的过程如 <<HDWalletFromSeed>> 所示。
+
+[[HDWalletFromSeed]]
+.从根种子创建主密钥和链码。
+image::images/mbc3_0506.png["HDWalletFromRootSeed"]
+
+把根种子输入 HMAC-SHA512 算法，所得哈希用于创建一个 _master private key_（主私钥）（_m_）和一个 _master chain code_（主链码）（_c_）。
+
+主私钥（_m_）随后使用我们在 <<public_key_derivation>> 中所见的常规椭圆曲线乘法过程 _m_ × _G_ 生成对应的主公钥（_M_）。
+
+主链码（_c_）则用于在从父密钥创建子密钥的函数中引入熵，下一节会看到这一点。
+
+===== 私有子密钥派生
+
+HD 钱包 ((("key generation", "HD (hierarchical deterministic)", "private child key derivation", id="keygen-hd-private-child")))((("HD (hierarchical deterministic) key generation", "private child key derivation", id="hd-keygen-private-child")))((("private child key derivation", id="private-child")))((("child key pair derivation", "private keys", id="child-key-pair-private"))) 使用 _child key derivation_（CKD）函数从父密钥派生子密钥。
+
+CKD 函数基于一个单向哈希函数，[.keep-together]#组合了：#
+
+* 一把父私钥或公钥（未压缩密钥）
+* 一个称为链码的种子（256 位）
+* 一个索引号（32 位）
+
+链码用于向过程中引入确定性的随机数据，使得仅知道索引和某把子密钥不足以派生其他子密钥。除非你也掌握链码，否则知道一把子密钥并不能让你找到它的兄弟密钥。最初的链码种子（位于树的根部）由种子生成，而后续的子链码则从各自的父链码派生。
+
+将这三项（父密钥、链码和索引）组合并哈希，即可生成子密钥，过程如下。
+
+父公钥、链码和索引号被组合并用 HMAC-SHA512 算法哈希，产生一个 512 位的哈希。将这个 512 位哈希分成两段 256 位。哈希输出的右半 256 位成为子密钥的链码。左半 256 位与父私钥相加，产生子私钥。在 <<CKDpriv>> 中，我们看到索引设为 0 时的演示，用以产生父密钥的"零号"（按索引为第一个）子密钥。
+
+[[CKDpriv]]
+.扩展父私钥以创建子私钥。
+image::images/mbc3_0507.png["ChildPrivateDerivation"]
+
+更改索引就可以扩展父密钥，按顺序创建其他子密钥（例如 Child 0、Child 1、Child 2，等等）。每把父密钥可以有 2,147,483,647（2^31^）个子密钥（2^31^ 是整个 2^32^ 范围的一半，因为另一半被保留给我们在本章后面会介绍的一类特殊派生）。
+
+将这个过程在树中往下一层重复，每个子密钥又可成为父密钥，创建自己的子密钥，可以一代接一代无限延伸。
+
+===== 使用派生出的子密钥
+
+子私钥与非确定性（随机）密钥在外观上无法区分。由于派生函数是单向函数，子密钥无法用来反推父密钥。子密钥同样无法用来找到任何兄弟密钥。如果你拥有第 n 个子密钥，你无法找到它的兄弟，例如 n–1 或 n+1 子密钥，也无法找到序列中的其他任何子密钥。只有父密钥和链码才能派生出所有子密钥。没有子链码，子密钥也无法用来派生任何孙密钥。你需要同时拥有子私钥和子链码，才能开启一个新分支并派生孙密钥。
+
+那么子私钥单独可以用来做什么？它可以用来生成公钥和比特币地址，然后用于对交易签名，花费向该地址支付的任何资金。
+
+[TIP]
+====
+子私钥、对应的公钥和比特币地址，都与随机创建的密钥和地址无法区分。它们属于某个序列这一事实在创建它们的 HD 钱包函数之外是不可见的。一旦创建出来，它们就像"普通"密钥一样运作 ((("key generation", "HD (hierarchical deterministic)", "private child key derivation", startref="keygen-hd-private-child")))((("HD (hierarchical deterministic) key generation", "private child key derivation", startref="hd-keygen-private-child")))((("private child key derivation", startref="private-child")))((("child key pair derivation", "private keys", startref="child-key-pair-private"))) 。
+====
+
+===== 扩展密钥
+
+正如 ((("key generation", "HD (hierarchical deterministic)", "extended keys", id="keygen-hd-extend")))((("HD (hierarchical deterministic) key generation", "extended keys", "explained", id="hd-keygen-extend")))((("extended keys", "explained", id="extend-key"))) 我们前面所见，密钥派生函数可以基于三个输入——密钥、链码和所需子密钥的索引——在树的任意层级创建子密钥。其中两个核心要素是密钥和链码，将它们组合在一起就称为 _extended key_（扩展密钥）。"extended key"这个术语也可以理解为"extensible key"（可扩展密钥），因为这样的密钥可以用来派生子密钥。
+
+扩展密钥的存储和表示就是密钥与链码的简单拼接。扩展密钥有两种类型。扩展私钥是私钥与链码的组合，可以用来派生子私钥（再由子私钥派生子公钥）。扩展公钥是公钥与链码，可以用来创建子公钥（_仅公钥_），如 <<public_key_derivation>> 所述。
+
+可以把扩展密钥视为 HD 钱包树形结构中某个分支的根。有了分支的根，就可以派生分支的其余部分。扩展私钥可以创建一整条完整分支，而扩展公钥 _只能_ 创建一条公钥分支。
+
+扩展密钥使用 base58check 编码，以便在不同 BIP32 兼容钱包之间方便地导出和导入。扩展密钥的 base58check 编码使用一个特殊的版本号，使得它们在编码为 base58 字符后会带上"xprv"和"xpub"前缀，便于辨识。由于扩展密钥包含的字节远多于普通地址，它也比我们之前见过的其他 base58check 编码字符串长得多。
+
+下面是一个用 base58check 编码的扩展 _私钥_ 示例：
+
+----
+xprv9tyUQV64JT5qs3RSTJkXCWKMyUgoQp7F3hA1xzG6ZGu6u6Q9VMNjGr67Lctvy5P8oyaYAL9CA
+WrUE9i6GoNMKUga5biW6Hx4tws2six3b9c
+----
+
+下面是对应的、用 base58check 编码的扩展 _公钥_：
+
+----
+xpub67xpozcx8pe95XVuZLHXZeG6XWXHpGq6Qv5cmNfi7cS5mtjJ2tgypeQbBs2UAR6KECeeMVKZBP
+LrtJunSDMstweyLXhRgPxdp14sk9tJPW9
+----
+
+[role="less_space pagebreak-before"]
+[[public__child_key_derivation]]
+===== 公开子密钥派生
+
+如 ((("key generation", "HD (hierarchical deterministic)", "public child key derivation", id="keygen-hd-public-child")))((("HD (hierarchical deterministic) key generation", "public child key derivation", id="hd-keygen-public-child")))((("public child key derivation", id="public-child")))((("child key pair derivation", "public keys", id="child-key-pair-public"))) 前面所述，HD 钱包一个非常有用的特性是：可以在 _没有_ 私钥的情况下从父公钥派生公开子密钥。这给了我们两种派生子公钥的方式：从子私钥派生，或直接从父公钥派生。
+
+因此，扩展公钥可以用来派生 HD 钱包结构中某个分支下的所有 _公开_ 密钥（且仅公开密钥）。
+
+这个捷径可以用来构建只含公钥的部署，比如服务器或应用拥有扩展公钥的副本，而完全没有任何私钥。这种部署可以产生无穷多的公钥和比特币地址，但无法花费支付到这些地址的任何资金。与此同时，在另一台更安全的服务器上，扩展私钥可以派生出所有对应的私钥，用于对交易签名并花费资金。
+
+这一方案的一个常见应用，是在为电子商务应用提供服务的 Web 服务器上安装扩展公钥。Web 服务器可以使用公钥派生函数为每笔交易创建一个新的比特币地址（例如为客户的购物车）。Web 服务器上不会有任何容易被盗的私钥。在没有 HD 钱包的情况下，唯一的做法是在另一台独立的安全服务器上生成成千上万个比特币地址，然后预先加载到电子商务服务器上。这种方法笨重，而且需要持续维护以确保电子商务服务器不会"用光"密钥。
+
+.Mind the Gap
+****
+扩展公钥 ((("gap limit", id="gap-limit"))) 大约可以生成 40 亿个直接子密钥，远超任何商店或应用所需。但是，钱包应用要生成全部 40 亿把密钥并在区块链上扫描涉及这些密钥的交易，所耗时间长得不切实际。因此，大多数钱包一次只生成少量密钥，扫描涉及这些密钥的付款，等先前的密钥被使用后再按顺序生成更多密钥。例如，Alice 的钱包先生成 100 把密钥；当它看到向第一把密钥的付款时，就生成第 101 把密钥。
+
+有时钱包应用会把密钥分发给某个之后决定不付款的人，从而在密钥链中产生一段空隙。只要钱包已经在该空隙之后生成了密钥，就能发现后续付款并继续生成更多密钥，这种情况是没问题的。在不引起问题的前提下，连续未收到付款的未用密钥的最大数量称为 _gap limit_（间隙上限）。
+
+当一个钱包应用已经分发完达到 gap limit 的所有密钥，且这些密钥都没有收到付款时，它对未来索取新密钥的请求有三种处理方式：
+
+[role="less_space pagebreak-before"]
+1. 拒绝这些请求，从而不再接收任何付款。这显然是个令人不爽的选项，尽管实现起来最简单。
+
+2. 在 gap limit 之外生成新密钥。这能确保每个请求付款的人都获得唯一的密钥，避免地址重用并改善隐私。然而，如果钱包需要从恢复码恢复，或者钱包持有者在使用其他装载了相同扩展公钥的软件，那些其他钱包就看不到在扩展间隙之后收到的任何付款。
+
+3. 重新分发之前分发过的密钥，确保顺利恢复，但可能降低钱包持有者及其交易对手的隐私。
+
+面向在线商家的开源生产系统（如 BTCPay Server）试图通过使用非常大的 gap limit 并限制生成发票的速率来规避此问题。还有人提出了其他方案，例如要求付款方的钱包先构造（但不广播）一笔向可能被复用的地址付款的交易，然后再为实际交易收到一个新地址。但截至本文撰写时，这些其他方案尚未在生产环境中使用 ((("gap limit", startref="gap-limit"))) 。
+****
+
+这种方案的另一个常见应用是冷存储或硬件签名设备。在该场景中，扩展私钥可以保存在纸钱包或硬件设备上，而扩展公钥则可以保持在线。用户可以随意创建"接收"地址，而私钥则安全地离线保存。要花费这些资金，用户可以在离线的软件钱包应用或硬件签名设备上使用扩展私钥。<<CKDpub>> 演示了如何扩展父公钥以派生子公钥 ((("wallets", "key generation", "HD (hierarchical deterministic)", startref="wallet-keygen-hd")))((("key generation", "HD (hierarchical deterministic)", startref="keygen-hd")))((("HD (hierarchical deterministic) key generation", startref="hd-keygen")))((("BIP32 HD (hierarchical deterministic) key generation", primary-sortas="BIP032", startref="bip32")))((("seeds", "HD wallet creation", startref="seed-hdwallet")))((("key generation", "HD (hierarchical deterministic)", "public child key derivation", startref="keygen-hd-public-child")))((("HD (hierarchical deterministic) key generation", "public child key derivation", startref="hd-keygen-public-child")))((("public child key derivation", startref="public-child")))((("child key pair derivation", "public keys", startref="child-key-pair-public"))) 。
+
+[[CKDpub]]
+.扩展父公钥以创建子公钥。
+image::images/mbc3_0508.png["ChildPublicDerivation"]
+
+==== 在网店中使用扩展公钥
+
+让我们 ((("key generation", "HD (hierarchical deterministic)", "extended keys", id="keygen-hd-extend-webstore")))((("HD (hierarchical deterministic) key generation", "extended keys", "web store example", id="hd-keygen-extend-webstore")))((("extended keys", "web store example", id="extend-key-webstore")))((("web store example (extended keys)", id="webstore-extend-key"))) 通过看看 Gabriel 的网店，来了解 HD 钱包是如何被使用的。
+
+Gabriel 最初是把开网店当作业余爱好，基于一个简单的托管 WordPress 页面。他的店面相当基础，只有几个页面和一个带有单一比特币地址的订单表单。
+
+Gabriel 把他常用钱包生成的第一个比特币地址作为店铺的主比特币地址。客户使用表单提交订单并把款项发送到 Gabriel 公布的比特币地址，触发一封带订单详情的邮件给 Gabriel 处理。每周只有少量订单时，这个系统勉强够用，尽管它削弱了 Gabriel、他的客户以及他付款对象的隐私。
+
+然而，这家小网店相当成功，吸引了大量来自本地社区的订单。很快，Gabriel 就忙不过来了。所有订单都付到同一个地址，使得正确匹配订单和交易变得困难，特别是当多个同金额订单密集到来时。
+
+一笔典型比特币交易中，由接收方选择的元数据只有金额和付款地址。没有可以用来承载唯一发票编号的主题或留言字段。
+
+Gabriel 的 HD 钱包凭借其无需私钥即可派生公开子密钥的能力，提供了一个好得多的解决方案。Gabriel 可以在自己的网站上加载一个扩展公钥（xpub），用它为每个客户订单派生唯一地址。唯一地址立即改善了隐私，同时也为每个订单提供了一个唯一标识符，用来追踪哪些发票已被支付。
+
+使用 HD 钱包，Gabriel 可以从他的个人钱包应用中花费资金，而网站上加载的 xpub 只能生成地址和接收资金。HD 钱包的这一特性是非常棒的安全特性。Gabriel 的网站不包含任何私钥，因此即使网站被黑，攻击者也只能偷走 Gabriel 未来本应收到的资金，而不能偷走他过去已收到的资金。
+
+为了从他的 Trezor 硬件签名设备中导出 xpub，Gabriel 使用基于网页的 Trezor 钱包应用。导出公钥时必须接入 Trezor 设备。注意，大多数硬件签名设备永远不会导出私钥——私钥始终保留在设备上。
+
+Gabriel 把 xpub 复制到他网店的比特币支付处理软件中，比如被广泛使用的开源 BTCPay Server。
+
+===== 硬化子密钥派生
+
+从 xpub 派生 ((("private child key derivation", "hardened derivation", id="private-child-harden")))((("child key pair derivation", "hardened derivation", id="child-key-pair-harden")))((("hardened child key derivation", id="harden-child-key"))) 一条公钥分支的能力非常有用，但它伴随一种潜在风险。获得 xpub 并不能获得子私钥。然而，由于 xpub 包含链码，如果某把子私钥被泄露或被知晓，就可以结合该链码派生出所有其他子私钥。一把被泄露的子私钥加上父链码，就会暴露所有子私钥。更糟的是，子私钥加上父链码可以用来反推父私钥。
+
+为了对抗这种风险，HD 钱包提供了一种替代派生函数，称为 _hardened derivation_（硬化派生），它打破了父公钥与子链码之间的关系。硬化派生函数使用父 _私钥_ 而不是父 _公钥_ 来派生子链码。这在父/子序列中建立起一道"防火墙"，使得它产生的链码无法被用来危及父密钥或兄弟私钥。硬化派生函数看起来几乎和普通子私钥派生一模一样，只不过哈希函数的输入是父私钥而非父公钥，如 <<CKDprime>> 中所示。
+
+[[CKDprime]]
+.子密钥的硬化派生；不使用父公钥。
+image::images/mbc3_0509.png["ChildHardPrivateDerivation"]
+
+
+当使用硬化的私有派生函数时，所产生的子私钥和链码与普通派生函数得到的完全不同。所得到的密钥"分支"可用来产生扩展公钥，且该扩展公钥不易受到攻击，因为它所含的链码无法被利用来揭露任何兄弟或父密钥的私钥。因此，硬化派生被用来在使用扩展公钥的层级之上"挖出"一道间隙。
+
+简而言之，如果你想利用 xpub 派生公钥分支的便利，又不希望承担链码泄露的风险，那你应当从硬化的父密钥而非普通的父密钥派生。作为最佳实践，主密钥的第一层子密钥总是通过硬化派生生成的，以防主密钥被破解。
+
+===== 普通派生和硬化派生的索引号
+
+派生函数中使用的索引号 ((("index numbers for hardened derivation"))) 是一个 32 位整数。为了便于区分通过普通派生函数创建的密钥和通过硬化派生创建的密钥，这个索引号被分成两个范围。0 到 2^31^ &#x2013; 1（0x0 到 0x7FFFFFFF）之间的索引号 _仅_ 用于普通派生。2^31^ 到 2^32^ &#x2013; 1（0x80000000 到 0xFFFFFFFF）之间的索引号 _仅_ 用于硬化派生。因此，如果索引号小于 2^31^，该子密钥是普通的；而如果索引号等于或大于 2^31^，该子密钥是硬化的。
+
+为了让索引号更易于阅读和显示，硬化子密钥的索引号从零开始显示，但带一个撇号。因此第一个普通子密钥显示为 0，而第一个硬化子密钥（索引 0x80000000）显示为 0++&#x27;++。在序列中，第二个硬化密钥的索引为 0x80000001，显示为 1++&#x27;++，依此类推。当你看到 HD 钱包的索引 i++&#x27;++ 时，它表示 2^31^+i。在常规 ASCII 文本中，这个撇号被替换为单引号或字母 _h_。对于诸如 output script descriptor 等情况，文本可能会在 shell 或其他上下文中使用，而单引号在这些地方有特殊含义，建议使用字母 _h_ ((("private child key derivation", "hardened derivation", startref="private-child-harden")))((("child key pair derivation", "hardened derivation", startref="child-key-pair-harden")))((("hardened child key derivation", startref="harden-child-key"))) 。
+
+===== HD 钱包密钥标识符（路径）
+
+HD 钱包 ((("path references in HD wallets")))((("key generation", "HD (hierarchical deterministic)", "path references")))((("HD (hierarchical deterministic) key generation", "path references"))) 中的密钥使用"路径"命名约定来标识，树的每一层之间用斜杠（/）分隔（参见 <<table_4-8>>）。从主私钥派生的私钥以"m"开头，从主公钥派生的公钥以"M"开头。因此，主私钥的第一个子私钥是 m/0，第一个子公钥是 M/0。第一个子密钥的第二个孙密钥是 m/0/1，依此类推。
+
+一把密钥的"祖先"是从右往左读，直到到达派生它的主密钥。例如，标识符 m/x/y/z 描述的是 m/x/y 的第 z 个子密钥，而 m/x/y 是 m/x 的第 y 个子密钥，m/x 又是 m 的第 x 个子密钥。
+
+++++
+<table id="table_4-8" class="pagebreak-before less_space">
+<caption>HD 钱包路径示例</caption>
+<thead>
+<tr>
+<th>HD 路径</th>
+<th>所描述的密钥</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>m/0</p></td>
+<td><p>主私钥（m）的第一个（0）子私钥</p></td>
+</tr>
+<tr>
+<td><p>m/0/0</p></td>
+<td><p>第一个子密钥（m/0）的第一个孙私钥</p></td>
+</tr>
+<tr>
+<td><p>m/0'/0</p></td>
+<td><p>第一个 <em>硬化</em> 子密钥（m/0'）的第一个普通孙私钥</p></td>
+</tr>
+<tr>
+<td><p>m/1/0</p></td>
+<td><p>第二个子密钥（m/1）的第一个孙私钥</p></td>
+</tr>
+<tr>
+<td><p>M/23/17/0/0</p></td>
+<td><p>第 24 个子密钥下，第 18 个孙密钥下，第一个曾孙密钥下，第一个玄孙公钥</p></td>
+</tr>
+</tbody>
+</table>
+++++
+
+===== 在 HD 钱包树形结构中导航
+
+HD 钱包 ((("tree structure in HD wallets", id="tree-hd-wallet")))((("key generation", "HD (hierarchical deterministic)", "tree structure", id="keygen-hd-tree")))((("HD (hierarchical deterministic) key generation", "tree structure", id="hd-keygen-tree"))) 的树形结构提供了极大的灵活性。每个父扩展密钥可以有 40 亿个子密钥：20 亿个普通子密钥和 20 亿个硬化子密钥。每一个子密钥又可以有 40 亿个子密钥，以此类推。树可以达到任意深度，世代数无限。然而，正是这种灵活性使得在这棵无穷大的树中导航变得相当困难。尤其困难的是在不同实现之间迁移 HD 钱包，因为内部分支与子分支的组织方式存在无穷可能。
+
+两个 BIP 通过为 HD 钱包树结构提出标准来解决这一复杂问题。BIP43 ((("BIP43 HD wallet tree structure", primary-sortas="BIP043"))) 提议把第一个硬化子密钥的索引作为特殊标识符，用来表示这棵树结构的"用途"。基于 BIP43，HD 钱包应只使用树的一个第 1 层分支，该索引号通过定义其用途来标识树其余部分的结构和命名空间。例如，一个只使用 m/i++&#x27;++/ 分支的 HD 钱包就意味着具有特定用途，并由索引号"i"标识该用途。
+
+在此基础上，BIP44 ((("BIP44 HD wallet tree structure", primary-sortas="BIP044", id="bip44"))) 扩展性地提出了一个多账户结构，作为 BIP43 下的"purpose"号 +44'+。所有遵循 BIP44 结构的 HD 钱包都可以通过它们仅使用树的一个分支 m/44++'++/ 这一事实来识别。
+
+BIP44 规定其结构由五个预定义的树层级组成：
+
+-----
+m / purpose' / coin_type' / account' / change / address_index
+-----
+
+
+第一层"purpose"始终设为 ++44'++。第二层"coin_type"指定加密货币的类型，从而允许多币种 HD 钱包，每种货币在第二层下都有自己的子树。Bitcoin 是 m/44++&apos;++/0++&apos;++，Bitcoin Testnet 是 m/44++&apos;++/1++&apos;++。
+
+树的第三层是"account"，允许用户将钱包细分为独立的逻辑子账户，用于会计或组织目的。例如，一个 HD 钱包可能包含两个 Bitcoin"账户"：m/44++&#x27;++/0++&#x27;++/0++&#x27;++ 和 m/44++&#x27;++/0++&#x27;++/1++&#x27;++。每个账户都是其子树的根。
+
+在第四层"change"上，HD 钱包有两棵子树，一棵用于创建接收地址，另一棵用于创建找零地址。注意，前几层使用硬化派生，而这一层使用普通派生。这是为了让这一层能够导出扩展公钥，用于非安全环境。可用地址由 HD 钱包作为第四层的子密钥派生，使树的第五层成为"address_index"。例如，主账户中用于收款的第三个接收地址是 M/44++&#x27;++/0++&#x27;++/0++&#x27;++/0/2。<<table_4-9>> 给出了更多示例。
+
+++++
+<table id="table_4-9">
+<caption>BIP44 HD 钱包结构示例</caption>
+<thead>
+<tr>
+<th>HD 路径</th>
+<th>所描述的密钥</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>M/44<code>'</code>/0<code>'</code>/0<code>'</code>/0/2</p></td>
+<td><p>主 Bitcoin 账户的第三个接收公钥</p></td>
+</tr>
+<tr>
+<td><p>M/44<code>'</code>/0<code>'</code>/3<code>'</code>/1/14</p></td>
+<td><p>第四个 Bitcoin 账户的第 15 个找零地址公钥</p></td>
+</tr>
+<tr>
+<td><p>m/44<code>'</code>/2<code>'</code>/0<code>'</code>/0/1</p></td>
+<td><p>Litecoin 主账户中第二个私钥，用于交易签名</p></td>
+</tr>
+</tbody>
+</table>
+++++
+
+许多人 ((("BIP44 HD wallet tree structure", primary-sortas="BIP044", startref="bip44"))) 把精力放在保护比特币免受盗窃和其他攻击上，但比特币丢失的主要原因之一——也许是 _最_ 主要原因——是数据丢失。如果花费你比特币所需的密钥及其他关键数据丢失，这些比特币将永远无法被花费。没有人能为你找回。在本章中，我们考察了现代钱包应用用来帮助你防止数据丢失的各类系统。但请记住，是否真正使用现有系统做好备份并定期 ((("key generation", "HD (hierarchical deterministic)", "extended keys", startref="keygen-hd-extend-webstore")))((("HD (hierarchical deterministic) key generation", "extended keys", "web store example", startref="hd-keygen-extend-webstore")))((("extended keys", "web store example", startref="extend-key-webstore")))((("web store example (extended keys)", startref="webstore-extend-key")))((("tree structure in HD wallets", startref="tree-hd-wallet")))((("key generation", "HD (hierarchical deterministic)", "tree structure", startref="keygen-hd-tree")))((("HD (hierarchical deterministic) key generation", "tree structure", startref="hd-keygen-tree"))) 测试它们，取决于你自己。

@@ -1,0 +1,71 @@
+[[appdxbitcoinimpproposals]]
+[appendix]
+== 比特币改进提案
+
+比特币改进提案（Bitcoin Improvement Proposals，BIP）是一类设计文档，用于向 Bitcoin 社区提供信息，或描述 Bitcoin 及其流程、环境的新特性。
+
+按照 BIP1 _BIP Purpose and Guidelines_ 的规定，BIP 分为三((("BIPs (Bitcoin Improvement Proposals)", "types of")))类：
+
+_Standard_ BIP（标准类）:: 描述影响大多数或全部 Bitcoin 实现的变更，例如对网络协议的修改、对区块或交易有效性规则的调整，或任何影响使用 Bitcoin 的应用之间互操作性的变更或新增内容。
+_Informational_ BIP（信息类）:: 描述 Bitcoin 的设计议题，或向 Bitcoin 社区提供通用指南与信息，但并不提出新特性。信息类 BIP 不一定代表 Bitcoin 社区的共识或推荐意见，因此用户和实现者可以忽略信息类 BIP，也可以选择遵循其建议。
+_Process_ BIP（流程类）:: 描述某项 Bitcoin 流程，或对流程提出变更（或流程中的事件）。流程类 BIP 与标准类 BIP 类似，但适用于 Bitcoin 协议本身之外的领域。它们可能提议某种实现，但不针对 Bitcoin 代码库；它们通常需要社区共识。与信息类 BIP 不同，流程类 BIP 不仅仅是建议，用户通常不能随意忽略。例子包括各种程序、指南、决策流程的变更，以及 Bitcoin 开发所用工具或环境的变更。任何 meta-BIP 也被视为流程类 BIP。
+
+BIP 记录在 https://oreil.ly/jjO0R[GitHub 上的一个带版本管理的仓库] 中。
+以下内容来自开源项目 Bitcoin Core 的一份 MIT 许可文档，在此以编辑后的形式转载，
+列出了 Bitcoin Core 实现了哪些 BIP，并标注了为每个 BIP 添加或显著修改支持的 Pull Request（PR）及 Bitcoin Core 版本。
+
+Bitcoin Core 已((("BIPs (Bitcoin Improvement Proposals)", "implemented by Bitcoin Core", id="bips-implement")))((("Bitcoin Core", "BIPs implemented by", id="bitcoin-core-bips")))实现的 BIP：
+
+-    BIP9：允许多个软分叉并行部署的变更自 v0.12.1 起已实现（PR #7575）。
+-    BIP11：多重签名输出自 v0.6.0 起成为标准（PR #669）。
+-    BIP13：P2SH 地址格式自 v0.6.0 起已实现（PR #669）。
+-    BIP14：subversion 字符串自 v0.6.0 起被用作 User Agent（PR #669）。
+-    BIP16：pay-to-script-hash 求值规则自 v0.6.0 起已实现，并于 2012 年 4 月 1 日生效（PR #748）。
+-    BIP21：用于 Bitcoin 支付的 URI 格式自 v0.6.0 起已实现（PR #176）。
+-    BIP22：用于挖矿的 'getblocktemplate'（GBT）RPC 协议自 v0.7.0 起已实现（PR #936）。
+-    BIP23：对 GBT 的一些扩展自 v0.10.0rc1 起已实现，包括 longpolling 和区块提案（PR #1816）。
+-    BIP30：禁止创建与此前未完全花费交易具有相同 txid 的新交易的求值规则自 v0.6.0 起已实现，并于 2012 年 3 月 15 日生效（PR #915）。
+-    BIP31：'pong' 协议消息（以及协议版本提升至 60001）自 v0.6.1 起已实现（PR #1081）。
+-    BIP32：分层确定性钱包（HD Wallet）自 v0.13.0 起已实现（PR #8035）。
+-    BIP34：要求区块在其 coinbase 输入中包含区块高度（编号），以及引入版本 2 区块的规则自 v0.7.0 起已实现。该规则自区块 224413（2013 年 3 月 5 日）起对版本 2 区块生效，自区块 227931（2013 年 3 月 25 日）起不再允许版本 1 区块（PR #1526）。
+-    BIP35：'mempool' 协议消息（以及协议版本提升至 60002）自 v0.7.0 起已实现（PR #1641）。自 v0.13.0 起，该消息仅对 +NODE_BLOOM+（BIP111）节点可用。
+
+[role="less_space pagebreak-before"]
+-    BIP37：用于交易转发的布隆过滤、区块的部分默克尔树以及协议版本提升至 70001（启用低带宽的轻量级客户端）自 v0.8.0 起已实现（PR #1795）。自 v0.19.0 起默认禁用，可通过 +-peerbloomfilters+ 选项启用。
+-    BIP42：会导致区块奖励发放计划在区块 13440000 之后恢复的 Bug 在 v0.9.2 中被修复（PR #3842）。
+-    BIP43：v0.21.0 引入的实验性 descriptor 钱包默认采用 BIP43 提出的分层确定性钱包派生方式（PR #16528）。
+-    BIP44：v0.21.0 引入的实验性 descriptor 钱包默认采用 BIP44 提出的分层确定性钱包派生方式（PR #16528）。
+-    BIP49：v0.21.0 引入的实验性 descriptor 钱包默认采用 BIP49 提出的分层确定性钱包派生方式（PR #16528）。
+-    BIP61：'reject' 协议消息（以及协议版本提升至 70002）在 v0.9.0 中加入（PR #3185）。从 v0.17.0 起，是否发送 reject 消息可通过 ++-enablebip61++ 选项配置，并自 v0.18.0 起被弃用（默认关闭）。该支持已在 v0.20.0 中移除（PR #15437）。
+-    BIP65：++CHECKLOCKTIMEVERIFY++ 软分叉在 v0.12.0 中合并（PR #6351），并回移植到 v0.11.2 和 v0.10.4。仅作用于内存池的 +CLTV+ 在 PR #6124 中加入。
+-    BIP66：严格 DER 规则及相关的版本 3 区块自 v0.10.0 起已实现（PR #5713）。
+-    BIP68：序列锁（Sequence locks）自 v0.12.1 起已实现（PR #7184），自 v0.19.0 起已 buried（PR #16060）。
+-    BIP70 71 72：Bitcoin Core GUI 中的 Payment Protocol 支持自 v0.9.0 起可用（PR #5216）。自 v0.18.0 起可在构建时选择性禁用（PR 14451），自 v0.19.0 起在构建时默认禁用（PR #15584）。该支持已在 v0.20.0 中移除（PR 17165）。
+-    BIP84：v0.21.0 引入的实验性 descriptor 钱包默认采用 BIP84 提出的分层确定性钱包派生方式（PR #16528）。
+-    BIP86：Descriptor 钱包自 v23.0 起默认采用 BIP86 提出的分层确定性钱包派生方式（PR #22364）。
+-    BIP90：用于激活 BIP 34、65、66 的触发机制自 v0.14.0 起被简化为区块高度检查（PR #8391）。
+-    BIP111：+NODE_BLOOM+ 服务位被加入并自 v0.13.0 起对所有节点版本强制执行（PR #6579 和 PR #6641）。
+-    BIP112：+CHECKSEQUENCEVERIFY+ 操作码自 v0.12.1 起已实现（PR #7524），自 v0.19.0 起已 buried（PR #16060）。
+-    BIP113：基于过去时间中位数的 lock-time 计算自 v0.12.1 起已实现（PR #6566），自 v0.19.0 起已 buried（PR #16060）。
+-    BIP125：可选的完整 replace-by-fee 信号已部分实现。
+-    BIP130：自 v0.12.0 起，对协议版本 ≥70012 的对等节点协商使用 direct headers 公告（PR 6494）。
+-    BIP133：自 v0.13.0 起，对协议版本 ≥70013 的对等节点遵从并发送 feefilter 消息（PR 7542）。
+-    BIP141：隔离见证（共识层）自 v0.13.0 起已实现（PR 8149），自 v0.13.1 起为主网定义（PR 8937），自 v0.19.0 起已 buried（PR #16060）。
+-    BIP143：版本 0 见证程序的交易签名验证自 v0.13.0 起已实现（PR 8149），自 v0.13.1 起为主网定义（PR 8937），自 v0.19.0 起已 buried（PR #16060）。
+-    BIP144：隔离见证自 v0.13.0 起已实现（PR 8149）。
+-    BIP145：针对隔离见证的 getblocktemplate 更新自 v0.13.0 起已实现（PR 8149）。
+-    BIP147：+NULLDUMMY+ 软分叉自 v0.13.1 起已实现（PR 8636 和 PR 8937），自 v0.19.0 起已 buried（PR #16060）。
+-    BIP152：紧凑区块传输及相关优化自 v0.13.0 起被启用（PR 8068）。
+-    BIP155：用于转发 Tor V3 地址（及其他网络）的 'addrv2' 和 'sendaddrv2' 消息自 v0.21.0 起被支持（PR 19954）。
+-    BIP157 158：面向轻量级客户端的紧凑区块过滤器自 v0.19.0 起可被索引（PR #14121），自 v0.21.0 起可通过 P2P 网络向对等节点提供服务（PR #16442）。
+-    BIP159：+NODE_NETWORK_LIMITED+ 服务位自 v0.16.0 起被广播（PR 11740），此类节点自 v0.17.0 起被连接（PR 10387）。
+-    BIP173：用于原生隔离见证输出的 Bech32 地址自 v0.16.0 起被支持（PR 11167）。自 v0.20.0 起默认生成 Bech32 地址（PR 16884）。
+-    BIP174：用于操作部分签名比特币交易（PSBT）的 RPC 自 v0.17.0 起已加入（PR 13557）。
+-    BIP176：Bits 计价单位 [仅 QT] 自 v0.16.0 起被支持（PR 12035）。
+-    BIP325：Signet 测试网自 v0.21.0 起被支持（PR 18267）。
+-    BIP339：通过 wtxid 转发交易自 v0.21.0 起被支持（PR 18044）。
+-    BIP340 341 342：Taproot 的验证规则（包括 Schnorr 签名和 Tapscript 叶）自 v0.21.0 起已实现（PR 19953），主网激活自 v0.21.1 起生效（PR 21377、PR 21686）。
+-    BIP350：自 v22.0 起，原生 v1+ 隔离见证输出的地址改用 bech32m 而非 bech32（PR 20861）。
+-    BIP371：用于 PSBT 的 Taproot 字段自 v24.0 起被支持（PR 22558）。
+-    BIP380 381 382 383 384 385：输出脚本描述符（Output Script Descriptors）及大部分 Script 表达式自 v0.17.0 起已实现（PR 13697）。
+-    BIP386：+tr()+ 输出脚本描述符自((("BIPs (Bitcoin Improvement Proposals)", "implemented by Bitcoin Core", startref="bips-implement")))((("Bitcoin Core", "BIPs implemented by", startref="bitcoin-core-bips"))) v22.0 起已实现（PR 22051）。

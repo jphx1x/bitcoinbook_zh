@@ -1,0 +1,453 @@
+[[c_signatures]]
+== 数字签名
+
+比特币目前(((("digital signatures", "schnorr signature algorithm")))((("schnorr signature algorithm")))((("digital signatures", "ECDSA")))((("ECDSA (Elliptic Curve Digital Signature Algorithm)")))((("transactions", "signatures", see="digital signatures"))))使用两种签名算法：_Schnorr 签名算法_ 与 _椭圆曲线数字签名算法_（_Elliptic Curve Digital Signature Algorithm_，即 _ECDSA_）。
+这些算法基于椭圆曲线私钥/公钥对实现数字签名，如 <<elliptic_curve>> 所述。
+它们用于花费 segwit v0 P2WPKH 输出、segwit v1 P2TR keypath 花费，以及由脚本函数 +OP_CHECKSIG+、
++OP_CHECKSIGVERIFY+、+OP_CHECKMULTISIG+、[.keep-together]#+OP_CHECKMULTISIGVERIFY+# 和
++OP_CHECKSIGADD+ 调用。
+每当其中之一被执行时，都必须提供一个签名。
+
+数字签名(((("digital signatures", "purpose of"))))在比特币中有三个用途。首先，签名证明
+私钥的控制者——也即资金的所有者——_授权_ 了对这些资金的花费。其次，这种授权的证明是 _不可否认的_（不可抵赖性）。第三，被授权的交易不能被未经授权的第三方更改——即其 _完整性_ 是完好的。
+
+[NOTE]
+====
+每个交易输入及其可能包含的任何签名都是 _完全_ 独立于其他输入或签名的。多方可以协作构造交易，并各自只签名一个输入。
+多种协议利用这一事实来构造多方交易以增强隐私。
+====
+
+本章我们将研究数字签名如何工作，以及它们如何在不泄露私钥的情况下提供对私钥控制权的证明。
+
+[role="less_space pagebreak-before"]
+=== 数字签名的工作原理
+
+数字签名由两部分组成。第一部分是使用私钥（签名密钥）为消息（交易）生成签名的算法。第二部分是允许任何人在给定消息和对应公钥的情况下验证签名的算法。
+
+==== 创建数字签名
+
+在比特币(((("digital signatures", "creating"))))对数字签名算法的使用中，被签名的"消息"就是交易，更准确地说是对交易中某个特定数据子集所做的哈希，((("commitment hash")))称为 _承诺哈希_（commitment hash，见
+<<sighash_types>>）。签名密钥则是用户的私钥。结果即为签名：
+
+[latexmath]
+++++
+\begin{equation}
+Sig = F_{sig}(F_{hash}(m), x)
+\end{equation}
+++++
+
+其中：
+
+* _x_ 是签名私钥
+* _m_ 是要签名的消息，即承诺哈希（如交易的某些部分）
+* _F_~_hash_~ 是哈希函数
+* _F_~_sig_~ 是签名算法
+* _Sig_ 是得到的签名
+
+关于 Schnorr 与 ECDSA 签名的数学细节，可见 <<schnorr_signatures>> 与 <<ecdsa_signatures>>。
+
+在 Schnorr 与 ECDSA 签名中，函数 _F_~_sig_~ 都会生成由两个值组成的签名 +Sig+。两个算法中这两个值的细节有所不同，我们稍后会探讨。两个值计算完成后，会被序列化为一个字节流。对于 ECDSA 签名，采用一种名为
+_Distinguished Encoding Rules_（_DER_）的国际标准编码方案进行编码。对于 Schnorr 签名，则使用更简单的序列化格式。
+
+==== 验证签名
+
+签名验证算法((("digital signatures", "verifying")))((("verifying", "digital signatures")))接收消息（交易的某些部分及相关数据的哈希）、签名者的公钥和签名，若签名对该消息及公钥有效，则返回 ++TRUE++。
+
+要验证签名，必须拥有签名、序列化后的交易、被花费输出的相关数据，以及与用于生成签名的私钥相对应的公钥。
+本质上，签名验证意味着"只有生成此公钥的私钥的控制者，才可能为这笔交易生成这个签名。"
+
+[[sighash_types]]
+==== 签名哈希类型（SIGHASH）
+
+数字签名(((("digital signatures", "SIGHASH flags", id="digital-signature-sighash")))((("SIGHASH flags", id="sighash"))))作用于消息，在比特币中即为交易本身。签名证明签名者对特定交易数据的 _承诺_。最简单的形式下，签名作用于几乎整个交易，从而对所有输入、输出及其他交易字段都做出承诺。然而，签名也可以只承诺交易中数据的一个子集，这在许多场景下都有用，本节将一一展示。
+
+比特币签名通过 +SIGHASH+ 标志来指明私钥所签名的哈希中包含交易数据的哪些部分。+SIGHASH+ 标志是附加在签名末尾的单个字节。每个签名都有一个显式或隐式的 +SIGHASH+ 标志，
+并且标志可以因输入不同而不同。一个含有三个已签名输入的交易可能拥有三个 +SIGHASH+ 标志不同的签名，每个签名分别承诺（签署）交易的不同部分。
+
+请记住，每个输入可以包含一个或多个签名。因此，一个输入可能含有 +SIGHASH+ 标志不同的多个签名，分别承诺交易的不同部分。还要注意，比特币交易可能包含来自不同"所有者"的输入，他们可能各自只签署部分构造的交易中的某一个输入，并与其他人协作收集所有必要的签名以构成一笔有效交易。许多 +SIGHASH+ 标志类型只有在你想到多个参与者在比特币网络之外协作并更新一个部分签名的交易时才有意义。
+
+共有三个 +SIGHASH+ 标志：+ALL+、+NONE+ 和 +SINGLE+，如
+<<sighash_types_and_their>> 所示。
+
+++++
+<table id="sighash_types_and_their">
+<caption>
+<span class="plain"><code>SIGHASH</code></span> 类型及其含义</caption>
+<thead>
+<tr>
+<th><code>SIGHASH</code> 标志</th>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p><code>ALL</code></p></td>
+<td><p><code>0x01</code></p></td>
+<td><p>签名作用于所有输入和所有输出</p></td>
+</tr>
+<tr>
+<td><p><code>NONE</code></p></td>
+<td><p><code>0x02</code></p></td>
+<td><p>签名作用于所有输入，不作用于任何输出</p></td>
+</tr>
+<tr>
+<td><p><code>SINGLE</code></p></td>
+<td><p><code>0x03</code></p></td>
+<td><p>签名作用于所有输入，但仅作用于与被签名输入索引号相同的那一个输出</p></td>
+</tr>
+</tbody>
+</table>
+++++
+
+此外，还有一个修饰标志 +SIGHASH_ANYONECANPAY+，可与前述每一个标志组合使用。当 +ANYONECANPAY+ 被设置时，仅签署一个输入，其余（及其序列号）可被修改。+ANYONECANPAY+ 的值为 +0x80+，
+通过按位或运算与其他标志组合，得到的组合标志如
+<<sighash_types_with_modifiers>> 所示。
+
+[role="less_space pagebreak-before"]
+++++
+<table id="sighash_types_with_modifiers">
+<caption>
+带修饰符的 <span class="plain"><code>SIGHASH</code></span> 类型及其含义</caption>
+<thead>
+<tr>
+<th><code>SIGHASH</code> 标志</th>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p><code>ALL|ANYONECANPAY</code></p></td>
+<td><p><code>0x81</code></p></td>
+<td><p>签名作用于一个输入和所有输出</p></td>
+</tr>
+<tr>
+<td><p><code>NONE|ANYONECANPAY</code></p></td>
+<td><p><code>0x82</code></p></td>
+<td><p>签名作用于一个输入，不作用于任何输出</p></td>
+</tr>
+<tr>
+<td><p><code>SINGLE|ANYONECANPAY</code></p></td>
+<td><p><code>0x83</code></p></td>
+<td><p>签名作用于一个输入及与其索引号相同的一个输出</p></td>
+</tr>
+</tbody>
+</table>
+++++
+
++SIGHASH+ 标志在签名和验证时的应用方式如下：会复制一份交易，其中某些字段被略去或截断（置为零长度并清空）。得到的交易随后被序列化。+SIGHASH+ 标志包含在序列化的交易数据中，再对结果计算哈希。哈希摘要本身就是被签名的"消息"。根据所使用的 +SIGHASH+ 标志不同，交易的不同部分会被包含进来。
+通过把 +SIGHASH+ 标志本身也包含在内，签名同时承诺了 +SIGHASH+ 类型，因此它无法被更改（例如被矿工修改）。
+
+在 <<serialization_of_signatures_der>> 中，我们将看到 DER 编码签名的最后一部分是 +01+，对 ECDSA 签名来说这就是 +SIGHASH_ALL+ 标志。这会锁定交易数据，使 Alice 的签名承诺了所有输入和输出的状态。这是最常见的签名形式。
+
+让我们来看一些其他的 +SIGHASH+ 类型及其在实际中的用法：
+
++ALL|ANYONECANPAY+ :: 这种((("crowdfunding")))构造可用于实现一种"众筹"式交易。试图筹款的人可以构造一笔只有一个输出的交易。该唯一输出将"目标"金额支付给筹款人。这样的交易显然是无效的，因为它没有输入。然而，其他人现在可以通过添加自己的输入作为捐款来修改它。他们用 +ALL|ANYONECANPAY+ 签名自己的输入。除非收集到足够的输入来达到该输出的金额，否则交易是无效的。每笔捐款都是一份"承诺"，在募集到全部目标金额之前，筹款人无法取走。可惜这一协议可以被筹款人通过添加自己的输入（或借来的资金）来绕过，使他们即使没有达到目标金额也能领取捐款。
+
++NONE+ :: 这种构造可用于创建特定金额的"无记名支票"或"空白支票"。它承诺所有输入但允许输出被更改。任何人都可以把自己的比特币地址写入输出脚本。
+单独使用时，这会允许任何矿工更改输出去向并将资金占为己有；但如果交易中其他必需的签名使用 +SIGHASH_ALL+ 或其他承诺输出的类型，那么这就允许这些花费者更改去向，而不允许任何第三方（如矿工）修改输出。
+
++NONE|ANYONECANPAY+ :: 这种构造可用于构建一个"粉尘收集器"。钱包中持有极小 UTXO 的用户无法花费它们，因为手续费成本会超过 UTXO 的价值；见
+<<uneconomical_outputs>>。借助这种类型的签名，这些不经济的 UTXO 可以被捐出，任何人都可以随时聚合和花费它们。
+
+也有一些修改或扩展 +SIGHASH+ 系统的提案。截至本文写作时讨论最广泛的提案是((("BIP118 SIGHASH flags")))BIP118，它提议增加两个新的 sighash 标志。使用 +SIGHASH_ANYPREVOUT+ 的签名不会承诺输入的 outpoint 字段，从而可用于花费针对某个特定 witness program 的任意先前输出。例如，如果 Alice 收到两笔金额相同、发往同一 witness program（例如只需要她钱包的一个签名）的输出，那么用于花费其中一个输出的 +SIGHASH_ANYPREVOUT+ 签名可以被复制并用于把另一个输出花到同一目的地。
+
+使用 +SIGHASH_ANYPREVOUTANYSCRIPT+ 的签名不会承诺 outpoint、金额、witness program，也不会承诺 taproot 默克尔树（script tree）中的某个具体叶子，从而可以花费该签名能够满足的任何先前输出。例如，如果 Alice 收到两笔金额不同、witness program 也不同的输出（例如一个只需她一个签名，另一个需要她的签名加上一些其他数据），那么用于花费其中一个输出的 +SIGHASH_ANYPREVOUTANYSCRIPT+ 签名可以被复制并用于把另一个输出花到同一目的地（前提是第二个输出所需的额外数据已知）。
+
+两个 ++SIGHASH_ANYPREVOUT++ 操作码的主要预期用途是改进的支付通道，例如闪电网络（LN）中所用的通道，尽管也已描述了若干其他用途。
+
+[NOTE]
+====
+你在用户钱包应用中通常看不到 +SIGHASH+ 标志作为可选项出现。简单的钱包应用都使用 [.keep-together]#+SIGHASH_ALL+# 标志进行签名。更复杂的应用，例如 LN 节点，可能会使用其他 +SIGHASH+ 标志，但它们所采用的协议都经过了广泛审查，能够理解使用替代((("digital signatures", "SIGHASH flags", startref="digital-signature-sighash")))((("SIGHASH flags", startref="sighash")))标志的影响。
+====
+
+[[schnorr_signatures]]
+=== Schnorr 签名
+
+1989 年，((("digital signatures", "schnorr signature algorithm", id="digital-sigs-schnorr")))((("schnorr signature algorithm", id="schnorr")))Claus Schnorr 发表了一篇论文，描述了与他同名的签名算法。该算法并不特定于比特币和许多其他应用所使用的椭圆曲线密码学（ECC），尽管它如今或许与 ECC 关联最为紧密。Schnorr 签名具有许多优良性质：
+
+可证明安全性::
+  Schnorr 签名安全性的数学((("digital signatures", "schnorr signature algorithm", "properties of")))((("schnorr signature algorithm", "properties of")))证明只依赖于求解离散对数问题（Discrete Logarithm Problem，DLP）的困难性——对比特币而言，是椭圆曲线（EC）上的离散对数问题——以及一个哈希函数（如比特币所用的 SHA256）能产生不可预测的值的能力，这被称为随机预言模型（random oracle model，ROM）。其他签名算法或者有额外的依赖，或者要求公钥或签名规模大得多才能达到与 ECC-Schnorr 等效的安全性（当威胁定义为经典计算机时；对抗量子计算机时其他算法可能提供更高效的安全性）。
+
+线性性::
+  Schnorr 签名具有数学家所((("linearity")))称的 _线性性_ 性质，它适用于具有两个特定性质的函数。第一个性质是把两个或更多变量先相加再对其和应用函数，将得到与分别对每个变量应用函数再把结果相加相同的值，即
+  _f(x_ + _y_ + _z)_ == _f(x)_ + _f(y)_ + _f(z)_；这一性质称为((("additivity")))_可加性_。第二个性质是把变量乘以一个量后再应用函数，将得到与先对变量应用函数再乘以同样的量相同的值，即
+  _f(a_ × _x)_ == _a_ × _f(x)_；这一性质称为 ((("homogeneity of degree 1")))_1 阶齐次性_。
++
+在密码学操作中，某些函数可能是私有的（如涉及私钥或秘密 nonce 的函数），因此能够在函数内或函数外执行同一操作而得到相同结果，使得多方在不共享各自秘密的情况下也能轻松协调与协作。我们将在 <<schnorr_multisignatures>> 和 <<schnorr_threshold_signatures>> 中看到 Schnorr 签名线性性带来的若干具体好处。
+
+批量验证::
+  当以某种方式((("batch verification of digital signatures")))使用时（比特币正是如此），Schnorr 线性性的一个结果是，相对容易地能够同时验证多个 Schnorr 签名，所用时间少于逐个独立验证它们所需的总时间。一批中要验证的签名越多，加速比就越大。对于一个区块中典型数量的签名，可以用大约逐个独立验证一半的时间完成批量验证。
+
+本章稍后将精确描述比特币中所用的 Schnorr 签名算法，但我们会从其简化版本开始，分阶段一步步推进到实际所用的协议。
+
+[role="less_space pagebreak-before"]
+Alice(((("digital signatures", "schnorr signature algorithm", "examples of usage")))((("schnorr signature algorithm", "examples of usage"))))首先选择一个大的随机数（_x_），我们称之为她的 _私钥_。她还知道比特币椭圆曲线上的一个公开点，称为生成元（_G_）（见 <<public_key_derivation>>）。Alice 使用椭圆曲线乘法把 _G_ 乘以她的私钥 _x_，此时 _x_ 称为 _标量（scalar）_，因为它对 _G_ 进行缩放。结果是 _xG_，我们称之为 Alice 的 _公钥_。Alice 把她的公钥交给 Bob。即使 Bob 也知道 _G_，DLP 也阻止 Bob 通过把 _xG_ 除以 _G_ 来推导出 Alice 的私钥。
+
+稍后，Bob 希望 Alice 通过证明她知道之前 Bob 收到的公钥（_xG_）对应的标量 _x_ 来表明自己的身份。Alice 不能直接把 _x_ 给 Bob，否则 Bob 就能向他人冒充她的身份，因此她需要在不向 Bob 透露 _x_ 的情况下证明她知道 _x_，((("zero-knowledge proof")))这称为 _零知识证明_。为此，我们开始 Schnorr 身份证明流程：
+
+1. Alice 选择另一个大的随机数（_k_），我们称之为 _私有 nonce_。同样地，她把它作为标量，将其与 _G_ 相乘得到 _kG_，我们称之为 _公开 nonce_。她把公开 nonce 交给 Bob。
+
+2. Bob 选择属于他自己的一个大的随机数 _e_，我们称之为 _挑战标量（challenge scalar）_。我们说"挑战"是因为它被用来挑战 Alice，要求她证明她知道她之前给 Bob 的公钥（_xG_）所对应的私钥（_x_）；我们说"标量"是因为它稍后将用于乘一个椭圆曲线上的点。
+
+3. Alice 现在拥有标量 _x_、_k_ 和 _e_。她使用公式
+  _s_ = _k_ + _ex_ 把它们组合在一起，得到最终的标量 _s_。她把 _s_ 给 Bob。
+
+4. Bob 现在知道标量 _s_ 和 _e_，但不知道 _x_ 或 _k_。然而 Bob 知道 _xG_ 和 _kG_，他自己可以计算出 _sG_ 和 _exG_。这意味着他可以检查 Alice 所执行操作的"放大版"是否成立：[.keep-together]#_sG_ == _kG_ + _exG_#。若该等式成立，Bob 就可以确定 Alice 在生成 _s_ 时确实知道 _x_。
+
+.使用整数替代点的 Schnorr 身份协议
+****
+如果把上面所有值（包括 _G_）替换为简单的整数而非椭圆曲线上的点，构造一个不安全的过度简化版本，可能更容易理解交互式 Schnorr 身份协议。
+例如，我们使用从 3 开始的素数：
+
+设置：Alice 选择 _x_ = 3 作为她的私钥。她用它乘以生成元 _G_ = 5，得到她的公钥 _xG_ = 15。她把 15 给 Bob。
+
+1. Alice 选择私有 nonce _k_ = 7，并生成公开 nonce
+  _kG_ = 35。她把 35 给 Bob。
+
+2. Bob 选择 _e_ = 11 并给 Alice。
+
+3. Alice 生成 _s_ = 40 = 7 + 11 × 3。她把 40 给 Bob。
+
+4. Bob 推导出 _sG_ = 200 = 40 × 5 和 _exG_ = 165 = 11 × 15。然后他验证 [.keep-together]#200 == 35 + 165#。注意这与 Alice 所做的运算相同，只是所有的值都被放大了 5 倍（_G_ 的值）。
+
+当然，这是一个过度简化的例子。在使用简单整数时，我们可以把乘积除以生成元 _G_ 来得到底层标量，这是不安全的。这就是为什么比特币使用的椭圆曲线密码学的一个关键性质是：乘法很容易，但除以曲线上的一个点是不可行的。此外，由于这里使用的数字很小，通过暴力枚举找到底层值（或有效替代值）也很容易；比特币使用的数字要大得多。
+****
+
+让我们来讨论交互式 Schnorr 身份协议中保证其安全性的若干特性：
+
+nonce（k）::
+在步骤 1 中，((("digital signatures", "schnorr signature algorithm", "security features")))((("schnorr signature algorithm", "security features")))Alice 选择了一个 Bob 不知道、也无法猜出的数，并把该数的缩放形式 _kG_ 给 Bob。此时 Bob 已经拥有她的公钥（_xG_），即她私钥 _x_ 的缩放形式。这意味着当 Bob 处理最终等式（_sG_ = _kG_ + _exG_）时，存在两个 Bob 不知道的独立变量（_x_ 与 _k_）。使用简单代数可以解一个含有一个未知变量的方程，但无法解含两个独立未知变量的方程，因此 Alice 的 nonce 的存在阻止了 Bob 推导出她的私钥。需要特别注意的是，这一保护取决于 nonce 在任何意义上都不可被猜测。如果 Alice 的 nonce 有任何可预测之处，Bob 就可能利用它推算出 Alice 的私钥。详见
+<<nonce_warning>>。
+
+挑战标量（e）::
+Bob 等待收到 Alice 的公开 nonce 后，在步骤 2 中给她一个 Alice 此前不知道、也无法猜到的数（挑战标量）。关键在于 Bob 必须仅在她承诺了自己的公开 nonce _之后_ 才给她挑战标量。考虑这样的情况：某个不知道 _x_ 的人想冒充 Alice，而 Bob 在他们告知公开 nonce _kG_ 之前就不慎把挑战标量 _e_ 给了他们。这就允许冒充者更改 Bob 用于验证的等式 _sG_ == _kG_ + _exG_ 两边的参数；具体而言，他们既能改 _sG_，也能改 _kG_。想想该表达式的简化形式：_x_ = _y_ + _a_。如果你可以同时改变 _x_ 和 _y_，那么你可以使用 _x_++'++ = (_x_ – _a_) + _a_ 消去 _a_。这样你为 _x_ 选择的任何值都能满足等式。对实际等式，冒充者只需为 _s_ 选一个随机数，生成 _sG_，然后用椭圆曲线减法选取一个满足 _kG_ = _sG_ – _exG_ 的 _kG_。他们把计算出的 _kG_ 先给 Bob，再给出随机的 _sG_，Bob 会认为有效，因为 [.keep-together]#_sG_ == (_sG_ – _exG_)# + _exG_。这说明协议中操作顺序的重要性：Bob 只能在 Alice 已经承诺了她的公开 nonce 之后才能给她挑战标量。
+
+++++
+<p class="fix_tracking">
+这里描述的交互式身份协议与 Claus Schnorr 最初描述的部分相符，但缺少去中心化比特币网络所必需的两个关键特性。其中之一是它依赖 Bob 等待 Alice 承诺其公开 nonce，然后由 Bob 给她一个随机的挑战标量。在比特币中，每笔交易的花费者都需要由成千上万个比特币全节点进行验证——包括尚未启动的未来节点，其运营者将来会希望确保自己收到的比特币来自一条每笔交易都有效的转移链。任何无法与 Alice 通信的比特币节点——无论是现在还是将来——都将无法验证她的交易，会与所有验证过该交易的其他节点产生分歧。对比特币这样的共识系统而言，这是不可接受的。要让比特币正常工作，我们需要一种不要求 Alice 与每个想要验证她的节点交互的协议。
+</p>
+++++
+
+一种简单的技术——以其发现者命名，称为 Fiat-Shamir 变换——可以把交互式 Schnorr 身份协议转换为一种非交互式的数字签名方案。回顾步骤 1 和 2 的重要性——以及它们必须按顺序执行。Alice 必须先承诺一个不可预测的 nonce；Bob 必须在收到她的承诺之后才能给 Alice 一个不可预测的挑战标量。再回想本书其他地方用到的安全密码学哈希函数的性质：对相同输入总会产生相同的输出，但对不同输入会产生与随机数据无法区分的值。
+
+这就允许 Alice 选择她的私有 nonce，推导出公开 nonce，然后对公开 nonce 进行哈希得到挑战标量。由于 Alice 无法预测哈希函数的输出（即挑战），而对相同输入（即 nonce）哈希函数总会给出相同输出，这就保证了 Alice 即使自己选择并哈希了 nonce，得到的也是一个随机的挑战。我们不再需要 Bob 的交互。她只需公布自己的公开 nonce _kG_ 和标量 _s_，成千上万个全节点（过去与未来的）就都可以对 _kG_ 哈希得到 _e_，再用它得到 _exG_，然后验证 _sG_ == _kG_ + _exG_。明确写出来，验证等式就是 [.keep-together]#_sG_ == _kG_ + _hash_(_kG_) × _xG_#。
+
+要把交互式 Schnorr 身份协议彻底转换为对比特币有用的数字签名协议，我们还需要另一件事。我们不仅希望 Alice 证明她知道自己的私钥；我们还希望让她能够对一条消息做出承诺。具体来说，我们希望她对与她想发送的比特币交易相关的数据做出承诺。有了 Fiat-Shamir 变换之后，我们已经有了一个承诺，因此只需让它额外对消息也做出承诺即可。原本是 _hash_(_kG_)，现在我们使用 _hash_(_kG_ || _m_) 来同时承诺消息 _m_，其中 || 表示串接。
+
+我们现在已经定义出了一个版本的 Schnorr 签名协议，但还有一件事需要处理，以应对比特币特有的一个问题。在 BIP32 密钥派生中，如 <<public_child_key_derivation>> 所述，非强化派生算法接收一个公钥并向其加上一个非保密值，从而得到一个派生公钥。这意味着也可以把同一非保密值加到某把密钥的有效签名上，从而为相关密钥得到一个签名。这种关联签名是有效的，但并未经过持有私钥者的授权，这是一个严重的安全失败。为了保护 BIP32 非强化派生，同时也支持人们希望在 Schnorr 签名之上构建的若干协议，比特币版本的 Schnorr 签名——称为 _BIP340 schnorr signatures for secp256k1_——除了承诺公开 nonce 和消息外，还承诺所使用的公钥。这样完整的承诺就是 _hash_(_kG_ || _xG_ || _m_)。
+
+至此我们已经描述了 BIP340 Schnorr 签名算法的每一个部分并解释了其作用，可以来定义该协议了。整数乘法在 _模 p_ 下进行，意思是运算结果会被除以数 _p_（如 secp256k1 标准中定义）取余数。数 _p_ 非常大，但如果它是 3 而运算结果是 5，那么实际使用的数就是 2（即 5 除以 3 余 2）。
+
+设置：Alice 选择一个大的随机数（_x_）作为她的私钥（可以直接选取，也可以使用 BIP32 之类的协议从一个大的随机种子值确定性地生成私钥）。她使用 secp256k1 中定义的参数（见 <<elliptic_curve>>）把生成元 _G_ 乘以她的标量 _x_，得到 _xG_（她的公钥）。她把她的公钥交给将来要对她的比特币交易进行验证的人（例如把 _xG_ 包含在某个交易输出中）。当她准备花费时，她开始生成签名：
+
+1. Alice 选择一个大的随机私有 nonce _k_，并推导出公开 nonce _kG_。
+
+2. 她选择消息 _m_（例如交易数据），生成挑战标量 _e_ = _hash_(_kG_ || _xG_ || _m_)。
+
+3. 她生成标量 _s_ = _k_ + _ex_。两个值 _kG_ 和 _s_ 就是她的签名。她把这个签名给所有希望验证该签名的人；她还需要确保所有人都收到她的消息 _m_。在比特币中，这通过把她的签名放入她花费交易的 witness 结构，并把该交易转发给全节点来完成。
+
+4. 验证者（如全节点）使用 _s_ 推导出 _sG_，然后验证 _sG_ == _kG_ + _hash_(_kG_ || _xG_ || _m_) × _xG_。若该等式成立，则 Alice 证明了她知道自己的私钥 _x_（且未泄露它），并承诺了消息 _m_（其中包含交易数据）。
+
+==== Schnorr 签名的序列化
+
+一个 Schnorr 签名(((("digital signatures", "schnorr signature algorithm", "serialization")))((("schnorr signature algorithm", "serialization")))((("serialization", "of schnorr signature algorithm", secondary-sortas="schnorr"))))由两个值组成：_kG_ 和 _s_。值 _kG_ 是比特币椭圆曲线（即 secp256k1）上的一个点，通常需要由两个 32 字节的坐标 (_x_, _y_) 表示。
+但实际只需 _x_ 坐标，所以只包含该值。当你在比特币的 Schnorr 签名中看到 _kG_ 时，请注意它只指该点的 _x_ 坐标。
+
+值 _s_ 是一个标量（用来乘其他数的数）。对于比特币的 secp256k1 曲线，它的长度不会超过 32 字节。
+
+虽然 _kG_ 和 _s_ 有时可以由少于 32 字节的值表示，但它们远小于 32 字节的可能性很小，因此都被序列化为 32 字节的值（即长度不足 32 字节的值会在前面补零）。序列化顺序是先 _kG_ 后 _s_，正好得到 64 字节。
+
+taproot 软分叉，也称为 v1 segwit，把 Schnorr 签名引入了比特币，截至本文写作时也是比特币中使用它们的唯一方式。当与 taproot keypath 或 scriptpath 花费一起使用时，64 字节的 Schnorr 签名被视为使用默认的签名哈希（sighash）即 +SIGHASH_ALL+。如果使用替代 sighash，或者花费者愿意浪费空间以显式指定 +SIGHASH_ALL+，则在签名末尾追加一个字节来指定签名哈希，使签名变为 65 字节。
+
+正如我们将看到的，无论 64 字节还是 65 字节，都比 <<serialization_of_signatures_der>> 中描述的 ECDSA 签名所使用的序列化要高效得多。
+
+[[schnorr_multisignatures]]
+==== 基于 Schnorr 的无脚本多重签名
+
+在(((("digital signatures", "schnorr signature algorithm", "scriptless multisignatures", id="digital-sigs-schnorr-multisig")))((("schnorr signature algorithm", "scriptless multisignatures", id="schnorr-multisig")))((("scriptless multisignatures", "in schnorr signature algorithm", secondary-sortas="schnorr", id="scriptless-multi-schnorr")))((("multisignature scripts", "in schnorr signature algorithm", secondary-sortas="schnorr", id="multi-script-schnorr"))))<<schnorr_signatures>> 中描述的单签名 Schnorr 协议里，Alice 使用一个签名 (_kG_, _s_) 公开证明她知道自己的私钥，这里我们将其称为 _y_。假设 Bob 也有一个私钥（_z_），且他愿意与 Alice 合作来证明他们一起知道 _x_ = _y_ + _z_，且双方都不向对方或他人泄露各自的私钥。让我们再次走一遍 BIP340 Schnorr 签名协议。
+
+[WARNING]
+====
+我们即将描述的简单协议出于稍后将说明的原因是不安全的。我们仅用它来展示 Schnorr 多重签名的机制，再去描述据信安全的相关协议。
+====
+
+Alice 和 Bob 需要推导 _x_ 对应的公钥，即 _xG_。由于可以利用椭圆曲线运算把两个椭圆曲线上的点相加，他们先由 Alice 计算 _yG_，由 Bob 计算 _zG_。然后他们把二者相加得到 [.keep-together]#_xG_ = _yG_ + _zG_#。点 _xG_ 是他们的 ((("aggregated public keys")))((("public keys", "aggregated")))_聚合公钥_。要生成签名，他们开始这个简单的多重签名协议：
+
+1. 他们各自独立选取一个大的随机私有 nonce：Alice 选 _a_，Bob 选 _b_。他们也各自独立推导出对应的公开 nonce _aG_ 和 _bG_。然后他们一起得到聚合公开 nonce _kG_ = _aG_ + _bG_。
+
+2. 他们对要签名的消息 _m_ 达成一致（例如一笔交易），每人各自生成一份挑战标量副本：_e_ = _hash_(_kG_ || _xG_ || _m_)。
+
+3. Alice 生成标量 _q_ = _a_ + _ey_。Bob 生成标量
+   _r_ = _b_ + _ez_。他们把这两个标量相加得到
+   _s_ = _q_ + _r_。他们的签名就是两个值 _kG_ [.keep-together]#和 _s_#。
+
+4. 验证者使用通常的等式来检验他们的公钥和签名：[.keep-together]#_sG_ ==# _kG_ + _hash_(_kG_ || _xG_ || _m_) × _xG_。
+
+Alice 和 Bob 由此证明了他们知道各自私钥之和，而无需向对方或他人泄露各自的私钥。该协议可以扩展到任意数量的参与者（例如，一百万人可以证明他们知道一百万把不同密钥之和）。
+
+前述协议存在若干安全问题。最显著的是，一方可能在向其他各方承诺自己的公钥之前就先知道了其他各方的公钥。例如，Alice 诚实地生成她的公钥 _yG_ 并与 Bob 分享。Bob 用 _zG_ – _yG_ 生成自己的公钥。当他们的两把密钥相加 [.keep-together]#(_yG_ + _zG_ – _yG_)# 时，正负 _yG_ 相互抵消，因此公钥只代表 _z_ 对应的私钥（即 Bob 的私钥）。这样 Bob 就可以在没有 Alice 任何协助的情况下生成有效签名。这被((("key cancellation attacks")))称为 _密钥抵消攻击（key cancellation attack）_。
+
+有多种方法可以解决密钥抵消攻击。最简单的方案是要求每个参与者在向其他所有参与者透露自己那部分公钥的任何信息之前，先对其做出承诺。例如，Alice 和 Bob 各自先对自己的公钥进行哈希，并相互分享哈希摘要。当双方都有了对方的摘要后，再分享密钥。然后他们各自检查对方的密钥是否哈希到此前提供的摘要，再按协议正常推进。这就阻止了任何一方选择能抵消其他参与者密钥的公钥。然而，这一方案很容易没有正确实现，例如以一种朴素的方式与非强化的 BIP32 公钥派生一起使用。此外，它还为参与者之间增加了一个额外的通信步骤，这在许多情况下也许并不理想。已有更复杂的方案被提出以解决这些不足。
+
+除了密钥抵消攻击外，还有若干针对((("nonce attacks")))nonce 的攻击。回想 nonce 的目的：阻止他人借助签名验证等式中其他已知值来反解出你的私钥。要有效达到这一目的，每次签署不同消息或更改其他签名参数时，必须使用不同的 nonce。这些不同的 nonce 之间不能存在任何关联。对多重签名而言，每个参与者都必须遵守这些规则，否则可能危及其他参与者的安全。此外，还需要防止抵消等其他攻击。达成这些目标的不同协议会做出不同的权衡，因此并不存在适用于所有情形的单一多重签名协议推荐。这里我们指出 MuSig 家族中的三个协议：
+
+MuSig::
+  也称为 _MuSig1_，该协议((("MuSig protocol")))在签名过程中要求三轮通信，与我们刚才描述的过程类似。MuSig1 的最大优势是简单。
+
+MuSig2::
+  仅需((("MuSig2 protocol")))两轮通信，且有时可以把其中一轮与密钥交换合并。对某些协议而言，这可以显著加快签名速度，例如计划在 LN 中如何使用无脚本多重签名。MuSig2 在 BIP327 中规范化（截至本文写作时是唯一拥有 BIP 的无脚本多重签名协议）。
+
+MuSig-DN::
+  DN ((("MuSig-DN protocol")))((("repeated session attacks")))表示 Deterministic Nonce（确定性 nonce），它消除了被称为 _重复会话攻击（repeated session attack）_ 的隐患。它不能与密钥交换合并，并且实现起来比 MuSig 或 MuSig2 复杂得多。
+
+对大多数应用而言，MuSig2 是截至本文写作时最好的多重签名协议(((("digital signatures", "schnorr signature algorithm", "scriptless multisignatures", startref="digital-sigs-schnorr-multisig")))((("schnorr signature algorithm", "scriptless multisignatures", startref="schnorr-multisig")))((("scriptless multisignatures", "in schnorr signature algorithm", secondary-sortas="schnorr", startref="scriptless-multi-schnorr")))((("multisignature scripts", "in schnorr signature algorithm", secondary-sortas="schnorr", startref="multi-script-schnorr"))))。
+
+[[schnorr_threshold_signatures]]
+==== 基于 Schnorr 的无脚本阈值签名
+
+无脚本(((("digital signatures", "schnorr signature algorithm", "scriptless threshold signatures", id="digital-sigs-schnorr-threshold")))((("schnorr signature algorithm", "scriptless threshold signatures", id="schnorr-threshold")))((("scriptless threshold signatures", id="scriptless-threshold-schnorr")))((("threshold signatures", "in schnorr signature algorithm", secondary-sortas="schnorr", id="threshold-schnorr"))))多重签名协议只能用于 _k_-of-_k_ 签名。所有持有作为聚合公钥一部分的部分公钥的人都必须为最终签名贡献一份部分签名和部分 nonce。但有时，参与者希望允许其中一部分人签名，例如 _t_-of-_k_——即由 _k_ 个参与者构造的密钥，只需要一个阈值数量（_t_）的参与者就能完成签名。这种签名被称为 _阈值签名（threshold signature）_。
+
+我们在 <<multisig>> 中看到了基于脚本的阈值签名。但正如无脚本多重签名相对于脚本多重签名节省空间并增强隐私，_无脚本阈值签名_ 相对于 _脚本阈值签名_ 也节省空间并增强隐私。对未参与签名的任何人来说，_无脚本阈值签名_ 看起来就像任何其他签名，可能是由单签名用户或通过无脚本多重签名协议生成的。
+
+生成无脚本阈值签名有多种已知方法，其中最简单的就是对前面构造无脚本多重签名方式略作修改。该协议还依赖于可验证秘密分享（其本身又依赖于安全秘密分享）。
+
+基本的秘密分享可以通过简单切分实现。Alice 有一个秘密数字，她把它切成三个等长的部分分发给 Bob、Carol 和 Dan。这三人可以按正确顺序组合收到的部分数（称为 _份额（shares）_）来重构 Alice 的秘密。更巧妙的方案会让 Alice 在每个份额上附加一些额外信息——称为纠错码——使其中任意两个份额便可恢复原数。这种方案并不安全，因为每个份额都让其持有者获得了对 Alice 秘密的部分了解，使得参与者比未参与者更容易猜出 Alice 的秘密。
+
+安全的秘密分享方案能够阻止参与者在没有合并最低阈值数量的份额之前了解到关于秘密的任何信息。例如，Alice 可以选择阈值为 2，如果她希望 Bob、Carol、Dan 中任意两人都能重构她的秘密。最广为人知的安全秘密分享算法是 _Shamir 秘密分享方案（Shamir's Secret Sharing Scheme）_，通常缩写为 SSSS，以其发现者命名——他也是我们在 <<schnorr_signatures>> 中看到的 Fiat-Shamir 变换的发现者之一。
+
+在某些密码学协议中——例如我们正在朝其推进的无脚本阈值签名方案——Bob、Carol 和 Dan 知道 Alice 在协议中诚实履行了自己那一侧至关重要。他们需要知道她创建的所有份额都派生自同一个秘密、她使用了她声称的阈值，并且她给每人发的份额都不相同。能够做到所有这些并仍然是一个安全秘密分享方案的协议就是 _可验证秘密分享方案（verifiable secret sharing scheme）_。
+
+要看 Alice、Bob、Carol 如何使用多重签名和可验证秘密分享，可以想象他们各自希望收到一笔资金，可由其中任意两人花费。他们按 <<schnorr_multisignatures>> 所述协作生成一个普通的多重签名公钥（k-of-k）以接收资金。然后每个参与者从自己的私钥派生两份秘密份额——分给其他两个参与者各一份。这些份额使得其中任意两个参与者就可以重构多重签名所需的源部分私钥。每个参与者把自己的两份秘密份额分别分发给另外两个参与者，结果是每个参与者既存储自己的部分私钥，又为其他每一位参与者存储一份份额。随后，每个参与者会与分发给其他参与者的份额相比对，验证自己收到份额的真实性与唯一性。
+
+之后，当（举例来说）Alice 和 Bob 想在 Carol 不参与的情况下生成一个无脚本阈值签名时，他们会交换各自持有的 Carol 的两份份额。这使他们能够重构出 Carol 的部分私钥。Alice 和 Bob 也都有自己的私钥，因此可以使用全部三把必要的密钥来生成一个无脚本多重签名。
+
+换言之，前述无脚本阈值签名方案与无脚本多重签名方案是相同的，只不过阈值数量的参与者有能力为任何无法或不愿签名的其他参与者重构其部分私钥。
+
+这指出了在考虑无脚本阈值签名协议时需要注意的若干事项：
+
+无追责性::
+由于 Alice 和 Bob 重构了 Carol 的部分私钥，所以参与了 Carol 的过程所产生的无脚本多重签名与不涉及 Carol 的过程所产生的无脚本多重签名之间不会有本质区别。即使 Alice、Bob 或 Carol 声称自己没有签名，他们也没有任何保证可以证明自己没有协助产生该签名的方法。如果对了解组中哪些成员签了名很重要，你将需要使用脚本。
+
+操纵攻击::
+设想 Bob 告诉 Alice 说 Carol 不在线，于是他们合作重构 Carol 的部分私钥。然后 Bob 又告诉 Carol 说 Alice 不在线，于是他们合作重构 Alice 的部分私钥。现在 Bob 既有自己的部分私钥，又有 Alice 和 Carol 的密钥，因此他可以在不需要他们参与的情况下自行花费资金。如果所有参与者同意只使用一种允许其中任何人看到其他所有人消息的方案进行通信，就可以应对这种攻击（例如，如果 Bob 告诉 Alice Carol 不在线，那么 Carol 在开始与 Bob 配合之前能够看到这条消息）。截至本文写作时，正在研究针对此问题的其他、可能更稳健的解决方案。
+
+尚未有无脚本阈值签名协议被提议为 BIP，尽管多位比特币贡献者已对该主题进行了大量研究，我们预计在本((("digital signatures", "schnorr signature algorithm", startref="digital-sigs-schnorr")))((("schnorr signature algorithm", startref="schnorr")))((("digital signatures", "schnorr signature algorithm", "scriptless threshold signatures", startref="digital-sigs-schnorr-threshold")))((("schnorr signature algorithm", "scriptless threshold signatures", startref="schnorr-threshold")))((("scriptless threshold signatures", startref="scriptless-threshold-schnorr")))((("threshold signatures", "in schnorr signature algorithm", secondary-sortas="schnorr", startref="threshold-schnorr")))书出版之后会有经过同行评审的方案出现。
+
+[[ecdsa_signatures]]
+=== ECDSA 签名
+
+不幸的是，(((("digital signatures", "ECDSA", id="digital-signature-ecdsa")))((("ECDSA (Elliptic Curve Digital Signature Algorithm)", id="ecdsa"))))对比特币以及许多其他应用未来的发展来说，Claus Schnorr 为他发现的算法申请了专利，使该算法在近二十年的时间里无法用于开放标准和开源软件。20 世纪 90 年代初被阻止使用 Schnorr 签名方案的密码学家开发了另一种构造，称为 _数字签名算法（Digital Signature Algorithm，DSA）_，并由此衍生出适配椭圆曲线的版本 ECDSA。
+
+到 2007 年比特币开发开始时，ECDSA 方案及其推荐曲线的标准参数已被广泛地实现在各种密码学库中。这几乎可以肯定是 ECDSA 成为比特币从第一个发布版本到 2021 年 taproot 软分叉激活之前唯一支持的数字签名协议的原因。如今，对所有非 taproot 交易，ECDSA 仍被支持。它与 Schnorr 签名的一些差异包括：
+
+更复杂::
+  正如我们将看到的，相较于 Schnorr 签名协议，ECDSA 生成或验证签名需要更多的运算。从实现的角度看，它并没有复杂太多，但这点额外的复杂性使 ECDSA 灵活性更差、性能更弱，也更难证明其安全性。
+
+可证明安全性较弱::
+  交互式 Schnorr 签名身份识别协议只依赖于椭圆曲线离散对数问题（ECDLP）的难度。比特币使用的非交互式认证协议还依赖于随机预言模型（ROM）。然而，ECDSA 额外的复杂性使得至今（据我们所知）尚未发表完整的安全性证明。我们并非证明密码算法的专家，但在 30 年之后，看起来 ECDSA 不太可能被证明只需与 Schnorr 相同的两个假设。
+
+非线性::
+  ECDSA 签名无法被轻易组合以构造无脚本多重签名，也无法用于相关高级应用，例如多方签名适配器。对这一问题有一些变通方案，但它们涉及额外的复杂性，会显著拖慢运算，并且在某些情况下导致软件意外泄露私钥。
+
+==== ECDSA 算法
+
+来看一下 ECDSA 的数学。签名由一个数学函数 _F_~_sig_~ 生成，该函数产生由两个值组成的签名。在 ECDSA 中，这两个值是 _R_ 和 _s_。
+
+签名算法首先生成一个私有 nonce（_k_），并由它派生出一个公开 nonce（_K_）。然后数字签名的 _R_ 值就是 nonce _K_ 的 _x_ 坐标。
+
+由此，算法计算签名的 _s_ 值。和我们对 Schnorr 签名做过的一样，涉及整数的运算是在模 p 下进行的：
+
+[latexmath]
+++++
+\begin{equation}
+s = k^{-1} (Hash(m) + x \times R)
+\end{equation}
+++++
+
+
+其中：
+
+* _k_ 是私有 nonce
+* _R_ 是公开 nonce 的 _x_ 坐标
+* _x_ 是 Alice 的私钥
+* _m_ 是消息（交易数据）
+
+验证是签名生成函数的逆过程，使用 _R_、_s_ 值以及公钥来计算一个值 _K_，它是椭圆曲线上的一个点（即签名创建时所用的公开 nonce）：
+
+[latexmath]
+++++
+\begin{equation}
+K = s^{-1} \times Hash(m) \times G + s^{-1} \times R \times X
+\end{equation}
+++++
+
+其中：
+
+- _R_ 和 _s_ 是签名的两个值
+- _X_ 是 Alice 的公钥
+- _m_ 是消息（被签名的交易数据）
+- _G_ 是椭圆曲线生成元
+
+如果计算得到的点 _K_ 的 _x_ 坐标等于 _R_，则验证者可以断定该签名有效。
+
+[TIP]
+====
+ECDSA 不可避免地涉及相当复杂的数学；完整解释超出了本书范围。网上有许多很好的指南可以一步步带你了解：搜索"ECDSA explained"。
+====
+
+[[serialization_of_signatures_der]]
+==== ECDSA 签名的序列化（DER）
+
+让我们((("serialization", "ECDSA signatures")))看一下下面这个 DER 编码的签名：
+
+----
+3045022100884d142d86652a3f47ba4746ec719bbfbd040a570b1deccbb6498c75c4ae24cb02204
+b9f039ff08df09cbe9f6addac960298cad530a863ea8f53982c09db8f6e381301
+----
+
+这是一段由签名者生成、用以证明对授权花费某个输出的私钥之控制权的 _R_、_s_ 值的序列化字节流。该序列化格式由九个元素组成，如下所示：
+
+* +0x30+，表示一个 DER 序列的开始
+* +0x45+，序列的长度（69 字节）
+  * +0x02+，后接一个整数值
+  * +0x21+，该整数的长度（33 字节）
+  * +R+，++00884d142d86652a3f47ba4746ec719bbfbd040a570b1deccbb6498c75c4ae24cb++
+  * +0x02+，后接另一个整数
+  * +0x20+，该整数的长度（32 字节）
+  * +S+，++4b9f039ff08df09cbe9f6addac960298cad530a863ea8f53982c09db8f6e3813++
+* 一个后缀 (+0x01+)，指示所用哈希(((("digital signatures", "ECDSA", startref="digital-signature-ecdsa")))((("ECDSA (Elliptic Curve Digital Signature Algorithm)", startref="ecdsa"))))类型（+SIGHASH_ALL+）
+
+[[nonce_warning]]
+=== 签名中随机性的重要性
+
+正如我们(((("digital signatures", "randomness, importance of", id="digital-signature-random")))((("randomness, importance in digital signatures", id="random-digital-signature"))))在 <<schnorr_signatures>> 和 <<ecdsa_signatures>> 中所见，签名生成算法使用一个随机数 _k_ 作为私有/公开 nonce 对的基础。_k_ 的值不重要，_只要它是随机的_。如果来自同一私钥的签名在不同的消息（交易）上使用了同一个私有 nonce _k_，那么任何人都可以计算出该签名 _私钥_。在签名算法中重复使用同一个 _k_ 值会导致私钥被泄露！
+
+[WARNING]
+====
+如果在两笔不同交易的签名算法中使用了相同的 _k_ 值，私钥就可以被计算出来并暴露给所有人！
+====
+
+这并不仅是理论上的可能性。我们已经看到该问题在比特币的若干交易签名算法实现中导致了私钥泄露。有人因为无意中重复使用了某个 _k_ 值而被盗资金。重复使用 _k_ 值最常见的原因是随机数生成器初始化不当。
+
+为避免这种漏洞，行业最佳实践不是仅用熵种子生成 _k_ 的随机数生成器，而是使用以交易数据本身加上签名所用私钥共同作为种子的过程。这能确保每笔交易产生不同的 _k_。ECDSA 中确定性地初始化 _k_ 的行业标准算法定义在 https://oreil.ly/yuabl[RFC6979] 中，由 Internet Engineering Task Force 发布。对于 Schnorr 签名，BIP340 推荐了一个默认签名算法。
+
+BIP340 和 RFC6979 可以完全确定性地生成 _k_，意味着相同的交易数据总会产生相同的 _k_。许多钱包这样做，因为这便于编写测试来验证其涉及安全的签名代码是否正确生成 _k_ 值。BIP340 和 RFC6979 也都允许在计算中加入额外数据。如果该数据是熵，那么即使对完全相同的交易数据签名也会产生不同的 _k_。这可以增强对侧信道与故障注入攻击的防护。
+
+如果你在实现签名比特币交易的算法，你 _必须_ 使用 BIP340、RFC6979 或类似算法来确保为每笔交易生成不同的 _k_(((("digital signatures", "randomness, importance of", startref="digital-signature-random")))((("randomness, importance in digital signatures", startref="random-digital-signature"))))。
+
+=== 隔离见证的新签名算法
+
+比特币交易中的签名(((("digital signatures", "segregated witness and")))((("segregated witness (segwit)", "digital signatures and")))((("commitment hash"))))作用于一个 _承诺哈希（commitment hash）_，该哈希由交易数据计算得到，锁定数据中的某些特定部分，表示签名者对这些值的承诺。例如，在简单的 +SIGHASH_ALL+ 类型签名中，承诺哈希包含所有输入和输出。
+
+不幸的是，旧式承诺哈希的计算方式引入了一种可能性：一个验证签名的节点可能被迫执行大量的哈希计算。具体而言，哈希操作的数量大致随交易中输入数量呈二次增长。因此攻击者可以构造一笔签名操作数极多的交易，导致整个比特币网络不得不为验证这笔交易执行数百或数千次哈希操作。
+
+Segwit 提供了通过改变承诺哈希的计算方式来解决该问题的机会。对于 segwit 版本 0 的 witness program，签名验证使用 BIP143 中规定的改进承诺哈希算法。
+
+新算法使哈希操作的数量随签名操作数量以更为平缓的 O(n) 增长，降低了通过过于复杂的交易制造拒绝服务攻击的可能。
+
+本章中我们了解了比特币的 Schnorr 与 ECDSA 签名。这解释了全节点如何对交易进行验证，以确保只有控制接收比特币所对应密钥的人才能花费这些比特币。我们还考察了签名的几种高级应用，例如无脚本多重签名和无脚本阈值签名，它们可用于提升比特币的效率与隐私。在前面几章中，我们学习了如何创建交易、如何用授权与认证保护它们、以及如何对其签名。接下来我们将学习如何通过为我们创建的交易添加手续费来激励矿工去确认它们。
+
+//FIXME: mention segwit v0 and v1 coverage of values to aid hardware
+//wallets

@@ -1,0 +1,464 @@
+[[satoshi_whitepaper]]
+[appendix]
+== 比特币白皮书 [.keep-together]#作者 Satoshi Nakamoto#
+
+
+[NOTE]
+====
+这是((("Bitcoin whitepaper", "original version", id="bitcoin-whitepaper-original")))((("whitepaper (Bitcoin)", "original version", id="whitepaper-original")))((("Nakamoto, Satoshi")))原始白皮书，完整复现了 Satoshi Nakamoto 于 2008 年 10 月发表的版本。
+====
+
+=== Bitcoin —— 一种点对点的电子现金系统
+
+Satoshi Nakamoto
+
+_satoshin@gmx.com_
+
+pass:[<a href="https://bitcoin.org/en/" class="orm:hideurl"><em>www.bitcoin.org</em></a>]
+
+*摘要。* 一种纯粹的点对点电子现金，将允许在线支付从一方直接发送给另一方，而无需经过任何金融机构。数字签名提供了部分解决方案，但若仍需可信第三方来防止双花，则主要益处将不复存在。本文提出一种利用对等网络解决双花问题的方案。该网络通过将交易哈希到一条以哈希为基础的、持续延伸的 proof-of-work 链中来为交易加盖时间戳，形成一份只有重做 proof-of-work 才能更改的记录。最长的链不仅作为所见事件序列的证明，也证明它来自最大的 CPU 算力池。只要大多数 CPU 算力由不合谋攻击网络的节点所控制，它们就会生成最长的链，并超越攻击者。网络本身只需要极少的结构。消息以尽力而为的方式广播，节点可以随意离开和重新加入网络，并将最长的 proof-of-work 链接受为它们离线期间所发生事件的证明。
+
+==== 引言
+互联网商务几乎完全依赖金融机构作为可信第三方来处理电子支付。尽管对于大多数交易而言该系统运作良好，但它仍受困于基于信任的模型所固有的弱点。完全不可逆的交易实际上并不可行，因为金融机构无法避免对纠纷进行仲裁。仲裁成本会推高交易成本，从而限制最小可行的交易额，并阻断了进行小额随意支付的可能性；此外还存在更广泛的代价——失去了为不可逆服务进行不可逆支付的能力。一旦存在撤销的可能性，对信任的需求便会蔓延。商家必须对客户保持戒心，并向其索要超出实际所需的更多信息。一定比例的欺诈被视为不可避免而被接受。当面交易时，使用实物货币可以规避这些成本与支付的不确定性，但在通信通道上进行支付时，目前还没有任何机制能够脱离可信第三方而完成。
+
+我们需要的是一种基于密码学证明而非信任的电子支付系统，使任意两个自愿的参与方可以直接彼此交易，而无需可信第三方。在计算上不可行被撤销的交易能够保护卖方免受欺诈，常规的托管机制也可以方便地实现以保护买方。本文提出一种利用点对点分布式时间戳服务器为交易时间顺序生成计算证明的方案，以解决双花问题。只要诚实节点共同控制的 CPU 算力多于任何合谋攻击者节点群，该系统就是安全的。
+
+==== 交易
+我们((("transactions", "in Bitcoin whitepaper", secondary-sortas="Bitcoin whitepaper", id="transaction-whitepaper")))将一枚电子货币定义为一串数字签名。每位持有者通过对前一笔交易的哈希和下一位持有者的公钥进行数字签名，并将其附加到该枚货币的末尾，从而把这枚货币转移给下一位持有者。收款人可以通过验证这些签名来核实所有权链条。
+
+image::images/mbc3_0401.png["交易"]
+
+当然，问题在于收款人无法验证某位先前的持有者是否对该枚货币进行了双花。常见的解决方案是引入一个可信的中心化权威机构，即铸币厂，由其检查每一笔交易以防止双花。每笔交易之后，必须把货币交回铸币厂以重新发行一枚新货币，并且只有直接由铸币厂签发的货币才被信任为未被双花。该方案的问题在于，整个货币体系的命运都取决于经营该铸币厂的公司，每一笔交易都必须经过他们，就像银行一样。
+
+我们需要一种方法，让收款人确信先前的持有者未曾对更早的交易进行签名。就本文目的而言，最早的那一笔交易是有效的，因此我们不关心稍后试图双花的行为。要确认某笔交易不存在，唯一的方法就是知晓所有交易。在基于铸币厂的模型中，铸币厂知晓所有交易，并决定哪一笔最先到达。要在没有可信方的情况下做到这一点，交易必须被公开宣告 [1]，并且我们需要一种系统，使参与者就交易接收顺序的单一历史达成一致。收款人需要证据来证明，在每笔交易发生时，多数节点都认可这是((("transactions", "in Bitcoin whitepaper", secondary-sortas="Bitcoin whitepaper", startref="transaction-whitepaper")))最先收到的那一笔。
+
+==== 时间戳服务器
+我们((("timestamp servers")))提出的方案从一个时间戳服务器开始。时间戳服务器的工作方式是：取一批待加盖时间戳的条目的哈希值，并将该哈希广泛地公布出去，例如登载于报纸或 Usenet 贴文 [2-5]。显然，时间戳证明了数据必然在该时刻已经存在，否则不可能进入该哈希。每个时间戳都把上一个时间戳包含在自身的哈希中，从而形成一条链，每个新增的时间戳都会进一步巩固其之前的时间戳。
+
+image::images/mbc3_aain02.png["时间戳服务器"]
+
+==== Proof-of-Work
+要((("proof-of-work algorithm", "in Bitcoin whitepaper", secondary-sortas="Bitcoin whitepaper")))在对等网络上实现一个分布式时间戳服务器，我们需要使用类似于 Adam Back 的 Hashcash [6] 的 proof-of-work 系统，而不是依赖报纸或 Usenet 贴文。proof-of-work 涉及寻找这样一个值：当对其进行哈希运算（例如使用 SHA-256）时，所得哈希以一定数量的零位开头。所需的平均工作量随所需零位数呈指数增长，而验证只需执行一次哈希即可。对于我们的时间戳网络，我们通过在 block 中递增一个 nonce 来实现 proof-of-work，直至找到使该 block 的哈希具备所需零位数的值。一旦花费了 CPU 算力使其满足 proof-of-work，若不重做该工作便无法更改该 block。随着后续 block 不断追加，要修改该 block 所需的工作量将包括重做其后所有 block 的工作。
+
+image::images/mbc3_aain03.png["pow"]
+
+proof-of-work 同时也解决了在多数决策中如何确定代表权的问题。如果多数票基于一个 IP 地址一票，便可能被任何能够分配大量 IP 的人所颠覆。proof-of-work 在本质上是一个 CPU 一票。多数决策由最长的链来表达，因为该链上凝结了最多的 proof-of-work 努力。如果多数 CPU 算力由诚实节点掌控，则诚实链将增长最快，并超越任何竞争链。要修改某个过往的 block，攻击者必须重做该 block 及其后所有 block 的 proof-of-work，然后追上并超过诚实节点的工作量。我们稍后将证明，随着后续 block 不断添加，较慢攻击者追上的概率会呈指数衰减。
+
+为应对硬件速度的提升以及不同时期运行节点意愿的变化，proof-of-work 难度由一个以平均出块速率（每小时若干个 block）为目标的移动平均值来确定。若 block 生成过快，难度便会提高。
+
+==== 网络
+
+运行((("nodes", "in Bitcoin", secondary-sortas="Bitcoin whitepaper")))((("Bitcoin network", "in Bitcoin whitepaper", secondary-sortas="Bitcoin whitepaper")))该网络的步骤如下：
+
+1. 新交易被广播到所有节点。
+2. 每个节点将新交易汇集到一个 block 中。
+3. 每个节点为其 block 求解一个困难的 proof-of-work。
+4. 当某个节点找到 proof-of-work 时，它把该 block 广播到所有节点。
+5. 节点只在 block 中所有交易均有效且未被花费的前提下接受该 block。
+6. 节点通过开始着手创建链中的下一个 block 来表达对该 block 的接受，并将已接受 block 的哈希作为前一个哈希。
+
+节点始终把最长的链视为正确链，并继续在其之上延伸。如果两个节点同时广播下一个 block 的不同版本，部分节点可能先收到其中之一。在这种情况下，它们会基于先收到的那一个开展工作，但同时保存另一个分支以备其变得更长。当下一个 proof-of-work 被找到、其中某一分支变得更长时，僵局将被打破；原本基于另一分支工作的节点随即会切换到较长的那条链上。
+
+新交易的广播并不一定需要到达所有节点。只要能到达足够多的节点，它们不久便会进入某个 block。block 的广播同样能容忍消息丢失。如果某节点没有收到某个 block，它会在收到下一个 block 并意识到自己漏掉了一个时主动请求该 block。
+
+==== 激励
+按((("incentives", id="incentive-whitepaper")))惯例，每个 block 中的第一笔交易是一笔特殊交易，用以创建归该 block 创建者所有的一枚新货币。这为节点支持网络提供了激励，并提供了一种最初将货币投入流通的方式，因为不存在中央权威来发行它们。稳定地新增固定数量的新货币，类似于黄金矿工耗费资源以将黄金投入流通。在我们的场景中，所耗费的是 CPU 时间与电力。
+
+该激励也可以通过交易手续费来资助。如果一笔交易的输出值小于其输入值，差额即为一笔交易手续费，会被加入到包含该交易的 block 的激励价值中。一旦预定数量的货币进入流通，该激励便可以完全过渡到交易手续费，并完全摆脱通货膨胀。
+
+该激励或许有助于鼓励节点保持诚实。如果一个贪婪的攻击者能够集结超过所有诚实节点总和的 CPU 算力，他将不得不在两种选择之间权衡：是用它通过取回已支付的款项来欺骗他人，还是用它来生成新货币。他应当会发现，按规则行事更为有利可图——这种规则使他获得比所有其他人加起来还多的新货币——而非破坏系统并损害他自身((("incentives", startref="incentive-whitepaper")))财富的合法性。
+
+==== 回收磁盘空间
+
+++++
+<p>一旦 ((("disk space", "reclaiming")))((("reclaiming", "disk space")))((("blocks", "reclaiming disk space"))) 一枚货币的最新交易被埋藏在足够多的 block 之下，其之前已花费的交易便可丢弃以节省磁盘空间。为了在不破坏 block 哈希的前提下做到这一点，交易被哈希到一棵 Merkle Tree <a href="#ref_seven">[7]</a> <a href="#ref_two">[2]</a> <a href="#ref_five">[5]</a> 中，且只把根包含在 block 的哈希里。随后可以通过剪除树的分支来压缩旧 block，内部哈希无需保存。</p>
+++++
+
+image::images/mbc3_aain04.png["disk"]
+
+不含交易的 block 头大约为 80 字节。如果假设每 10 分钟生成一个 block，则 +80 bytes * 6 * 24 * 365 = 4.2MB+ 每年。截至 2008 年，计算机系统通常售出时配备 2GB RAM，并且摩尔定律预测当前的增速为每年 1.2GB，因此即便必须将 block 头保存在内存中，存储也不应成为问题。
+
+==== 简化支付验证
+不((("payment verification", "in Bitcoin whitepaper", secondary-sortas="Bitcoin whitepaper", id="payment-verify")))((("verifying", "payment", "in Bitcoin whitepaper", tertiary-sortas="Bitcoin whitepaper", id="verify-payment")))运行全节点也可以验证支付。用户只需保留最长 proof-of-work 链的 block 头副本，他可以通过向网络节点查询直到确信自己拥有最长链来获取这些 block 头，并取得将该交易关联到其被加盖时间戳的 block 的 Merkle 分支。他无法自行检查该交易，但通过将其链接到链中的某个位置，他可以看到某个网络节点已经接受了它，且其后追加的 block 进一步确认网络已接受该交易。
+
+image::images/mbc3_aain05.png["spv"]
+
+因此，只要诚实节点控制着网络，这种验证就是可靠的；但若网络被攻击者压制，则该验证较为脆弱。尽管网络节点可以自行验证交易，但只要攻击者能够持续压制网络，这种简化方法就可能被攻击者伪造的交易所欺骗。一种防护策略是：在网络节点检测到无效 block 时接收其警报，从而提示用户的软件去下载完整 block 及被警示的交易，以确认其中的不一致。频繁收款的商家可能仍希望运行自己的节点，以获得更独立的安全保障与更快速的((("payment verification", "in Bitcoin whitepaper", secondary-sortas="Bitcoin whitepaper", startref="payment-verify")))((("verifying", "payment", "in Bitcoin whitepaper", tertiary-sortas="Bitcoin whitepaper", startref="verify-payment")))验证。
+
+==== 价值的合并与拆分
+尽管((("transactions", "inputs", "in Bitcoin whitepaper", tertiary-sortas="Bitcoin whitepaper")))((("transactions", "outputs", "in Bitcoin whitepaper", tertiary-sortas="Bitcoin whitepaper")))((("inputs", "in Bitcoin whitepaper", secondary-sortas="Bitcoin whitepaper")))((("outputs", "in Bitcoin whitepaper", secondary-sortas="Bitcoin whitepaper")))逐枚处理货币是可行的，但为转账中的每一分钱都创建单独的交易会显得笨拙。为允许价值被拆分与合并，交易包含多个输入与输出。通常情况下，要么是来自某笔较大的先前交易的单一输入，要么是把若干较小金额合并起来的多个输入；输出至多两个：一个用于支付，另一个在有找零时把找零返还给发送者。
+
+image::images/mbc3_aain06.png["合并与拆分"]
+
+需要指出的是，这里并不存在扇出（fan-out）问题——即某笔交易依赖于若干笔交易，而那些交易又依赖于更多交易。从不需要为一笔交易的历史抽取一份完整的独立副本。
+
+==== 隐私
+传统的((("privacy", "in Bitcoin whitepaper", secondary-sortas="Bitcoin whitepaper")))银行模型通过限制相关各方与可信第三方对信息的访问，实现了一定程度的隐私。必须公开宣告所有交易这一要求排除了该方法，但仍可通过在另一处切断信息流来维持隐私：即保持公钥的匿名性。公众可以看到有人正在向另一人转账某笔金额，但没有能将该交易与任何人相联系的信息。这类似于证券交易所所披露的信息层级——单笔交易的时间与规模即"行情纸带"会被公开，但不会披露双方身份。
+
+image::images/mbc3_aain07.png["隐私"]
+
+作为附加防线，每笔交易都应使用一对新的密钥对，以防止它们被关联到同一持有者。多输入交易仍不可避免地会泄露其输入归同一持有者所有，因此存在一定的关联。其风险在于，一旦某个密钥的持有者身份被揭示，关联便可能揭示出归同一持有者所有的其他交易。
+
+==== 计算
+我们((("calculations", "in Bitcoin whitepaper", secondary-sortas="Bitcoin whitepaper", id="calculate-whitepaper")))考虑这样一种情景：攻击者试图比诚实链更快地生成一条替代链。即便其成功了，也不会让系统对任意更改敞开大门，例如凭空创造价值或夺取从未属于攻击者的资金。节点不会接受无效交易作为支付，诚实节点也绝不会接受包含此类交易的 block。攻击者只能尝试修改自己的某笔交易，以取回他最近支付的款项。
+
+诚实链与攻击者链之间的赛跑可以刻画为一个((("Binomial Random Walk")))二项随机游走。成功事件为诚实链被延长一个 block，使其领先优势增加 +1；失败事件为攻击者链被延长一个 block，使差距缩小 -1。
+
+++++
+<p>攻击者从给定的落后量追赶上来的概率，类似于一个((("Gambler&#x27;s Ruin problem")))赌徒破产问题。设想一个拥有无限信用额度的赌徒从落后状态开始，进行潜在无限多次试验以试图回到收支平衡。我们可以计算他最终回到收支平衡的概率，亦即攻击者最终追上诚实链的概率，公式如下 <a href="#ref_eight">[8]</a>：</p>
+++++
+
+p = 诚实节点找到下一个 block 的概率
+
+q = 攻击者找到下一个 block 的概率
+
+q~z~ = 攻击者从落后 z 个 block 最终追上的概率
+
+
+++++
+<div data-type="equation">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML" >
+  <mstyle mathsize="1.2000em">
+    <msub>
+      <mi>q</mi>
+      <mi>z</mi>
+    </msub>
+    <mo>=</mo>
+    <mrow>
+      <mo fence="true" form="prefix">{</mo>
+      <mtable columnalign="center center">
+        <mtr>
+          <mtd>
+            <mn>1</mn>
+          </mtd>
+          <mtd>
+            <mrow>
+              <mtext>if</mtext>
+              <mspace width="0.2778em"></mspace>
+              <mi>p</mi>
+              <mo>≤</mo>
+              <mi>q</mi>
+            </mrow>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix" stretchy="false">(</mo>
+              <mi>q</mi>
+              <mo lspace="0em" rspace="0em">⁄</mo>
+              <mi>p</mi>
+              <msup>
+                <mo form="postfix" stretchy="false">)</mo>
+                <mi>z</mi>
+              </msup>
+            </mrow>
+          </mtd>
+          <mtd>
+            <mrow>
+              <mtext>if</mtext>
+              <mspace width="0.2778em"></mspace>
+              <mi>p</mi>
+              <mo>&gt;</mo>
+              <mi>q</mi>
+            </mrow>
+          </mtd>
+        </mtr>
+      </mtable>
+      <mo fence="true" form="postfix">}</mo>
+    </mrow>
+  </mstyle>
+</math>
+</div>
+++++
+
+在我们假设 p > q 的前提下，随着攻击者需要追赶的 block 数增加，该概率呈指数下降。在形势不利于他的情况下，若他没有在早期幸运地一跃领先，则随着他落后得越来越远，其机会将变得微乎其微。
+
+接下来我们考虑：新交易的收款人需要等待多久，才能足够确信发送方无法更改该交易。我们假设发送方是一个攻击者，他想让收款人在一段时间内相信他已经向其支付，然后在一段时间过后将该笔支付转回给自己。一旦发生这种情况，收款人将收到警报，但发送方希望那时为时已晚。
+
+收款人生成一对新的密钥对，并在签名前不久将公钥交给发送方。这可以阻止发送方提前通过持续工作准备一条 block 链，使其足够幸运地领先足够多，然后在那一刻执行交易。一旦交易被发送，不诚实的发送方便开始秘密地在一条平行链上工作，该链包含其交易的替代版本。
+
+收款人等待，直到该交易被纳入某个 block，且此后又有 z 个 block 相继链接其上。他并不知道攻击者已经取得多少进展，但假设诚实 block 的耗时为每个 block 的平均期望时间，则攻击者潜在的进展将服从期望值为如下的泊松分布：
+
+++++
+<div data-type="equation">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML" >
+  <mstyle mathsize="1.2000em">
+    <mi>λ</mi>
+    <mo>=</mo>
+    <mi>z</mi>
+    <mfrac>
+      <mi>q</mi>
+      <mi>p</mi>
+    </mfrac>
+  </mstyle>
+</math>
+</div>
+++++
+
+为得到此刻攻击者仍能追上的概率，我们将其可能取得的每一进度对应的泊松密度，乘以他从该位置追上的概率：
+
+++++
+<div data-type="equation">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML" >
+  <mstyle mathsize="1.2000em">
+    <mrow>
+      <munderover>
+        <mo movablelimits="false">∑</mo>
+        <mrow>
+          <mi>k</mi>
+          <mo>=</mo>
+          <mn>0</mn>
+        </mrow>
+        <mi>∞</mi>
+      </munderover>
+    </mrow>
+    <mfrac>
+      <mrow>
+        <msup>
+          <mi>λ</mi>
+          <mi>k</mi>
+        </msup>
+        <msup>
+          <mi>e</mi>
+          <mrow>
+            <mo>−</mo>
+            <mi>λ</mi>
+          </mrow>
+        </msup>
+      </mrow>
+      <mrow>
+        <mi>k</mi>
+        <mo form="postfix" stretchy="false">!</mo>
+      </mrow>
+    </mfrac>
+    <mo>⋅</mo>
+    <mrow>
+      <mo fence="true" form="prefix">{</mo>
+      <mtable columnalign="center center">
+        <mtr>
+          <mtd>
+            <mrow>
+              <mo form="prefix" stretchy="false">(</mo>
+              <mi>q</mi>
+              <mo lspace="0em" rspace="0em">⁄</mo>
+              <mi>p</mi>
+              <msup>
+                <mo form="postfix" stretchy="false">)</mo>
+                <mrow>
+                  <mo form="prefix" stretchy="false">(</mo>
+                  <mi>z</mi>
+                  <mo>−</mo>
+                  <mi>k</mi>
+                  <mo form="postfix" stretchy="false">)</mo>
+                </mrow>
+              </msup>
+            </mrow>
+          </mtd>
+          <mtd>
+            <mrow>
+              <mtext>if</mtext>
+              <mspace width="0.2778em"></mspace>
+              <mi>k</mi>
+              <mo>≤</mo>
+              <mi>z</mi>
+            </mrow>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mn>1</mn>
+          </mtd>
+          <mtd>
+            <mrow>
+              <mtext>if</mtext>
+              <mspace width="0.2778em"></mspace>
+              <mi>k</mi>
+              <mo>&gt;</mo>
+              <mi>z</mi>
+            </mrow>
+          </mtd>
+        </mtr>
+      </mtable>
+      <mo fence="true" form="postfix">}</mo>
+    </mrow>
+  </mstyle>
+</math>
+</div>
+++++
+
+为避免对该分布的无限尾部求和，我们将其重新整理为...
+
+++++
+<div data-type="equation">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML" >
+  <mstyle mathsize="1.2000em">
+    <mn>1</mn>
+    <mo>−</mo>
+    <mrow>
+      <munderover>
+        <mo movablelimits="false">∑</mo>
+        <mrow>
+          <mi>k</mi>
+          <mo>=</mo>
+          <mn>0</mn>
+        </mrow>
+        <mi>z</mi>
+      </munderover>
+    </mrow>
+    <mfrac>
+      <mrow>
+        <msup>
+          <mi>λ</mi>
+          <mi>k</mi>
+        </msup>
+        <msup>
+          <mi>e</mi>
+          <mrow>
+            <mo>−</mo>
+            <mi>λ</mi>
+          </mrow>
+        </msup>
+      </mrow>
+      <mrow>
+        <mi>k</mi>
+        <mo form="postfix" stretchy="false">!</mo>
+      </mrow>
+    </mfrac>
+    <mrow>
+      <mo fence="true" form="prefix">(</mo>
+      <mn>1</mn>
+      <mo>−</mo>
+      <mo form="prefix" stretchy="false">(</mo>
+      <mi>q</mi>
+      <mo lspace="0em" rspace="0em">⁄</mo>
+      <mi>p</mi>
+      <msup>
+        <mo form="postfix" stretchy="false">)</mo>
+        <mrow>
+          <mo form="prefix" stretchy="false">(</mo>
+          <mi>z</mi>
+          <mo>−</mo>
+          <mi>k</mi>
+          <mo form="postfix" stretchy="false">)</mo>
+        </mrow>
+      </msup>
+      <mo fence="true" form="postfix">)</mo>
+    </mrow>
+  </mstyle>
+</math>
+</div>
+++++
+
+转换为 C 代码...
+
+[source,c]
+----
+#include <math.h>
+double AttackerSuccessProbability(double q, int z)
+{
+    double p = 1.0 - q;
+    double lambda = z * (q / p);
+    double sum = 1.0;
+    int i, k;
+    for (k = 0; k <= z; k++)
+    {
+        double poisson = exp(-lambda);
+        for (i = 1; i <= k; i++)
+            poisson *= lambda / i;
+        sum -= poisson * (1 - pow(q / p, z - k));
+    }
+    return sum;
+}
+----
+
+运行得到一些结果，我们可以看到该概率随 z 呈指数下降。
+----
+q=0.1
+z=0 P=1.0000000
+z=1 P=0.2045873
+z=2 P=0.0509779
+z=3 P=0.0131722
+z=4 P=0.0034552
+z=5 P=0.0009137
+z=6 P=0.0002428
+z=7 P=0.0000647
+z=8 P=0.0000173
+z=9 P=0.0000046
+z=10 P=0.0000012
+----
+----
+q=0.3
+z=0 P=1.0000000
+z=5 P=0.1773523
+z=10 P=0.0416605
+z=15 P=0.0101008
+z=20 P=0.0024804
+z=25 P=0.0006132
+z=30 P=0.0001522
+z=35 P=0.0000379
+z=40 P=0.0000095
+z=45 P=0.0000024
+z=50 P=0.0000006
+----
+求解 P 小于 0.1% 的情形...
+----
+P < 0.001
+q=0.10 z=5
+q=0.15 z=8
+q=0.20 z=11
+q=0.25 z=15
+q=0.30 z=24
+q=0.35 z=41
+q=0.40 z=89
+q=0.45 z=340
+----
+
+==== 结论
+我们((("calculations", "in Bitcoin whitepaper", secondary-sortas="Bitcoin whitepaper", startref="calculate-whitepaper")))提出了一种无需依赖信任的电子交易系统。我们从基于数字签名的货币这一惯常框架出发，它对所有权提供了强有力的控制，但若没有防止双花的手段，则尚不完备。为解决这一问题，我们提出了一个使用 proof-of-work 的对等网络，用以记录交易的公开历史；只要诚实节点掌控多数 CPU 算力，攻击者要更改该历史很快就会在计算上变得不可行。该网络以其无结构的简洁性而稳健。节点同时一齐工作，几乎无需协调。它们无需被标识身份，因为消息并不被路由到任何特定地点，且只需以尽力而为的方式投递。节点可以随意离开和重新加入网络，并将 proof-of-work 链接受为它们离线期间所发生事件的证明。它们以其 CPU 算力投票，通过在有效 block 之上继续工作来表达接受，通过拒绝在无效 block 上工作来表达拒绝。任何所需的规则与激励都可以通过这一共识机制来强制执行。
+
+==== 参考文献
+++++
+<p>
+<span id="ref_one">[1]</span> W. Dai, "b-money," <a href="http://www.weidai.com/bmoney.txt"><em>http://www.weidai.com/bmoney.txt</em></a>, 1998.
+</p>
+<p>
+<span id="ref_two">[2]</span> H. Massias, X.S. Avila, and J.-J. Quisquater, "Design of a secure timestamping service with minimal trust requirements," In 20th Symposium on Information Theory in the Benelux, May 1999.
+</p>
+<p>
+<span id="ref_three">[3]</span> S. Haber, W.S. Stornetta, "How to time-stamp a digital document," In Journal of Cryptology, vol 3, no 2, pages 99-111, 1991.
+</p>
+
+<p>
+<span id="ref_four">[4]</span> D. Bayer, S. Haber, W.S. Stornetta, "Improving the efficiency and reliability of digital time-stamping," In Sequences II: Methods in Communication, Security and Computer Science, pages 329-334, 1993.
+</p>
+
+<p>
+<span id="ref_five">[5]</span> S. Haber, W.S. Stornetta, "Secure names for bit-strings," In Proceedings of the 4th ACM Conference on Computer and Communications Security, pages 28-35, April 1997.
+</p>
+
+<p>
+<span id="ref_six">[6]</span> A. Back, "Hashcash - a denial of service counter-measure," <a href="http://www.hashcash.org/papers/hashcash.pdf"><em>http://www.hashcash.org/papers/hashcash.pdf</em></a>, 2002.
+</p>
+
+<p>
+<span id="ref_seven">[7]</span> R.C. Merkle, "Protocols for public key cryptosystems," In Proc. 1980 Symposium on Security and Privacy, IEEE Computer Society, pages 122-133, April 1980.
+</p>
+
+<p>
+<span id="ref_eight">[8]</span> W. Feller, "An introduction to probability theory and its applications," 1957.
+</p>
+++++
+
+=== 许可证
+
+本白皮书由 Satoshi Nakamoto 于 2008 年 10 月发表。其后（2009 年）作为支持性文档被加入比特币软件之中，并沿用相同的 MIT 许可证。本白皮书在 MIT 许可证条款下被收录于本书中，除排版格式外未作任何修改：
+
+The MIT License (MIT)
+Copyright (c) 2008 Satoshi Nakamoto
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN((("Bitcoin whitepaper", "original version", startref="bitcoin-whitepaper-original")))((("whitepaper (Bitcoin)", "original version", startref="whitepaper-original"))) THE SOFTWARE.

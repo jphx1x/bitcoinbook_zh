@@ -1,0 +1,229 @@
+[preface]
+== 前言
+
+=== 写作这本书的缘起
+
+我（Andreas）第一次偶然接触比特币是在 2011 年中。当时我的直接反应大致是"嗤！极客玩具货币！"，于是又把它晾在一边长达半年之久，没能理解它的重要性。我后来发现，许多我认识的最聪明的人都有过类似反应，这让我多少得到了一些安慰。第二次遇到比特币是在一次邮件列表的讨论中，我决定读一读 Satoshi Nakamoto 写的那篇白皮书，看看它究竟讲了什么。我至今仍记得读完那九页的那一刻——我意识到比特币不仅仅是一种数字货币，而是一张信任网络，可以承载远不止货币的种种应用。"这不是货币，而是一张去中心化的信任网络"——这个认识开启了我长达四个月、近乎吞噬式的旅程，我搜罗并阅读了所能找到的每一份与比特币有关的资料。我变得着迷而入神，每天有十二个小时甚至更多时间盯着屏幕，阅读、写作、写代码、尽可能多地学习。等我从这种神游状态中走出来的时候，由于经常忘记吃饭，我瘦了二十多磅，并下定决心要把自己投入到比特币的工作中去。
+
+两年后，在创立了若干个探索各种比特币相关服务与产品的小型创业公司之后，我决定是时候写我的第一本书了。比特币这个主题让我陷入创造的狂热，占据了我所有的思考；自互联网以来，这是我所遇到过最令人振奋的技术。是时候把我对这项神奇技术的热情分享给更广泛的读者了。
+
+=== 目标读者
+
+本书主要面向程序员。如果你能使用某门编程语言，本书会教你加密货币的工作原理、如何使用它们，以及如何开发与之交互的软件。前几章对于非程序员读者来说，也可作为一份深入的比特币入门读物——适合那些想要理解比特币与加密货币内部运作机制的人。
+
+=== 为什么封面上是虫子？
+
+切叶蚁（leafcutter ant）这一物种在群落这个超个体中表现出极为复杂的行为，但其中每一只蚂蚁个体所遵循的，不过是受社会互动与化学气味（信息素）所驱动的一套简单规则。Wikipedia 上说："除人类之外，切叶蚁形成了地球上规模最大、最复杂的动物社会。"切叶蚁其实并不吃叶子，而是用叶子培育一种真菌，那才是整个群落的主要食物来源。看明白了吗？这些蚂蚁在搞农业！
+
+虽然蚂蚁形成了基于种姓的社会，并有一只蚁后负责繁殖后代，但在蚁群内部并不存在中央权威或领导者。一个由数百万成员组成的蚁群所表现出的高度智能与复杂行为，是在社会网络中个体互动所产生的涌现属性。
+
+自然界证明了：去中心化系统可以富有韧性，可以在没有中央权威、层级结构或复杂组件的情况下，涌现出复杂性与惊人的精巧。
+
+比特币是一张高度精巧的去中心化信任网络，能够支撑无数种金融流程。然而，比特币网络中的每个节点，所遵循的只是寥寥几条简单规则。复杂行为的涌现来自众多节点之间的互动，而不是来自任何单个节点本身的复杂性或可信度。如同蚁群一样，比特币网络是一张富有韧性的网络，由遵循简单规则的简单节点构成，它们合在一起就能在没有任何中央协调的情况下做出令人惊叹的事情。
+
+=== 本书使用的排版约定
+
+本书使用如下排版约定：
+
+_斜体_:: 表示新术语、URL、电子邮件地址、文件名以及文件扩展名。
+
++等宽字体+:: 用于程序清单，以及段落中引用程序元素时，例如变量名、函数名、数据库、数据类型、环境变量、语句和关键字。
+
+**`等宽粗体`**:: 表示用户应原样键入的命令或其他文本。
+
+_++等宽斜体++_:: 表示应被用户提供的值或由上下文决定的值所替换的文本。
+
+
+[TIP]
+====
+此图标表示一条提示或建议。
+====
+
+[NOTE]
+====
+此图标表示一条一般性注释。
+====
+
+[WARNING]
+====
+此图标表示警告或注意事项。
+====
+
+=== 代码示例
+
+本书的所有代码片段都可以在大多数操作系统上，仅安装相应语言的编译器或解释器后即可复现。必要时，我们会给出基本的安装说明，以及那些命令输出的逐步示例。
+
+部分代码片段以及代码输出为适配纸书排版做了重新折行。所有此类情况下，我们都会在折行处用反斜杠（\）加换行符断开。在誊抄这些示例时，请将这两个字符去掉，把行重新拼接起来，你看到的结果应与示例中所示完全一致。
+
+所有代码片段都尽可能使用真实的数值与计算，因此你可以从一个示例延伸到下一个示例，并且在你自己写代码计算相同数值时，能够得到一致的结果。
+
+=== 关于代码示例的使用
+
+本书旨在帮助你完成工作。一般而言，如果本书提供了示例代码，你可以在自己的程序或文档中使用它。除非你要复制其中相当一部分代码，否则无需联系我们获取许可。例如，编写一个使用本书若干代码片段的程序无需许可；销售或分发 O'Reilly 图书中的示例则需要许可。回答问题时引用本书并摘录示例代码无需许可；在你产品的文档中大量整合本书的示例代码则需要许可。
+
+我们感谢但不强制要求署名。一般署名包含[.keep-together]#书名、#作者、出版社与 ISBN。例如："_Mastering Bitcoin_, 3rd ed., by [.keep-together]#Andreas M.# Antonopoulos and David A. Harding (O'Reilly). Copyright 2024 David Harding, ISBN 978-1-098-15009-9."
+
+本书的某些版本以开源协议发行，例如 https://oreil.ly/RzUHE[CC-BY-NC]，在这种情况下适用相应协议的条款。
+
+如果你认为自己对示例代码的使用超出了合理使用或上述允许范围，欢迎通过 pass:[<a href="mailto:permissions@oreilly.com">permissions@oreilly.com</a>] 与我们联系。
+
+=== 相对上一版的变化
+
+第三版的一个特别重点是对 2017 年第二版的内容以及残留的 2014 年第一版内容做现代化更新。此外，本版还增加了许多与 2023 年当代 Bitcoin 开发实践相关的概念：
+
+xref:ch04_keys.adoc#ch04_keys_addresses[第 4 章 · 密钥与地址]::
+  我们重新组织了地址相关的内容，使其按历史顺序逐步展开：新增了介绍 P2PK 的小节（在那个年代"地址"还是"IP 地址"），刷新了原有的 P2PKH 与 P2SH 章节，并为 segwit/bech32 与 taproot/bech32m 新增了小节。
+
+原第 6 章与第 7 章::
+  原第 6 章《交易》与第 7 章《高级交易》的内容已被重新整理，并扩充为四个新章节：xref:ch06_transactions.adoc#c_transactions[第 6 章 · 交易]（交易的结构）、xref:ch07_authorization-authentication.adoc#c_authorization_authentication[第 7 章 · 授权与认证]、xref:ch08_signatures.adoc#c_signatures[第 8 章 · 数字签名]，以及 xref:ch09_fees.adoc#tx_fees[第 9 章 · 交易手续费]。
+
+xref:ch06_transactions.adoc#c_transactions[第 6 章 · 交易]::
+  我们新增了几乎全部全新的内容来描述一笔交易的结构。
+
+xref:ch07_authorization-authentication.adoc#c_authorization_authentication[第 7 章 · 授权与认证]::
+  我们新增了关于 MAST、P2C、scriptless multisignatures、taproot 与 tapscript 的内容。
+
+xref:ch08_signatures.adoc#c_signatures[第 8 章 · 数字签名]::
+  我们修订了 ECDSA 部分，并新增了关于 Schnorr 签名、多重签名与门限签名的内容。
+
+xref:ch09_fees.adoc#tx_fees[第 9 章 · 交易手续费]::
+  我们新增了几乎全部全新的内容，覆盖手续费、RBF 与 CPFP 费率提升、transaction pinning、package relay 以及 CPFP carve-out。
+
+xref:ch10_network.adoc#bitcoin_network_ch08[第 10 章 · 比特币网络]::
+  我们新增了关于 compact block relay 的内容，对 bloom filters 做了重要更新以更准确地描述其隐私问题，并新增了关于 compact block filters 的内容。
+
+xref:ch11_blockchain.adoc#blockchain[第 11 章 · 区块链]::
+  我们新增了关于 signet 的内容。
+
+xref:ch12_mining.adoc#mining[第 12 章 · 挖矿与共识]::
+  我们新增了关于 BIP8 与 speedy trial 的内容。
+
+附录::
+  我们移除了与具体软件库相关的附录。在收录原始白皮书的附录之后，新增了一份附录，描述 Bitcoin 的实现与特性与白皮书提案之间的差异。
+
+//FIXME:text check edits history for additional changes
+
+=== 本书中的比特币地址与交易
+
+本书中使用的比特币地址、交易、密钥、二维码及区块链数据，大多数都是真实的。这意味着你可以浏览区块链，查看作为示例的交易，并用你自己的脚本或程序去检索它们等等。
+
+但请注意，用来构造这些地址的私钥要么已经印在了本书中，要么已被"销毁"。这就意味着，如果你向这些地址中的任何一个发送资金，钱要么永远丢失，要么在某些情况下，任何能读到这本书的人都可以用书中印出来的私钥把钱拿走。
+
+[WARNING]
+====
+不要向本书中的任何地址发送资金。你的钱要么会被另一位读者取走，要么会永远丢失。
+====
+
+=== O'Reilly 在线学习
+[role = "ormenabled"]
+[NOTE]
+====
+四十多年来，pass:[<a href="https://oreilly.com" class="orm:hideurl"><em class="hyperlink">O'Reilly Media</em></a>] 一直为企业提供技术与商业培训、知识与洞见，助力企业取得成功。
+====
+
+我们独有的专家与创新者网络通过图书、文章以及在线学习平台分享他们的知识与专长。O'Reilly 的在线学习平台为你提供按需访问的实时培训课程、深入的学习路径、交互式编码环境，以及来自 O'Reilly 与 200 多家其他出版商的海量图文与视频资料。更多信息请访问 pass:[<a href="https://oreilly.com" class="orm:hideurl"><em>https://oreilly.com</em></a>]。
+
+=== 如何联系我们
+
+关于本书的评论与问题，请寄给出版社：
+
+++++
+<ul class="simplelist">
+  <li>O'Reilly Media, Inc.</li>
+  <li>1005 Gravenstein Highway North</li>
+  <li>Sebastopol, CA 95472</li>
+  <li>800-889-8969（美国或加拿大境内）</li>
+  <li>707-829-7019（国际或本地）</li>
+  <li>707-829-0104（传真）</li>
+  <li><a class="email" href="mailto:support@oreilly.com"><em>support@oreilly.com</em></a></li>
+  <li><a href="https://www.oreilly.com/about/contact.html"><em>https://www.oreilly.com/about/contact.html</em></a></li>
+</ul>
+++++
+
+我们为本书设有专门的网页，上面列出勘误、示例以及任何其他附加信息。你可以通过 link:$$https://oreil.ly/MasteringBitcoin3e$$[] 访问该页面。
+
+++++
+<!--Don't forget to update the link above.-->
+++++
+
+有关我们图书与课程的新闻与资讯，请访问 link:$$https://oreilly.com$$[]。
+
+在 LinkedIn 上关注我们：link:$$https://linkedin.com/company/oreilly-media$$[]。
+
+在 Twitter 上关注我们：link:$$https://twitter.com/oreillymedia$$[]。
+
+在 YouTube 上观看我们：link:$$https://youtube.com/oreillymedia$$[]。
+
+
+=== 联系作者
+
+++++
+<p class="left-align">
+你可以在 Andreas M. Antonopoulos 的个人网站上联系到他：
+<span class="keep-together"><a href="https://antonopoulos.com"><em class="hyperlink">https://antonopoulos.com</em></a>。</span></p>
+++++
+
+在 Facebook 上关注 Andreas：
+link:$$https://facebook.com/AndreasMAntonopoulos$$[]。
+
+在 Twitter 上关注 Andreas：
+link:$$https://twitter.com/aantonop$$[]。
+
+在 LinkedIn 上关注 Andreas：
+link:$$https://linkedin.com/company/aantonop$$[]。
+
+衷心感谢所有通过每月捐赠支持 Andreas 工作的赞助人。你可以在他的 Patreon 页面上关注他：
+link:$$https://patreon.com/aantonop$$[]。
+
+关于 _Mastering Bitcoin_、Andreas 的开放版（Open Edition）以及各语言译本的信息，可在以下网址获取：
+link:$$https://bitcoinbook.info$$[]。
+
+你可以在 David A. Harding 的个人网站上联系到他：
+link:$$https://dtrt.org$$[]。
+
+=== 第一版与第二版致谢
+
+_作者：Andreas M. Antonopoulos_
+
+本书凝聚了许多人的努力与贡献。我衷心感谢一路上从朋友、同事乃至素不相识的陌生人那里得到的所有帮助，是你们与我一同投入了这项工作，要写出一本关于加密货币与比特币的权威技术书。
+
+比特币技术与比特币社区是无法割裂的，本书既是一本关于这项技术的书，也同样是这个社区的产物。从最初到最后，整个比特币社区都在鼓励我、为我加油、支持我、回报我的工作。最重要的是，本书让我有机会在两年时间里成为这个美好社区的一员，对于把我接纳进来这件事，我对你们感激不尽。要逐一致谢的人实在太多——我在大会、活动、研讨会、聚会、披萨饭局以及小型私人聚会上结识的人们，以及许多通过 Twitter、reddit、bitcointalk.org 和 GitHub 与我交流的人，都对本书产生了影响。本书中你看到的每一个想法、类比、问题、回答与解释，都曾在某个时刻通过我与社区的互动得到启发、检验或改进。感谢你们所有人的支持；没有你们就不会有这本书。我永远心怀感激。
+
+当然，成为作者的旅程远在第一本书之前就已经开始。我的母语（以及最初接受教育的语言）是希腊语，所以大学第一年我不得不去补一门英语写作课。我要感谢我的英语写作老师 Diana Kordas，是她让我在那一年里建立起信心与写作能力。后来作为一名职业人士，我在数据中心这一题材上磨练了我的技术写作能力，为 _Network World_ 杂志撰稿。我要感谢 John Dix 和 John Gallant，是他们给了我在 _Network World_ 担任专栏作者的第一份写作工作；还有我的编辑 Michael Cooney 与我的同事 Johna Till Johnson，他们编辑了我的专栏，让它们达到了可发表的水准。每周写 500 字，连写四年，给了我足够的经验，最终让我有勇气考虑成为一名作者。
+
+也要感谢那些在我向 O'Reilly 提交本书的写作提案时，为我提供推荐意见与提案评审的人。具体而言，感谢 John Gallant、Gregory Ness、Richard Stiennon、Joel Snyder、Adam B. Levine、Sandra Gittlen、John Dix、Johna Till Johnson、Roger Ver 与 Jon Matonis。特别感谢 Richard Kagan 与 Tymon Mattoszko，他们审阅了提案的早期版本，以及为提案做文字编辑的 Matthew Taylor。
+
+感谢 O'Reilly 出版的 _DNS and BIND_ 一书的作者 Cricket Liu，是他把我介绍给了 O'Reilly。也感谢 O'Reilly 的 Michael Loukides 与 Allyson MacDonald，他们花了数月时间帮助促成本书的诞生。当生活打乱了我们既定的计划，以致截稿时间被错过、交付物被延期时，Allyson 表现出了非凡的耐心。对于第二版，我要感谢 Timothy McGovern 在整个流程中的引导、Kim Cofer 耐心的编辑，以及 Rebecca Panzer 为许多新图表所做的绘制工作。
+
+最初几章的最初几稿是最艰难的，因为比特币是一个很难梳理清楚的主题。每当我去拉扯比特币技术的一根线时，就不得不把整团东西都扯出来。我曾反复陷入僵局并有些沮丧，努力想把这个主题讲得通俗易懂，并围绕这样一个高度技术性的题材建立起一条叙事线。最终，我决定通过那些使用比特币的人的故事来讲述比特币本身的故事，整本书才变得容易写得多。我要感谢我的朋友兼导师 Richard Kagan，是他帮我把故事的脉络捋顺，渡过了写作瓶颈的那些时刻。我感谢 Pamela Morgan，她审阅了本书第一版与第二版每一章的早期草稿，并提出了犀利的问题来推动它们变得更好。也感谢 San Francisco Bitcoin Developers Meetup 小组的开发者们，以及 Taariq Lewis 与 Denise Terry，他们帮助检验了早期素材。还要感谢 Andrew Naugler 完成的信息图设计。
+
+在本书写作过程中，我把早期草稿放到了 GitHub 上，并邀请公众发表评论。社区给出了一百多条评论、建议、勘误与贡献。这些贡献都明确列在了 <<github_contrib>> 中，并附上了我的谢意。最重要的是，我要由衷感谢我的志愿者 GitHub 编辑 Ming T. Nguyen（第一版）与 Will Binns（第二版），他们不知疲倦地在 GitHub 上整理与管理 pull request、issue 报告，并修复了 bug。
+
+本书初稿完成后，经历了多轮技术审阅。感谢 Cricket Liu 与 Lorne Lantz 细致的审阅、评论与支持。
+
+多位比特币开发者贡献了代码示例、审阅意见、评论与鼓励。感谢 Amir Taaki 与 Eric Voskuil 贡献的示例代码片段以及众多精彩评论；感谢 Chris Kleeschulte 贡献的关于 Bitcore 的信息；感谢 Vitalik Buterin 与 Richard Kiss 在椭圆曲线数学与代码上的协助；感谢 Gavin Andresen 的更正、评论与鼓励；感谢 Michalis Kargakis 的评论、贡献以及 btcd 相关的撰写；感谢 Robin Inge 提交的勘误，让第二版的纸书印刷得到了改进。在第二版中，我再次得到了许多 Bitcoin Core 开发者的大力帮助，包括为我揭开 segregated witness 神秘面纱的 Eric Lombrozo、帮助改进交易章节的 Luke Dashjr、审阅 segregated witness 及其他章节的 Johnson Lau，以及许许多多其他人。我也要感谢 Joseph Poon、Tadge Dryja 与 Olaoluwa Osuntokun，是他们为我讲解了 Lightning Network，审阅了我的文字，并在我陷入困境时回答了我的问题。
+
+我对文字与书籍的热爱，应归功于我的母亲 Theresa，是她在一座四壁立满书籍的房子里把我抚养长大。我的母亲还在 1982 年给我买了人生第一台电脑，尽管她自称是个对科技敬而远之的人。我的父亲 Menelaos 是一位土木工程师，他刚刚在 80 岁高龄出版了自己的第一本书，是他教会了我逻辑与分析性的思维，以及对科学与工程的热爱。
+
+感谢你们所有人，一路上对我的支持。
+
+=== 第三版致谢
+
+_作者：David A. Harding_
+
+<<schnorr_signatures>> 中那段对非交互式 schnorr 签名协议的介绍——它先从描述交互式 schnorr 身份认证协议入手——在很大程度上受到了 Gregory Maxwell 与 Andrew Poelstra 2015 年所撰 "Borrommean Ring Signatures" 一文中对同一主题的引入方式的深刻影响。过去十年间他们二位无私提供的帮助，让我深深心怀感激。
+
+为本书手稿草稿提供宝贵技术审阅的，有 Jorge Lesmes、Olaoluwa Osuntokun、René Pickhardt 以及 Mark "Murch" Erhardt。尤其是 Murch 那份极为深入而富有洞见的审阅，以及他愿意一遍又一遍地评估同一段文字的多个迭代版本，把本书的质量提升到了超出我最高预期的水平。
+
+我也要由衷感谢 Jimmy Song 推荐我承担这个项目，感谢与我合著的 Andreas 允许我去更新他那部畅销之作，感谢 Angela Rufino 在整个 O'Reilly 写作流程中对我的引导，以及感谢 O'Reilly 的所有其他工作人员，是他们让第三版的写作成为了一段愉快且富有成效的经历。
+
+最后，对于所有在我这段旅程中给过我帮助的比特币贡献者们——从创造了我所使用的软件，到教我理解它的工作原理，再到帮助我把所学到的那点知识传播出去——我真不知道该如何向你们一一道谢。你们人数太多了，名字列不过来，但我常常想起你们，并且明白：若没有你们为我所做的一切，我对本书的贡献是不可能实现的。
+
+[[github_contrib]]
+=== 早期发布版草稿（GitHub 贡献者）
+
+许多贡献者为 GitHub 上的早期发布版草稿提供了评论、更正与补充。感谢你们所有人对本书的贡献。
+
+下面列出值得致谢的 GitHub 贡献者，括号中是他们的 GitHub ID：
+
+include::meta/github_contrib.adoc[]
