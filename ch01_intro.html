@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<title>引论</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment the following line when using as a custom stylesheet */
+/* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700"; */
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+b,strong{font-weight:bold}
+abbr{font-size:.9em}
+abbr[title]{cursor:help;border-bottom:1px dotted #dddddf;text-decoration:none}
+dfn{font-style:italic}
+hr{height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type=checkbox],input[type=radio]{padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,::before,::after{box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;line-height:1;position:relative;cursor:auto;-moz-tab-size:4;-o-tab-size:4;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.square{list-style-type:square}
+ul.circle ul:not([class]),ul.disc ul:not([class]),ul.square ul:not([class]){list-style:inherit}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:1px solid #dedede;word-wrap:normal}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 0 0 .1em #fff;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin:0 auto;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:hsla(0,0%,100%,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details{margin-left:1.25rem}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
+details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
+details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class=paragraph]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock pre>code{display:block}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos,pre.pygments .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+pre.pygments span.linenos{display:inline-block;margin-right:.75em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
+table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
+table.frame-sides{border-width:0 1px}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+li>p:empty:only-child::before{content:"";display:inline-block}
+ul.checklist>li>p:first-child{margin-left:-1em}
+ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist>li>p:first-child>input[type=checkbox]:first-child{margin-right:.25em}
+ul.inline{display:flex;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]{border-bottom:1px dotted}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#header,#content,#footnotes,#footer{max-width:none}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media amzn-kf8,print{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/github.min.css">
+</head>
+<body class="article">
+<div id="header">
+</div>
+<div id="content">
+<div class="sect1 pagenumrestart">
+<h2 id="ch01_intro_what_is_bitcoin">引论</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Bitcoin是一系列概念与技术的集合，它们构成了一个数字货币生态系统的基础。这一系统中称为 bitcoin 的货币单位，被用于在 Bitcoin 网络的参与者之间存储和传递价值。Bitcoin 用户主要通过互联网，使用 Bitcoin 协议彼此通信，当然也可以使用其他传输网络。Bitcoin 协议栈以开源软件的形式提供，可以运行在多种计算设备上，包括笔记本电脑和智能手机，这使得该技术易于获取。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>本书中，货币单位以小写 <em>b</em> 开头，写作 "bitcoin"；
+而整个系统以大写 <em>B</em> 开头，写作 "Bitcoin"。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>用户可以通过网络转移 bitcoin，去做几乎所有传统货币能做的事，包括购买和销售商品、向个人或组织汇款，或者发放信贷。bitcoin 可以在专门的货币交易所被买入、卖出，以及与其他货币兑换。可以说 Bitcoin 是互联网时代理想的货币形式，因为它快速、安全、无国界。</p>
+</div>
+<div class="paragraph">
+<p>与传统货币不同，bitcoin 完全是虚拟的。它没有实体硬币，甚至没有单独的数字硬币。所谓的"币"，是隐含在把价值从付款方转移到收款方的交易之中的。Bitcoin 用户掌握密钥，凭借密钥证明自己对 Bitcoin 网络中某笔 bitcoin 的所有权。借助这些密钥，他们可以对交易签名，从而解锁价值并把它转移给新的所有者花掉。密钥通常存储在用户电脑或智能手机上的数字钱包里。能够对交易签名的密钥，是花费 bitcoin 的唯一前提条件，这把控制权完全交到每个用户手中。</p>
+</div>
+<div class="paragraph">
+<p>Bitcoin 是一个分布式的、对等的系统。因此，它没有中央服务器，也没有可控制的中心点。bitcoin 的单位是通过一种称为"挖矿"（mining）的过程产生的，该过程包括反复执行一个引用最近 Bitcoin 交易列表的计算任务。Bitcoin 网络中的任何参与者都可以作为矿工，使用自己的计算设备帮助保护交易安全。平均每 10 分钟，就会有一位 Bitcoin 矿工能够为过去的交易增加安全性，并因此获得全新发行的 bitcoin 以及近期交易支付的手续费作为奖励。从本质上说，Bitcoin 挖矿把中央银行的货币发行与清算职能去中心化了，从而无需任何中央银行。</p>
+</div>
+<div class="paragraph">
+<p>Bitcoin 协议内置了多种算法，用以在整个网络范围内调节挖矿功能。矿工必须执行的计算任务的难度会被动态调整，使得无论任意时刻有多少矿工（以及多少算力）在竞争，平均每 10 分钟都会有人成功。该协议还会周期性地降低新发行的 bitcoin 数量，把曾经发行的 bitcoin 总数限制在略低于 2100 万枚这一固定上限。其结果是，流通中的 bitcoin 数量紧密地遵循一条易于预测的曲线，剩余的 bitcoin 中每四年会有一半进入流通。大约在区块高度 1,411,200，预计出现在 2035 年前后，将来会存在的 bitcoin 中已有 99% 被发行出来。由于 Bitcoin 的发行速度不断减缓，从长期来看，bitcoin 这一货币是通缩的。此外，没有人能够强迫你接受任何超出预期发行速率而产生的 bitcoin。</p>
+</div>
+<div class="paragraph">
+<p>在幕后，Bitcoin 也是一种协议的名称，一个对等网络，以及一项分布式计算领域的创新。Bitcoin 建立在数十年密码学和分布式系统研究的基础上，并以独特而强大的方式融合了至少四项关键创新。Bitcoin 包含：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>一个去中心化的对等网络（Bitcoin 协议）</p>
+</li>
+<li>
+<p>一份公开的交易账本（区块链）</p>
+</li>
+<li>
+<p>一套用于独立验证交易和发行货币的规则（共识规则）</p>
+</li>
+<li>
+<p>一种就有效区块链达成全局去中心化共识的机制（proof-of-work 算法）</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>作为一名开发者，我把 Bitcoin 看作类似于"货币的互联网"——一个通过分布式计算来传播价值并保障数字资产所有权的网络。Bitcoin 的内涵远比初看上去要丰富得多。</p>
+</div>
+<div class="paragraph">
+<p>在本章中，我们将从解释一些主要的概念与术语入手，获取必要的软件，并使用 Bitcoin 进行简单的交易。在后续章节中，我们将逐层揭开使 Bitcoin 得以实现的技术，并深入考察 Bitcoin 网络与协议的内部机制。</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Bitcoin 之前的数字货币</div>
+<div class="paragraph">
+<p>可行的数字货币的出现，与密码学的发展密切相关。考虑到用比特来表示可以兑换商品和服务的价值所涉及的基本挑战，这一点并不奇怪。任何接受数字货币的人都会面临三个基本问题：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>我能否信任这笔钱是真实而非伪造的？</p>
+</li>
+<li>
+<p>我能否信任这笔数字货币只能被花一次（即所谓的"双花"问题）？</p>
+</li>
+<li>
+<p>我能否确信没有别人能宣称这笔钱属于他而不是我？</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>纸币的发行方通过使用日益复杂的纸张和印刷技术，持续不断地与伪造问题作斗争。实体货币天然解决了双花问题，因为同一张纸钞不可能同时出现在两个地方。当然，传统货币常常也会以数字方式存储和传输。在这些情况下，伪造和双花问题是通过让所有电子交易经由具有流通货币全局视角的中央机构进行清算来解决的。对于无法借助特种油墨或全息条纹的数字货币而言，密码学为信任用户对价值的主张提供了基础。具体来说，密码学的数字签名使用户能够对数字资产或交易签名，证明其对该资产的所有权。在合适的架构下，数字签名也可以用来应对双花问题。</p>
+</div>
+<div class="paragraph">
+<p>到了 1980 年代后期，当密码学开始更加广泛地被使用和理解时，许多研究者开始尝试用密码学构建数字货币。这些早期的数字货币项目所发行的数字货币，通常以某种法定货币或诸如黄金的贵金属作为背书。</p>
+</div>
+<div class="paragraph">
+<p>尽管这些早期的数字货币能够运作，但它们都是中心化的，因此很容易遭到政府和黑客的攻击。早期数字货币使用一个中央清算所定期结算所有交易，就像传统银行系统一样。不幸的是，大多数情况下，这些萌芽中的数字货币遭到了忧心忡忡的政府的针对，最终在诉讼中走向消亡。还有一些则在母公司突然清算时戏剧性地崩盘。为了抵御来自合法政府或犯罪分子等敌对者的干预，需要一种 <em>去中心化</em> 的数字货币，以避免单点攻击。Bitcoin 正是这样一个系统——其设计本身就是去中心化的，没有任何可被攻击或腐蚀的中央权威或控制点。</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bitcoin_的历史">Bitcoin 的历史</h3>
+<div class="paragraph">
+<p>Bitcoin最早是在 2008 年通过发表一篇题为
+"Bitcoin: A Peer-to-Peer Electronic Cash
+System"<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>的论文被描述出来的，该论文以
+Satoshi Nakamoto 这一化名发表（参见 <a href="#satoshi_whitepaper">[satoshi_whitepaper]</a>）。Nakamoto
+将数字签名和 Hashcash 等若干已有的发明结合起来，创造出一个完全去中心化的电子现金系统，它不依赖任何中央权威来发行货币、结算和验证交易。一项关键创新，是使用一个分布式计算系统（称为 "proof-of-work" 算法）每 10 分钟左右进行一次全球性的"抽奖"，使去中心化的网络得以就交易的状态达成 <em>共识</em>。这优雅地解决了双花问题——即单一货币单位被花费两次的问题。在此之前，双花问题一直是数字货币的弱点，过去都是通过将所有交易交由中央清算所处理来解决的。</p>
+</div>
+<div class="paragraph">
+<p>Bitcoin 网络于 2009 年启动，其基础是 Nakamoto 发布的一份参考实现，此后该实现又经过许多其他程序员的修订。运行为 Bitcoin 提供安全性与韧性的 proof-of-work 算法（即挖矿）的机器，其数量与算力都呈指数级增长，目前它们合在一起的计算能力，已经超过了世界上顶尖超级计算机算力的总和。</p>
+</div>
+<div class="paragraph">
+<p>Satoshi Nakamoto 于 2011 年 4 月退出公众视野，将开发代码和维护网络的责任交给了一群充满活力的志愿者。Bitcoin 背后的人或团体的身份至今仍是未知的。然而，无论是 Satoshi Nakamoto 还是其他任何人，都未能对 Bitcoin 系统实施个人控制——它的运作基于完全透明的数学原理、开源代码以及参与者之间的共识。这项发明本身具有开创性，已经在分布式计算、经济学和计量经济学等领域催生了新的科学研究。</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">对一个分布式计算难题的解答</div>
+<div class="paragraph">
+<p>Satoshi Nakamoto 的发明 
+同时也是对分布式计算中一个难题——即"拜占庭将军问题"——的一种实用且新颖的解答。简言之，
+该问题在于：让多个没有领导者的参与者，通过在一个不可靠且可能被污染的网络上交换信息，
+就行动方案达成一致。Satoshi Nakamoto 的解决方案使用 proof of work 的概念，
+<em>在没有中央可信权威的情况下</em> 实现共识，这代表了分布式计算领域的一项突破。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_入门">入门</h3>
+<div class="paragraph">
+<p>Bitcoin 是一种协议，可以通过支持该协议的应用程序来访问它。"Bitcoin 钱包"是 Bitcoin 系统最常见的用户界面，正如 web 浏览器是 HTTP 协议最常见的用户界面一样。Bitcoin 钱包有许多实现和品牌，正如 web 浏览器也有许多品牌（例如 Chrome、Safari 和 Firefox）。
+而且就像我们都有自己偏爱的浏览器一样，Bitcoin 钱包在质量、性能、安全性、隐私性和可靠性方面也各不相同。还有一个 Bitcoin 协议的参考实现，它包含一个钱包，称为 "Bitcoin Core"，源自 Satoshi Nakamoto 编写的原始实现。</p>
+</div>
+<div class="sect3">
+<h4 id="_选择_bitcoin_钱包">选择 Bitcoin 钱包</h4>
+<div class="paragraph">
+<p>Bitcoin 钱包是 Bitcoin 生态系统中开发最活跃的应用程序之一。竞争非常激烈，可能此时此刻就有一款新的钱包正在被开发，而去年的几款钱包可能已经无人维护。许多钱包专注于特定平台或特定用途，有些更适合新手，另一些则为高级用户提供了丰富的功能。选择钱包是一件高度主观的事情，取决于具体用途和用户的经验水平。因此，推荐某个特定品牌或钱包是没有意义的。不过，我们可以按照平台和功能对 Bitcoin 钱包进行分类，并对存在的各种钱包类型作一些说明。建议你尝试几款不同的钱包，直到找到适合自己需求的那一款。</p>
+</div>
+<div class="sect4">
+<h5 id="_bitcoin_钱包的类型">Bitcoin 钱包的类型</h5>
+<div class="paragraph">
+<p>Bitcoin 钱包按平台可分为以下几类：</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">桌面钱包</dt>
+<dd>
+<p>桌面钱包是作为参考实现而创建的第一类 Bitcoin 钱包。许多用户运行桌面钱包是为了获得它所提供的功能、自主性和控制力。然而，运行在 Windows 和 macOS 等通用操作系统上有一定的安全劣势，因为这些平台往往不够安全，配置也比较粗放。</p>
+</dd>
+<dt class="hdlist1">移动钱包</dt>
+<dd>
+<p>移动钱包是最常见的 Bitcoin 钱包类型。它们运行在 Apple iOS 和 Android 等智能手机操作系统上，对于新用户来说通常是不错的选择。许多移动钱包以简单易用为设计目标，但也有面向高级用户的功能完备的移动钱包。为了避免下载和存储大量数据，大多数移动钱包从远程服务器获取信息，这会将你的 Bitcoin 地址和余额信息暴露给第三方，从而降低你的隐私性。</p>
+</dd>
+<dt class="hdlist1">Web 钱包</dt>
+<dd>
+<p>Web 钱包通过 web 浏览器访问，并将用户的钱包存储在第三方拥有的服务器上。这类似于网页邮箱，完全依赖第三方服务器。其中有些服务使用运行在用户浏览器中的客户端代码，由用户掌控 Bitcoin 密钥，但用户对服务器的依赖仍会损害其隐私。然而，大多数服务则会以易用性为交换，从用户手中接管 Bitcoin 密钥的控制权。不建议在第三方系统中存储大量 bitcoin。</p>
+</dd>
+<dt class="hdlist1">硬件签名设备</dt>
+<dd>
+<p>硬件签名设备是一种通过专用硬件和固件来存储密钥并对交易签名的设备。它们通常通过 USB 线、近场通信（NFC）或带二维码的相机连接到桌面、移动或 web 钱包。由于所有与 Bitcoin 相关的操作都在专用硬件上完成，这类钱包对多种攻击具有更强的防御能力。硬件签名设备有时被称为 "hardware wallets"，但它们需要与一个功能完备的钱包配对，才能发送和接收交易；而该配对钱包所提供的安全性和隐私性，对用户使用硬件签名设备时获得的安全性和隐私性起着关键作用。</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_全节点_vs_轻量级">全节点 vs. 轻量级</h5>
+<div class="paragraph">
+<p>对 Bitcoin 钱包进行分类的另一种方式，是看它们的自治程度以及它们如何与 Bitcoin 网络交互：</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">全节点</dt>
+<dd>
+<p>全节点是一种程序，它验证 Bitcoin 全部交易历史（即每位用户曾经的每一笔交易）。可选地，全节点也可以存储之前验证过的交易，并向其他 Bitcoin 程序（无论是同一台计算机上还是通过互联网）提供数据。全节点会消耗相当多的计算机资源——大致相当于每天为一天的 Bitcoin 交易观看一个小时的流媒体视频——但作为回报，全节点为用户提供了完整的自治权。</p>
+</dd>
+<dt class="hdlist1">轻量级客户端</dt>
+<dd>
+<p>轻量级客户端，也称为简化支付验证（simplified-payment-verification, SPV）客户端，它连接到一个全节点或其他远程服务器以接收和发送 Bitcoin 交易信息，但在本地存储用户的钱包，对接收到的交易进行部分验证，并独立地构造对外发送的交易。</p>
+</dd>
+<dt class="hdlist1">第三方 API 客户端</dt>
+<dd>
+<p>第三方 API 客户端是一种通过第三方 API 系统与 Bitcoin 交互的客户端，而不是直接连接到 Bitcoin 网络。钱包可能由用户保存，也可能保存在第三方服务器上，但客户端信任远程服务器为其提供准确的信息并保护其隐私。</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Bitcoin是一个对等（P2P）网络。全节点是其中的 <em>对等节点（peers）</em>：
+每个对等节点独立验证每一笔已确认的交易，并以完全的权威向其用户提供数据。轻量级钱包和其他软件则是 <em>客户端（clients）</em>：每个客户端都依赖一个或多个对等节点为其提供有效数据。Bitcoin 客户端可以对接收到的部分数据执行二次验证，并连接多个对等节点以降低对单个对等节点完整性的依赖，但客户端的安全性最终仍依赖于其对等节点的完整性。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_由谁控制密钥">由谁控制密钥</h5>
+<div class="paragraph">
+<p>一个非常重要的额外考虑因素是：<em>谁控制密钥</em>。
+正如我们将在后续章节看到的，对 bitcoin 的访问由"私钥"控制，私钥就像非常长的 PIN 码。如果只有你自己控制这些私钥，那么你就掌控着自己的 bitcoin。反之，如果你不掌握控制权，那么你的 bitcoin 就是由代你管理资金的第三方掌控的。基于控制权的不同，密钥管理软件分为两个重要类别：由你自己控制密钥的 <em>钱包</em>，以及托管方掌控密钥的资金与账户。为了强调这一点，我（Andreas）创造了这样一句话：<em>Your keys, your coins. Not your keys, not your coins</em>（你的密钥，你的币；不是你的密钥，就不是你的币）。</p>
+</div>
+<div class="paragraph">
+<p>结合上述分类，许多 Bitcoin 钱包可以归入几个组别，其中最常见的三类是：桌面全节点（你控制密钥）、移动轻量级钱包（你控制密钥）以及基于 web 的第三方账户（你不控制密钥）。不同类别之间的界限有时是模糊的，因为软件可以运行在多个平台上，并以不同方式与网络交互。</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_快速上手">快速上手</h4>
+<div class="paragraph">
+<p>Alice 并不是一个技术型用户，最近才从朋友 Joe 那里听说 Bitcoin。在一次聚会上，Joe 正热情地向身边的每个人讲解 Bitcoin，并主动提出演示一下。Alice 被吸引了，于是问她该如何开始使用 Bitcoin。Joe 说移动钱包最适合新用户，并推荐了几款他喜欢的钱包。Alice 下载了其中一款 Joe 推荐的钱包，并把它装到了自己的手机上。</p>
+</div>
+<div class="paragraph">
+<p>当 Alice 第一次运行她的钱包应用时，她选择了创建一个新的 Bitcoin 钱包。由于她选择的是非托管钱包，Alice（且只有 Alice）将掌握她的密钥。因此，她需要对密钥的备份负责，因为丢失密钥就意味着丧失对她那些 bitcoin 的访问权限。为此，她的钱包生成了一个 <em>恢复码（recovery code）</em>，可用于恢复她的钱包。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="recovery_code_intro">恢复码</h4>
+<div class="paragraph">
+<p>大多数现代非托管 Bitcoin 钱包都会为用户提供一个恢复码以便备份。恢复码通常由软件随机选择的数字、字母或单词组成，并作为钱包生成的密钥的基础。示例见 <a href="#recovery_code_sample">[recovery_code_sample]</a>。</p>
+</div>
+<table id="recovery_code_sample">
+<caption>恢复码示例</caption>
+<thead>
+<tr>
+<th>钱包</th>
+<th>恢复码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>BlueWallet</p></td>
+<td><p>(1) media (2) suspect (3) effort (4) dish (5) album (6) shaft (7) price (8) junk (9) pizza (10) situate (11) oyster (12) rib</p></td>
+</tr>
+<tr>
+<td><p>Electrum</p></td>
+<td><p>nephew dog crane clever quantum crazy purse traffic repeat fruit old clutch</p></td>
+</tr>
+<tr>
+<td><p>Muun</p></td>
+<td><p>LAFV TZUN V27E NU4D WPF4 BRJ4 ELLP BNFL</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>恢复码有时被称为 "mnemonic"（助记词）或 "mnemonic phrase"（助记词短语），
+这意味着你应该把短语记住，但把短语写在纸上其实比依赖大多数人的记忆更省力，也更可靠。它的另一个别名是 "seed phrase"（种子短语），
+因为它为生成钱包所有密钥的函数提供了输入（即"种子"）。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>如果 Alice 的钱包出了什么问题，她可以下载一份新的钱包软件，输入这个恢复码，从而重建钱包数据库，恢复她曾经发送或接收的所有 onchain（链上）交易记录。
+然而，从恢复码恢复并不会自动还原 Alice 在钱包中输入的额外数据，例如她为某些地址或交易关联的标签。尽管丧失这些元数据不像丧失资金那样要紧，但它仍然以自己的方式有其重要性。设想你需要查阅一份旧的银行或信用卡对账单，而其中每一个你支付过（或付款给你）的实体名称都被涂黑了。为防止丢失元数据，许多钱包除了恢复码之外还提供额外的备份功能。</p>
+</div>
+<div class="paragraph">
+<p>对于某些钱包而言，这一额外的备份功能在今天甚至比过去更重要。许多 Bitcoin 支付现在使用<em>offchain</em>（链下）技术进行，并非每一笔支付都存储在公开的区块链中。除了其他好处之外，这降低了用户成本并提高了隐私性，但这也意味着，像恢复码这种依赖于链上数据的机制并不能保证恢复用户的所有 bitcoin。对于支持链下技术的应用，定期备份钱包数据库就显得很重要。</p>
+</div>
+<div class="paragraph">
+<p>值得注意的是，许多钱包在首次接收资金到一个新的移动钱包时，往往会重新核验你是否已经安全备份了恢复码。这种核验方式从简单的弹窗提示，到要求用户手动重新输入恢复码，各有不同。</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>尽管许多合法钱包都会提示你重新输入恢复码，但也有许多恶意软件应用程序伪装成钱包的样子，要求你输入恢复码，然后将你输入的内容转发给恶意软件开发者，从而盗走你的资金。这相当于试图骗你交出银行密码的钓鱼网站。对于大多数钱包应用而言，它们只会在以下两种情况下要求你输入恢复码：初次设置时（在你收到任何 bitcoin 之前），以及恢复钱包时（在你丧失对原始钱包的访问之后）。如果应用在其他任何时候要求你输入恢复码，请咨询专家以确保你没有遭到钓鱼攻击。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_bitcoin_地址">Bitcoin 地址</h4>
+<div class="paragraph">
+<p>Alice现在已经准备好开始使用她的新 Bitcoin 钱包了。她的钱包应用随机生成了一个私钥（在 <a href="#private_keys">[private_keys]</a> 中有更详细的描述），将用于派生指向她钱包的 Bitcoin 地址。此时，她的 Bitcoin 地址对 Bitcoin 网络来说尚不为人知，也未在 Bitcoin 系统的任何部分"注册"。她的 Bitcoin 地址只是与她的私钥对应的数字，她可以用它们来控制对资金的访问。这些地址是由她的钱包独立生成的，没有引用任何服务，也没有向任何服务注册。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Bitcoin 地址和发票格式有多种。地址和发票可以与其他 Bitcoin 用户共享，他们可以用它直接向你的钱包发送 bitcoin。你可以与他人共享地址或发票，而不必担心 bitcoin 的安全性。与银行账号不同，知道你某个 Bitcoin 地址的人无法从你的钱包中取走资金——所有的花费都必须由你发起。然而，如果你把同一个地址给了两个人，他们就能看到对方向你发送了多少 bitcoin。如果你把地址公开发布，那么所有人都能看到其他人向那个地址发送了多少 bitcoin。为保护你的隐私，每次请求付款时，你都应当生成一个使用新地址的新发票。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_接收_bitcoin">接收 Bitcoin</h4>
+<div class="paragraph">
+<p>Alice使用 <em>Receive</em>（接收）按钮，它会显示一个二维码，如 <a href="#wallet_receive">Alice 在她的移动 Bitcoin 钱包中使用接收界面，以二维码格式显示她的地址。</a> 所示。</p>
+</div>
+<div id="wallet_receive" class="imageblock width-50">
+<div class="content">
+<img src="images/mbc3_0101.png" alt="Wallet receive screen with QR code displayed.  Image derived from Bitcoin Design Guide CC-BY">
+</div>
+<div class="title">Figure 1. Alice 在她的移动 Bitcoin 钱包中使用接收界面，以二维码格式显示她的地址。</div>
+</div>
+<div class="paragraph">
+<p>二维码是那个由黑白点构成图案的方块，它就像一种条形码，以可以被 Joe 的智能手机相机扫描的格式包含相同的信息。</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>发送到本书中地址的任何资金都将丢失。如果你想测试发送 bitcoin，请考虑将其捐赠给接受 bitcoin 的慈善机构。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="getting_first_bitcoin">获取你的第一笔 Bitcoin</h4>
+<div class="paragraph">
+<p>新用户的首要任务是获取一些 bitcoin。</p>
+</div>
+<div class="paragraph">
+<p>Bitcoin 交易是不可逆的。大多数电子支付网络——例如信用卡、借记卡、PayPal 以及银行账户转账——都是可逆的。对于出售 bitcoin 的人来说，这一差异带来了非常高的风险：买方在收到 bitcoin 之后可能撤销电子支付，从而对卖方实施欺诈。为了降低这种风险，接受传统电子支付以换取 bitcoin 的公司，通常会要求买家进行身份核验和信用审查，这可能需要几天到几周时间。对新用户而言，这意味着你无法立即用信用卡买到 bitcoin。不过，只要稍有耐心，并发挥一点创造性思维，你其实并不需要这么做。</p>
+</div>
+<div class="paragraph">
+<p>下面是一些新用户获取 bitcoin 的方法：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>找一位持有 bitcoin 的朋友，直接从他/她那里买一些。许多 Bitcoin 用户都是这样起步的。这种方式最简单。结识持有 bitcoin 的人的一种途径，是参加在 <a href="https://meetup.com" class="orm:hideurl">Meetup.com</a> 上列出的本地 Bitcoin 线下聚会。</p>
+</li>
+<li>
+<p>通过出售商品或服务来赚取 bitcoin。如果你是程序员，可以出售你的编程技能。如果你是理发师，可以为 bitcoin 剪头发。</p>
+</li>
+<li>
+<p>使用你所在城市的 Bitcoin ATM。Bitcoin ATM 是一种接受现金并将 bitcoin 发送到你智能手机 Bitcoin 钱包的机器。</p>
+</li>
+<li>
+<p>使用与你的银行账户绑定的 Bitcoin 货币交易所。如今许多国家都有货币交易所，为买卖双方提供使用本地法币兑换 bitcoin 的市场。汇率行情服务（例如 <a href="https://bitcoinaverage.com">BitcoinAverage</a>）通常会列出针对各种货币的 Bitcoin 交易所清单。</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>相对于其他支付系统，Bitcoin 的一个优点是：在正确使用时，它能为用户提供更多的隐私。获取、持有和花费 bitcoin 并不要求你向第三方披露敏感的、可识别个人身份的信息。然而，凡是 Bitcoin 与传统系统发生接触的地方，例如货币交易所，国内外法规通常都会适用。为了将 bitcoin 兑换成你所在国家的法币，你通常需要提供身份证明和银行信息。用户应当意识到，一旦某个 Bitcoin 地址被关联到一个身份，与之相关的其他 Bitcoin 交易也可能变得容易被识别和追踪——包括更早之前发生的交易。这是为什么许多用户选择保留独立于个人钱包之外的专门交易所账户的原因之一。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Alice 是通过朋友介绍接触到 Bitcoin 的，因此她有一条便捷的途径来获取她的第一笔 bitcoin。接下来，我们将看看她如何从朋友 Joe 那里购买 bitcoin，以及 Joe 是如何把 bitcoin 发送到她钱包的。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="bitcoin_price">查询 Bitcoin 的当前价格</h4>
+<div class="paragraph">
+<p>在Alice 能从 Joe 那里买入 bitcoin 之前，他们需要先就 bitcoin 与美元之间的 <em>汇率</em> 达成一致。这就引出了 Bitcoin 新手常问的一个问题："谁来设定 bitcoin 的价格？"简短的回答是：价格由市场决定。</p>
+</div>
+<div class="paragraph">
+<p>像大多数其他货币一样，Bitcoin 实行 <em>浮动汇率</em>。也就是说，bitcoin 的价值会根据它所交易的各个市场上的供求关系而波动。比如，bitcoin 以美元计价的"价格"，是在每个市场上基于最近一笔 bitcoin 与美元的成交计算出来的。因此，价格往往每秒钟都会发生细微波动。一项价格服务会聚合多个市场的价格，并计算一个成交量加权平均值，用以代表某一货币对（例如 BTC/USD）在整体市场上的汇率。</p>
+</div>
+<div class="paragraph">
+<p>有数百种应用和网站可以提供当前市场行情。下面是其中几种最受欢迎的：</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="https://bitcoinaverage.com">Bitcoin Average</a></dt>
+<dd>
+<p>一个对每种货币提供简洁的成交量加权平均价视图的网站。</p>
+</dd>
+<dt class="hdlist1"><a href="https://coincap.io">CoinCap</a></dt>
+<dd>
+<p>一项列出包括 bitcoin 在内的数百种加密货币的市值与汇率的服务。</p>
+</dd>
+<dt class="hdlist1"><a href="https://oreil.ly/ACieC">Chicago Mercantile Exchange Bitcoin Reference Rate</a></dt>
+<dd>
+<p>一种可用作机构和合约参考的参考利率，由 CME 作为其投资数据源的一部分提供。</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>除了这些各式各样的网站和应用之外，一些 Bitcoin 钱包还会自动在 bitcoin 与其他货币之间进行金额换算。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sending_receiving">发送与接收 Bitcoin</h4>
+<div class="paragraph">
+<p>Alice决定购买 0.001 个 bitcoin。她和 Joe 核对了汇率之后，她递给 Joe 相应金额的现金，然后打开自己的移动钱包应用并选择 Receive（接收）。这会显示一个包含 Alice 第一个 Bitcoin 地址的二维码。</p>
+</div>
+<div class="paragraph">
+<p>接着 Joe 在自己的智能手机钱包上选择 Send（发送），并打开二维码扫描器。这样 Joe 就可以用智能手机的相机扫描该条形码，不必手动输入 Alice 那串很长的 Bitcoin 地址。</p>
+</div>
+<div class="paragraph">
+<p>现在 Joe 已经把 Alice 的 Bitcoin 地址设为收款人。Joe 输入金额为 0.001 个 bitcoin（BTC），参见 <a href="#wallet-send">Bitcoin 钱包发送界面。</a>。某些钱包可能会用不同的单位显示金额：0.001 BTC 等于 1 毫比特币（millibitcoin, mBTC），或 100,000 satoshi（sat）。</p>
+</div>
+<div class="paragraph">
+<p>某些钱包可能还会建议 Joe 为这笔交易输入一个标签；如果是这样，Joe 就输入 "Alice"。几周或几个月之后，这能帮助 Joe 记起他当初为什么发送了这 0.001 个 bitcoin。某些钱包可能还会就手续费向 Joe 给出提示。根据钱包种类以及交易的发送方式，钱包可能会要求 Joe 输入一个交易费率，或者给出建议手续费（或费率）的提示。手续费越高，交易确认越快（参见 <a href="#confirmations">确认</a>）。</p>
+</div>
+<div id="wallet-send" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0102.png" alt="Wallet send screen.  Image derived from Bitcoin Design Guide CC-BY">
+</div>
+<div class="title">Figure 2. Bitcoin 钱包发送界面。</div>
+</div>
+<div class="paragraph">
+<p>接着 Joe 仔细检查自己是否输入了正确的金额，因为他马上要把钱发出去，而错误很快就会变得不可逆。在再次核对地址和金额后，他按下 Send 来广播这笔交易。Joe 的移动 Bitcoin 钱包会构造一笔交易，把 0.001 BTC 分配给 Alice 提供的地址，资金来源于 Joe 的钱包，并使用 Joe 的私钥对该交易签名。这告诉 Bitcoin 网络：Joe 已授权向 Alice 的新地址转移价值。当这笔交易通过对等协议广播出去后，它会迅速在 Bitcoin 网络中扩散。只需几秒钟，网络中大多数连接良好的节点都会收到这笔交易，并第一次看到 Alice 的地址。</p>
+</div>
+<div class="paragraph">
+<p>与此同时，Alice 的钱包正在不断"监听" Bitcoin 网络上的新交易，寻找任何与它所包含的地址相匹配的交易。Joe 的钱包广播这笔交易之后没过几秒，Alice 的钱包就会显示它正在收到 0.001 BTC。</p>
+</div>
+<div id="confirmations" class="sidebarblock">
+<div class="content">
+<div class="title">确认</div>
+<div class="paragraph">
+<p>起初，Alice 的地址会把来自 Joe 的这笔交易显示为 "Unconfirmed"（未确认）。这意味着该交易已经传播到网络，但尚未被记入称为区块链的 Bitcoin 交易账本。要被确认，交易必须被打包进一个区块并添加到区块链中，这平均每 10 分钟发生一次。在传统金融术语中，这被称为 <em>clearing</em>（清算）。关于 bitcoin 交易的传播、验证和清算（确认）的更多细节，请参见 <a href="#mining">[mining]</a>。</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Alice 现在自豪地拥有了 0.001 BTC，并且可以花掉它们。在接下来的几天里，Alice 又通过 ATM 和一家交易所购买了更多的 bitcoin。在下一章中，我们将看看她用 Bitcoin 进行的第一笔购买，并更详细地考察底层的交易和传播技术。</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. <a href="https://oreil.ly/KUaBM">"Bitcoin: A Peer-to-Peer Electronic Cash System"</a>, Satoshi Nakamoto.
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2026-06-12 15:53:51 +0800
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</body>
+</html>

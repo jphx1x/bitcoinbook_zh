@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<title>交易</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment the following line when using as a custom stylesheet */
+/* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700"; */
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+b,strong{font-weight:bold}
+abbr{font-size:.9em}
+abbr[title]{cursor:help;border-bottom:1px dotted #dddddf;text-decoration:none}
+dfn{font-style:italic}
+hr{height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type=checkbox],input[type=radio]{padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,::before,::after{box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;line-height:1;position:relative;cursor:auto;-moz-tab-size:4;-o-tab-size:4;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.square{list-style-type:square}
+ul.circle ul:not([class]),ul.disc ul:not([class]),ul.square ul:not([class]){list-style:inherit}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:1px solid #dedede;word-wrap:normal}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 0 0 .1em #fff;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin:0 auto;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:hsla(0,0%,100%,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details{margin-left:1.25rem}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
+details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
+details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class=paragraph]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock pre>code{display:block}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos,pre.pygments .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+pre.pygments span.linenos{display:inline-block;margin-right:.75em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
+table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
+table.frame-sides{border-width:0 1px}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+li>p:empty:only-child::before{content:"";display:inline-block}
+ul.checklist>li>p:first-child{margin-left:-1em}
+ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist>li>p:first-child>input[type=checkbox]:first-child{margin-right:.25em}
+ul.inline{display:flex;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]{border-bottom:1px dotted}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#header,#content,#footnotes,#footer{max-width:none}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media amzn-kf8,print{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/github.min.css">
+</head>
+<body class="article">
+<div id="header">
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="c_transactions">交易</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>我们日常转移实物现金的方式，与转移比特币的方式几乎毫无相似之处。实物现金是一种不记名凭证。Alice 通过把若干凭证（例如一些美元钞票）递给 Bob，从而完成支付。相比之下，bitcoin 既不以实物形式存在，也不以数字数据的形式存在——Alice 既不能把一些 bitcoin 递给 Bob，也不能通过邮件把它们发送出去。</p>
+</div>
+<div class="paragraph">
+<p>不妨换个角度，想想 Alice 怎样把一块土地的控制权转给 Bob。她无法亲手把土地拎起来递给 Bob。实际上，存在某种记录（通常由当地政府维护），用来描述 Alice 拥有的这块土地。Alice 通过说服政府更新这条记录，标明这块土地现在归 Bob 所有，从而完成转让。</p>
+</div>
+<div class="paragraph">
+<p>Bitcoin 的工作方式与此类似。每个 Bitcoin 全节点上都存在一个数据库，记录 Alice 控制着若干 bitcoin。Alice 通过说服全节点更新它们的数据库，将她的部分 bitcoin 标记为由 Bob 控制，从而完成支付。Alice 用来说服全节点更新其数据库的数据，被称为 <em>交易（transaction）</em>。这个过程并不直接使用 Alice 或 Bob 的身份信息，正如我们将在 <a href="#c_authorization_authentication">[c_authorization_authentication]</a> 中看到的那样。</p>
+</div>
+<div class="paragraph">
+<p>本章中我们将拆解一个 Bitcoin 交易，并逐一考察它的各个部分，看看它们如何以一种富有表达力且极其可靠的方式促成价值的转移。</p>
+</div>
+<div class="sect2">
+<h3 id="tx_structure">序列化的 Bitcoin 交易</h3>
+<div class="paragraph">
+<p>在 <a href="#exploring_and_decoding_transactions">[exploring_and_decoding_transactions]</a> 中，我们启用了 Bitcoin Core 的 txindex 选项，用以获取 Alice 向 Bob 付款的那笔交易的副本。我们再次取出包含那次付款的交易，如 <a href="#alice_tx_serialized_reprint">Alice 的序列化交易</a> 所示。</p>
+</div>
+<div id="alice_tx_serialized_reprint" class="exampleblock">
+<div class="title">Example 1. Alice 的序列化交易</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>$ bitcoin-cli getrawtransaction 466200308696215bbc949d5141a49a41\
+38ecdfdfaa2a8029c1f9bcecd1f96177
+
+01000000000101eb3ae38f27191aa5f3850dc9cad00492b88b72404f9da13569
+8679268041c54a0100000000ffffffff02204e0000000000002251203b41daba
+4c9ace578369740f15e5ec880c28279ee7f51b07dca69c7061e07068f8240100
+000000001600147752c165ea7be772b2c0acb7f4d6047ae6f4768e0141cf5efe
+2d8ef13ed0af21d4f4cb82422d6252d70324f6f4576b727b7d918e521c00b51b
+e739df2f899c49dc267c0ad280aca6dab0d2fa2b42a45182fc83e81713010000
+0000</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Bitcoin Core 的序列化格式之所以特殊，是因为它既用于对交易做出承诺（commitment），也用于在 Bitcoin 的 P2P 网络上中继交易；不过其他程序也可以使用不同的格式，只要传输相同的数据即可。然而 Bitcoin Core 的格式在传输这些数据时相当紧凑且易于解析，因此许多其他 Bitcoin 程序也使用这种格式。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>据我们所知，唯一一种被广泛使用的另一种交易序列化格式，是部分签名的 bitcoin 交易（partially signed bitcoin transaction, PSBT）格式，由 BIP174 和 BIP370 定义（其扩展由其他若干 BIP 描述）。PSBT 允许不受信任的程序生成交易模板，由具有所需私钥或其他敏感数据的受信任程序（例如硬件签名设备）来校验和填充该模板。为了实现这一点，PSBT 允许保存大量与交易相关的元数据，使其远不如标准序列化格式紧凑。本书不会详细介绍 PSBT，但我们强烈建议计划支持多密钥签名的钱包开发者使用它。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a href="#alice_tx_serialized_reprint">Alice 的序列化交易</a> 中以十六进制显示的交易，在 <a href="#alice_tx_byte_map">Alice 交易的字节图</a> 中以字节图的形式重新呈现。请注意，显示 32 字节需要用 64 个十六进制字符。该图只展示了顶层字段。我们将按它们在交易中出现的顺序逐一考察，并描述它们所包含的其他字段。</p>
+</div>
+<div id="alice_tx_byte_map" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0601.png" alt="A byte map of Alice&#8217;s transaction">
+</div>
+<div class="title">Figure 1. Alice 交易的字节图</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="version">版本（Version）</h3>
+<div class="paragraph">
+<p>一个序列化 Bitcoin 交易的前 4 个字节是它的版本号。Bitcoin 交易最初的版本是版本 1（0x01000000）。Bitcoin 中的所有交易都必须遵循版本 1 交易的规则，本书贯穿始终描述了其中的许多规则。</p>
+</div>
+<div class="paragraph">
+<p>版本 2 的 Bitcoin 交易是在 BIP68 软分叉修改 Bitcoin 共识规则时引入的。BIP68 对 sequence 字段施加了额外约束，但这些约束只适用于版本号为 2 或更高的交易。版本 1 的交易不受影响。BIP112 与 BIP68 属于同一次软分叉，它升级了一个操作码（OP_CHECKSEQUENCEVERIFY）：在版本号小于 2 的交易中执行该操作码时，现在会失败。除了这两项改动，版本 2 交易与版本 1 交易完全相同。</p>
+</div>
+<div class="sidebarblock less_space pagebreak-before">
+<div class="content">
+<div class="title">保护预签名交易</div>
+<div class="paragraph">
+<p>在将一笔交易广播到网络以纳入区块链之前，最后一步就是对它签名。然而，签名后不立即广播也是可能的。你可以将这笔已签名但未广播的预签名交易（presigned transaction）保留数月乃至数年，相信将来广播时它仍可被纳入区块链。在此期间，你甚至可能丢失签发花费同一笔资金的替代交易所需的那个（或那些）私钥。这并非纯粹假设：包括闪电网络（Lightning Network）在内的多种基于 Bitcoin 构建的协议，都依赖预签名[.keep-together]<mark>交易。</mark></p>
+</div>
+<div class="paragraph">
+<p>这给协议开发者在协助用户升级 Bitcoin 共识协议时带来了一个挑战。新增约束——例如 BIP68 对 sequence 字段所做的——可能使某些预签名交易失效。如果无法为等价交易创建新的签名，那么预签名交易中所花费的资金就会被永久锁死。</p>
+</div>
+<div class="paragraph">
+<p>这个问题通过为升级保留某些交易特征（例如版本号）来解决。任何在 BIP68 之前创建预签名交易的人都应使用版本 1 的交易，因此 BIP68 的新增 sequence 约束只施加在版本 2 及以上的交易上，不会让任何预签名[.keep-together]<mark>交易失效。</mark></p>
+</div>
+<div class="paragraph">
+<p>如果你实现的协议使用预签名交易，请确保它没有使用任何为未来升级所保留的特性。Bitcoin Core 的默认交易中继策略不允许使用这些保留特性。你可以在 Bitcoin 主网（mainnet）上使用 Bitcoin Core 的 testmempoolaccept RPC 来测试一笔交易是否符合该策略。</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>截至本书撰写时，开始使用版本 3 交易的提案正在被广泛讨论。该提案并不打算修改共识规则，而只是修改 Bitcoin 全节点用于中继交易的策略。在该提案中，版本 3 交易将受到额外约束，以防止某些拒绝服务（DoS）攻击，我们将在 <a href="#transaction_pinning">[transaction_pinning]</a> 中作更深入的讨论。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_扩展_marker_与_flag">扩展 Marker 与 Flag</h3>
+<div class="paragraph">
+<p>示例序列化交易中接下来的两个字段，是作为隔离见证（segregated witness，SegWit）软分叉对 Bitcoin 共识规则改动的一部分新增的。规则改动定义在 BIP141 与 BIP143 中，而 <em>扩展序列化格式（extended serialization format）</em> 则定义在 BIP144 中。</p>
+</div>
+<div class="paragraph less_space pagebreak-before">
+<p>如果交易包含 witness 结构（我们将在 <a href="#witness_structure">Witness 结构</a> 中描述），那么 marker 必须为零（0x00），flag 必须为非零。在当前的 P2P 协议中，flag 应当始终为 1（0x01）；其他取值的 flag 保留给后续协议升级使用。</p>
+</div>
+<div class="paragraph">
+<p>如果交易不需要 witness 栈，则不得包含 marker 与 flag 字段。这与 Bitcoin 最初版本的交易序列化格式兼容，该格式现在被称为 <em>legacy 序列化（legacy serialization）</em>。详情请参见 <a href="#legacy_serialization">Legacy 序列化</a>。</p>
+</div>
+<div class="paragraph">
+<p>在 legacy 序列化中，marker 字节会被解读为输入的数量（零）。但是一笔交易不可能有零个输入，所以 marker 实际上向现代程序发出信号，表明正在使用扩展序列化。flag 字段提供了类似的信号，同时也简化了未来更新序列化格式的过程。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="inputs">输入（Inputs）</h3>
+<div class="paragraph">
+<p>输入字段还包含若干其他字段，因此我们先在 <a href="#alice_tx_input_map">Alice 交易输入字段的字节图</a> 中给出这些字节的映射图。</p>
+</div>
+<div id="alice_tx_input_map" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0602.png" alt="map of bytes in the inputs field of Alice&#8217;s transaction">
+</div>
+<div class="title">Figure 2. Alice 交易输入字段的字节图</div>
+</div>
+<div class="sect3">
+<h4 id="_交易输入列表的长度">交易输入列表的长度</h4>
+<div class="paragraph">
+<p>交易输入列表以一个整数开头，表示交易中输入的数量。其最小值为 1。没有显式的最大值，但是对交易最大体积的限制实际上把交易的输入数量限制在几千个以内。这个数字采用 compactSize 无符号整数进行编码。</p>
+</div>
+<div class="sidebarblock less_space pagebreak-before">
+<div class="content">
+<div class="title">CompactSize 无符号整数</div>
+<div class="paragraph">
+<p>在 Bitcoin 中，那些通常取较小值、但有时取较大值的无符号整数，一般使用 compactSize 数据类型编码。CompactSize 是变长整数的一种，因此有时也被称为 var_int 或 varint（例如 BIP37 和 BIP144 的文档中即如此）。</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>不同程序中使用了多种变长整数，包括不同的 Bitcoin 程序中也是如此。例如，Bitcoin Core 序列化其 UTXO 数据库时使用了一种它称为 VarInts 的数据类型，它与 compactSize 不同。此外，Bitcoin 区块头中的 nBits 字段使用一种自定义的、被称为 Compact 的数据类型，它与 compactSize 无关。在谈到 Bitcoin 交易序列化以及 Bitcoin P2P 协议其他部分中使用的变长整数时，我们将始终使用完整名称 compactSize。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>对于 0 到 252 之间的数字，compactSize 无符号整数与 C 语言数据类型 uint8_t 完全相同，对任何程序员来说这都是再熟悉不过的原生编码。对于一直到 0xffffffffffffffff 的其他数字，会在前面加上一个字节用于指示其长度——除此之外，它们看起来就像普通的 C 语言编码无符号整数：</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>取值</th>
+<th>占用字节数</th>
+<th>格式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>≥ <code>0</code> &amp;&amp; ≤ <code>252</code> (<code>0xfc</code>)</p></td>
+<td><p><code>1</code></p></td>
+<td><p><code>uint8_t</code></p></td>
+</tr>
+<tr>
+<td><p>≥ <code>253</code> &amp;&amp; ≤ <code>0xffff</code></p></td>
+<td><p>3</p></td>
+<td><p><code>0xfd</code> 后跟以 <code>uint16_t</code> 表示的数字</p></td>
+</tr>
+<tr>
+<td><p>≥ <code>0x10000</code> &amp;&amp; ≤ <code>0xffffffff</code></p></td>
+<td><p><code>5</code></p></td>
+<td><p><code>0xfe</code> 后跟以 <code>uint32_t</code> 表示的数字</p></td>
+</tr>
+<tr>
+<td><p>≥ <code>0x100000000</code> &amp;&amp; ≤ <code>0xffffffffffffffff</code></p></td>
+<td><p><code>9</code></p></td>
+<td><p><code>0xff</code> 后跟以 <code>uint64_t</code> 表示的数字</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="paragraph">
+<p>交易中的每个输入都必须包含三个字段：一个 <em>outpoint</em> 字段、一个带长度前缀的 <em>input script（输入脚本）</em> 字段，以及一个 <em>sequence</em> 字段。</p>
+</div>
+<div class="paragraph">
+<p>我们将在接下来的小节中逐一介绍这些字段。某些输入还包含一个 witness 栈，但它被序列化在交易的末尾，因此我们将在后面再讨论。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="outpoints">Outpoint</h4>
+<div class="paragraph">
+<p>Bitcoin 交易是对全节点的一个请求，要求它们更新关于 coin 所有权信息的数据库。为了让 Alice 将她的部分 bitcoin 控制权转给 Bob，她首先需要告诉全节点如何找到她当初收到这些 bitcoin 的那次先前转账。由于 bitcoin 的控制权是在交易输出中分配的，Alice 使用一个 <em>outpoint</em> 字段来 <em>指向</em> 之前的 <em>输出</em>。每个输入都必须包含一个 outpoint。</p>
+</div>
+<div class="paragraph">
+<p>outpoint 中包含一个 32 字节的 txid，对应于 Alice 当初收到她现在想花费的 bitcoin 的那笔交易。该 txid 使用 Bitcoin 哈希的内部字节序；参见 <a href="#internal_and_display_order">内部与显示字节序</a>。</p>
+</div>
+<div class="paragraph">
+<p>由于一笔交易可能包含多个输出，Alice 还需要指明使用该交易中具体哪一个输出，这个值称为 <em>output index（输出索引）</em>。输出索引是 4 字节的无符号整数，从零开始计数。</p>
+</div>
+<div class="paragraph">
+<p>当全节点遇到一个 outpoint 时，它会根据该信息尝试找到所引用的输出。全节点只需要查看区块链中更早的交易。例如，Alice 的交易被包含在第 774,958 号区块中。验证她的交易的全节点只会在该区块及更早的区块中查找她的 outpoint 所引用的先前输出，而不会查找更晚的区块。在第 774,958 号区块内，它们只会查看在 Alice 的交易之前出现在该区块中的交易（顺序由区块 merkle 树叶子的顺序决定，参见 <a href="#merkle_trees">[merkle_trees]</a>）。</p>
+</div>
+<div class="paragraph">
+<p>找到该先前输出后，全节点会从中获取几条关键信息：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>分配给该先前输出的 bitcoin 数量。所有这些 bitcoin 都将在本次交易中被转移。在示例交易中，先前输出的金额为 100,000 satoshi。</p>
+</li>
+<li>
+<p>该先前输出的授权条件。这些是花费该先前输出所分配的 bitcoin 时必须满足的条件。</p>
+</li>
+<li>
+<p>对于已确认的交易，还有确认它的区块高度以及该区块的 median time past（MTP）。这是相对时间锁（参见 <a href="#relative_timelocks">Sequence 作为共识强制的相对时间锁</a>）以及 coinbase 交易输出（参见 <a href="#coinbase_transactions">Coinbase 交易</a>）所需要的。</p>
+</li>
+<li>
+<p>证明该先前输出确实存在于区块链中（或者作为已知的未确认交易存在），并且尚未被其他任何交易花费。Bitcoin 的共识规则之一禁止任何输出在合法的区块链中被花费超过一次。这就是关于 <em>双花（double spending）</em> 的规则：Alice 不能在两笔不同的交易中分别用同一个先前输出向 Bob 和 Carol 付款。两笔都试图花费同一个先前输出的交易被称为 <em>冲突交易（conflicting transactions）</em>，因为合法的区块链中只能包含其中之一。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>不同全节点实现在不同时期尝试过追踪先前输出的不同方法。Bitcoin Core 目前使用的方案被认为是在保留所有必要信息的同时尽可能减少磁盘空间方面最有效的：它维护一个数据库，存储每一个 UTXO 及其基本元数据（如确认它的区块高度）。每当有一个新的交易区块到来时，所有它们花费的输出都会被从 UTXO 数据库中移除，所有它们创建的输出都会被加入该数据库。</p>
+</div>
+<div id="internal_and_display_order" class="sidebarblock">
+<div class="content">
+<div class="title">内部与显示字节序</div>
+<div class="paragraph">
+<p>Bitcoin 以多种方式使用哈希函数的输出，这种输出被称为 <em>digest（摘要）</em>。摘要为区块和交易提供唯一标识；它们用于地址、区块、交易、签名等的承诺中；摘要还在 Bitcoin 的工作量证明（proof-of-work）函数中被反复迭代。在某些情况下，哈希摘要以一种字节序展示给用户，而在内部使用另一种字节序，这就造成了混淆。例如，考虑示例交易 outpoint 中的先前输出 txid：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>eb3ae38f27191aa5f3850dc9cad00492b88b72404f9da135698679268041c54a</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果我们试图用这个 txid 通过 Bitcoin Core 取回该交易，会得到一个错误，必须把它的字节序反转：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ bitcoin-cli getrawtransaction \
+  eb3ae38f27191aa5f3850dc9cad00492b88b72404f9da135698679268041c54a
+error code: -5
+error message:
+No such mempool or blockchain transaction.
+Use gettransaction for wallet transactions.
+
+$ echo eb3ae38f27191aa5f3850dc9cad00492b88b72404f9da135698679268041c54a \
+  | fold -w2 | tac | tr -d "\n"
+4ac541802679866935a19d4f40728bb89204d0cac90d85f3a51a19278fe33aeb
+
+$ bitcoin-cli getrawtransaction \
+  4ac541802679866935a19d4f40728bb89204d0cac90d85f3a51a19278fe33aeb
+02000000000101c25ae90c9f3d40cc1fc509ecfd54b06e35450702...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这种奇怪的行为很可能是早期 Bitcoin 软件中某个 <a href="https://oreil.ly/01JH2">设计决定</a> 的无意后果。从实践角度看，这意味着 Bitcoin 软件开发者必须记得在向用户展示交易和区块标识符时反转其字节序。</p>
+</div>
+<div class="paragraph">
+<p>在本书中，我们将出现在交易和区块内部的数据所用的字节序称为 <em>内部字节序（internal byte order）</em>，将展示给用户的形式称为 <em>显示字节序（display byte order）</em>。另一组常见的术语是：内部版本被称为 <em>小端字节序（little-endian byte order）</em>，显示版本被称为 <em>大端字节序（big-endian byte order）</em>。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_输入脚本input_script">输入脚本（Input Script）</h4>
+<div class="paragraph">
+<p>input script 字段是 legacy 交易格式的遗留产物。我们示例交易的输入花费的是一个原生（native）segwit 输出，不需要在 input script 中放置任何数据，因此 input script 的长度前缀被设为零（0x00）。</p>
+</div>
+<div class="paragraph">
+<p>作为一个带长度前缀的 input script 花费 legacy 输出的例子，我们从本书撰写时最近一个区块中任取一笔交易：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>6b483045022100a6cc4e8cd0847951a71fad3bc9b14f24d44ba59d19094e0a8c
+fa2580bb664b020220366060ea8203d766722ed0a02d1599b99d3c95b97dab8e
+41d3e4d3fe33a5706201210369e03e2c91f0badec46c9c903d9e9edae67c167b
+9ef9b550356ee791c9a40896</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>长度前缀是一个 compactSize 无符号整数，表示序列化 input script 字段的长度。在本例中，它是单个字节（0x6b），表示 input script 长度为 107 字节。我们将在 <a href="#c_authorization_authentication">[c_authorization_authentication]</a> 中详细介绍如何解析和使用脚本。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sequence">Sequence</h4>
+<div class="paragraph">
+<p>输入的最后 4 个字节是它的 <em>sequence</em> 号。这个字段的用途和含义随时间发生过变化。</p>
+</div>
+<div class="sect4">
+<h5 id="original_tx_replacement">最初的基于 sequence 的交易替换</h5>
+<div class="paragraph">
+<p>sequence 字段最初设计用来允许创建同一笔交易的多个版本，较晚的版本会替换较早的版本作为待确认候选。sequence 号用于跟踪交易的版本。</p>
+</div>
+<div class="paragraph">
+<p>例如，设想 Alice 和 Bob 想要就一局纸牌游戏打赌。他们首先各自签署一笔交易，将一些钱存入一个输出，该输出的脚本要求双方的签名才能花费，即 <em>多重签名（multisignature）</em> 脚本（简称 <em>multisig</em>）。这被称为 <em>setup transaction（建立交易）</em>。然后他们创建一笔花费该输出的交易：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>该交易的第一个版本，nSequence 为 0（0x00000000），将双方最初存入的钱原数退还给 Alice 和 Bob。这被称为 <em>refund transaction（退款交易）</em>。此时他们都不会广播退款交易。只有出问题时才会用到它。</p>
+</li>
+<li>
+<p>Alice 赢了纸牌游戏的第一轮，于是该交易的第二个版本（sequence 为 1）增加给 Alice 的金额，减少 Bob 的份额。两人都对更新后的交易签名。同样地，除非出问题，他们不需要广播这个版本。</p>
+</li>
+<li>
+<p>Bob 赢了第二轮，于是 sequence 增至 2，减少 Alice 的份额，增加 Bob 的份额。他们再次签名但不广播。</p>
+</li>
+<li>
+<p>在 sequence 不断递增、资金不断重新分配、生成的交易被签名但不广播的多轮之后，他们决定最终敲定这笔交易。他们生成一笔反映最终资金分配的交易，把 sequence 设为最大值（0xffffffff），从而最终敲定这笔交易。他们广播这个版本的交易，它在网络上被中继，最终被矿工确认。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>如果我们考虑一些备选场景，就能看到基于 sequence 的替换规则是如何起作用的：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>设想 Alice 广播了 sequence 为 0xffffffff 的最终交易，然后 Bob 又广播了某个较早的、他自己份额更高的版本。由于 Bob 那个版本的交易 sequence 较低，使用 Bitcoin 原始代码的全节点不会把它中继给矿工，使用原始代码的矿工也不会去挖它。</p>
+</li>
+<li>
+<p>在另一种场景下，设想 Bob 在 Alice 广播最终版本之前几秒钟广播了一个较早版本的交易。节点会中继 Bob 的版本，矿工也会尝试去挖它；但当 Alice 的具有更高 sequence 号的版本到达时，节点也会中继它，使用原始 Bitcoin 代码的矿工会转而尝试挖 Alice 的版本而非 Bob 的版本。除非 Bob 走运、在 Alice 的版本到达之前就挖出了一个区块，否则最终被确认的将是 Alice 的版本。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>这种协议就是我们如今所说的 <em>payment channel（支付通道）</em>。在一封据信出自 Bitcoin 创始人之手的邮件中，他将这些称为 <em>高频交易（high-frequency transactions）</em>，并描述了为支持它们而加入协议的若干特性。我们稍后会学习其中一些特性，也会看到支付通道的现代版本如今在 Bitcoin 中越来越被广泛使用。</p>
+</div>
+<div class="paragraph">
+<p>纯粹基于 sequence 的支付通道存在一些问题。第一个问题是，用更高 sequence 的交易替换更低 sequence 的交易的规则只是软件策略层面的事情。矿工并没有任何直接的激励去偏好某个版本胜过另一个版本。第二个问题是，先广播交易的一方可能因为运气好而让自己的交易被确认，即便它并不是 sequence 最高的那一版。一个有几个百分点失败概率（仅仅因为运气不佳）的安全协议算不上一个非常有效的协议。</p>
+</div>
+<div class="paragraph">
+<p>第三个问题是，可以用一笔交易的不同版本无限次地替换之前的版本。每次替换都会消耗网络上所有中继全节点的带宽。例如，截至本书撰写时，约有 50,000 个中继全节点；攻击者每分钟创建 1,000 笔大小为 200 字节的替换交易，会消耗他自己约 20 KB 的带宽，但每分钟消耗全节点网络约 10 GB 的带宽。除了 20 KB/分钟带宽的成本，以及交易被确认时偶尔需要支付的费用之外，攻击者无需为自己施加给全节点运营者的巨大负担付出任何代价。</p>
+</div>
+<div class="paragraph">
+<p>为了消除这种攻击风险，最初这种基于 sequence 的交易替换在 Bitcoin 软件早期版本中被禁用了。在长达数年的时间里，Bitcoin 全节点不允许一笔未确认交易（按其 outpoint 标识的某个特定输入）被另一笔包含相同输入的交易替换。然而，这种情形并未一直持续。</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sequence-bip125">Opt-in 交易替换信号</h5>
+<div class="paragraph">
+<p>在最初的基于 sequence 的交易替换因可能被滥用而被禁用之后，有人提出了一个解决方案：在 Bitcoin Core 和其他中继全节点软件中编程，允许一笔支付更高交易费率的交易替换一笔支付较低费率的冲突交易。这就是所谓的 <em>replace by fee（按费率替换）</em>，简称 <em>RBF</em>。一些用户和企业反对在 Bitcoin Core 中重新引入交易替换支持，于是达成了一个折中方案，再次借助 sequence 字段来支持替换。</p>
+</div>
+<div class="paragraph">
+<p>按照 BIP125 的描述，任何一笔未确认交易，只要其中有任意一个输入的 sequence 被设置为低于 0xfffffffe 的值（即至少比最大值小 2），就向网络发出信号，表明其签名者希望它能被支付更高费率的冲突交易替换。Bitcoin Core 允许这类未确认交易被替换，对其他未确认交易则继续禁止替换。这使得反对替换的用户和企业可以简单地忽略包含 BIP125 信号的未确认交易，直到它们被确认。</p>
+</div>
+<div class="paragraph">
+<p>除了费率和 sequence 信号之外，现代交易替换策略还有更多内容，我们将在 <a href="#rbf">[rbf]</a> 中看到。</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="relative_timelocks">Sequence 作为共识强制的相对时间锁</h5>
+<div class="paragraph">
+<p>在 <a href="#version">版本（Version）</a> 中我们了解到，BIP68 软分叉为版本号为 2 或更高的交易增加了一个新约束。该约束作用于 sequence 字段。</p>
+</div>
+<div class="paragraph">
+<p>sequence 值小于 2<sup>31</sup> 的交易输入被解释为带有相对时间锁。这样的交易只有当其先前输出（由 outpoint 引用）已经经历了与相对时间锁数量相等的"年龄"之后，才能被纳入区块链。例如，某笔交易的一个输入带有 30 个区块的相对时间锁，那么它只能被包含在这样的区块中：该区块与同一条区块链上包含其所花费输出的那个区块之间至少相隔 29 个区块。由于 sequence 是按输入设置的字段，一笔交易可以包含任意数量的带时间锁的输入，所有这些输入都必须达到足够的"年龄"，交易才有效。一个禁用标志位允许一笔交易同时包含带相对时间锁（sequence &lt; 2<sup>31</sup>）的输入和不带相对时间锁（sequence ≥ 2<sup>31</sup>）的输入。</p>
+</div>
+<div class="paragraph">
+<p>sequence 值既可以以区块为单位，也可以以秒为单位指定。一个类型标志位（type-flag）用于区分以区块计数和以秒计时。类型标志位设置在第 23 个最低有效位（即值为 1&lt;&lt;22）。如果类型标志位被设置，则 sequence 值被解释为 512 秒的倍数；否则被解释为区块数。</p>
+</div>
+<div class="paragraph">
+<p>当把 sequence 解释为相对时间锁时，只考虑最低的 16 位。在评估完标志位（第 32 位和第 23 位）后，sequence 值通常会被一个 16 位掩码"屏蔽"（例如 sequence &amp; 0x0000FFFF）。512 秒的倍数大致等于区块之间的平均时间间隔，因此 16 位（2<sup>16</sup>）能表示的最大相对时间锁，无论是以区块还是以秒计，都略多于一年。</p>
+</div>
+<div class="paragraph">
+<p><a href="#bip_68_def_of_nseq">BIP68 定义的 sequence 编码（来源：BIP68）</a> 展示了 BIP68 定义的 sequence 值的二进制布局。</p>
+</div>
+<div id="bip_68_def_of_nseq" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0603.png" alt="BIP68 definition of sequence encoding">
+</div>
+<div class="title">Figure 3. BIP68 定义的 sequence 编码（来源：BIP68）</div>
+</div>
+<div class="paragraph">
+<p>请注意，任何使用 sequence 设置了相对时间锁的交易，同时也会发出 opt-in replace by fee 的信号，如 <a href="#sequence-bip125">Opt-in 交易替换信号</a> 中所述。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_输出outputs">输出（Outputs）</h3>
+<div class="paragraph">
+<p>交易的输出字段包含与具体输出相关的若干字段。与输入字段一样，我们也先来看示例交易（Alice 向 Bob 付款）中输出字段的具体字节，以字节图的形式显示在 <a href="#output-byte-map">Alice 交易输出字段的字节图</a> 中。</p>
+</div>
+<div id="output-byte-map" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0604.png" alt="A byte map of the outputs field from Alice&#8217;s transaction">
+</div>
+<div class="title">Figure 4. Alice 交易输出字段的字节图</div>
+</div>
+<div class="sect3">
+<h4 id="_输出数量outputs_count">输出数量（Outputs Count）</h4>
+<div class="paragraph">
+<p>与交易输入部分的开头相同，输出字段以一个计数开头，表示这笔交易中的输出数量。它是一个 compactSize 整数，必须大于零。</p>
+</div>
+<div class="paragraph">
+<p>示例交易有两个输出。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_金额amount">金额（Amount）</h4>
+<div class="paragraph">
+<p>具体输出的第一个字段是它的 <em>amount（金额）</em>，在 Bitcoin Core 中也称为 "value"。它是一个 8 字节的有符号整数，表示要转移的 satoshi 数量。satoshi 是 Bitcoin 链上交易中可表示的最小 bitcoin 单位。1 个 bitcoin 等于 1 亿个 satoshi。</p>
+</div>
+<div class="paragraph">
+<p>Bitcoin 的共识规则允许一个输出的金额最小为零，最大为 2,100 万个 bitcoin（即 2.1 千万亿 satoshi）。</p>
+</div>
+<div class="sect4">
+<h5 id="uneconomical_outputs">不经济输出与被禁止的尘埃</h5>
+<div class="paragraph">
+<p>尽管零值输出本身没有任何价值，它仍然可以按照与其他输出相同的规则被花费。然而，花费一个输出（即把它作为某笔交易的输入）会增加交易的体积，从而增加需要支付的手续费。如果该输出的价值小于所需额外手续费，那么花费这个输出在经济上就不划算。这类输出被称为 <em>不经济输出（uneconomical outputs）</em>。</p>
+</div>
+<div class="paragraph">
+<p>零值输出始终是不经济输出；即便花费它的交易的费率为零，它也不会给该交易增加任何价值。然而，许多其他价值较低的输出也可能是不经济的，甚至是无意造成的。例如，在当前网络的典型费率下，某个输出给交易带来的价值可能高于花费它的成本——但明天费率可能上涨，使这个输出变得不经济。</p>
+</div>
+<div class="paragraph">
+<p>如 <a href="#outpoints">Outpoint</a> 中所述，全节点需要追踪所有 UTXO，这意味着每个 UTXO 都会让运行全节点稍微更困难一些。对于包含较多价值的 UTXO，最终花费它们存在经济激励，所以它们不构成问题。但是控制一个不经济 UTXO 的人没有任何花费它的激励，这可能使其成为全节点运营者永久的负担。由于 Bitcoin 的去中心化依赖于许多人愿意运行全节点，包括 Bitcoin Core 在内的若干全节点实现通过影响未确认交易中继和挖矿的策略，来抑制不经济输出的产生。</p>
+</div>
+<div class="paragraph less_space pagebreak-before">
+<p>针对不中继或不挖矿创建新不经济输出的交易的策略，被称为 <em>dust（尘埃）</em> 策略，这是把价值非常小的输出比喻为非常小的微粒。Bitcoin Core 的 dust 策略相当复杂，包含若干随意选取的数字，因此我们所知的许多程序简单地认为小于 546 satoshi 的输出就是尘埃，默认情况下不会被中继或挖矿。偶尔会有降低 dust 限额的提案以及提高它的反提案，因此我们建议使用预签名交易或多方协议的开发者检查策略自本书出版以来是否发生了变化。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>自 Bitcoin 诞生以来，每个全节点都需要保存每个 UTXO 的副本，但这种情况可能不会永远如此。几位开发者一直在开发 Utreexo 项目，它允许全节点存储对 UTXO 集合的承诺，而不存储数据本身。一个最小承诺可能只有一两 KB 大小——对比一下截至本书撰写时 Bitcoin Core 所存储的超过 5 GB 数据。</p>
+</div>
+<div class="paragraph">
+<p>但是，Utreexo 仍然需要一些节点存储全部 UTXO 数据，特别是为矿工和其他需要快速校验新区块的运营提供服务的节点。这意味着即便在大多数节点使用 Utreexo 的未来，不经济输出对全节点来说仍可能是个问题。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Bitcoin Core 关于 dust 的策略规则确实有一个例外：以 OP_RETURN 开头的 output script，被称为 <em>数据承载输出（data carrier outputs）</em>，可以拥有零金额。OP_RETURN 操作码会让脚本立即失败，不论其后是什么内容，因此这类输出永远不可被花费。这意味着全节点无需追踪它们，Bitcoin Core 利用这一特性，允许用户在区块链中存储少量任意数据而不增加 UTXO 数据库的大小。由于这类输出不可被花费，它们并不"不经济"——分配给它们的任何 satoshi 都会变得永远不可花费——所以允许金额为零确保了 satoshi 不会被销毁。</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_输出脚本output_scripts">输出脚本（Output Scripts）</h4>
+<div class="paragraph">
+<p>输出金额之后跟着一个 compactSize 整数，表示 <em>output script（输出脚本）</em> 的长度，输出脚本包含花费这些 bitcoin 时所需满足的条件。根据 Bitcoin 的共识规则，output script 的最小尺寸为零。</p>
+</div>
+<div class="paragraph">
+<p>共识规则允许的 output script 的最大尺寸取决于在何时进行检查。一笔交易的输出中 output script 的尺寸没有显式限制，但是后续交易只能花费 output script 不超过 10,000 字节的先前输出。隐含地说，output script 可以几乎与包含它的交易一样大，而一笔交易可以几乎与包含它的区块一样大。</p>
+</div>
+<div id="anyone-can-spend" class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>长度为零的 output script 可以被一个包含 OP_TRUE 的 input script 花费。任何人都可以构造这样的 input script，这意味着任何人都可以花费一个空的 output script。基本上有无数个任何人都能花费的脚本，Bitcoin 协议开发者把它们称为 <em>anyone can spends（人人可花费）</em>。Bitcoin 脚本语言的升级常常以一个已有的 anyone-can-spend 脚本为基础，添加新约束，使其只能在新条件下被花费。应用开发者应当永远不需要使用 anyone-can-spend 脚本，但如果你确实要这么做，我们强烈建议你大张旗鼓地向 Bitcoin 用户和开发者宣布你的计划，以免未来的升级意外干扰你的系统。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Bitcoin Core 中继和挖矿交易的策略实际上把 output script 限制在少数几种模板，称为 <em>standard transaction outputs（标准交易输出）</em>。这最初是在 Bitcoin 中发现若干与 Script 语言相关的早期 bug 之后实现的，并在现代 Bitcoin Core 中得到保留，用于支持 anyone-can-spend 升级，以及鼓励将脚本条件放置在 P2SH 赎回脚本（redeem script）、segwit v0 witness 脚本以及 segwit v1（taproot）leaf 脚本中的最佳实践。</p>
+</div>
+<div class="paragraph">
+<p>我们将在 <a href="#c_authorization_authentication">[c_authorization_authentication]</a> 中看到当前的每种标准交易模板，并学习如何解析脚本。</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="witness_structure">Witness 结构</h3>
+<div class="paragraph">
+<p>在法庭上，证人（witness）是指作证目睹了某件重要事情发生的人。人类证人并不总是可靠，因此法庭有各种程序来盘问证人，以便（理想情况下）只采信那些可靠的证词。</p>
+</div>
+<div class="paragraph">
+<p>设想一下数学问题的"证人"会是什么样。例如，如果重要问题是 <em>x + 2 == 4</em>，有人声称见证了这个问题的解答，我们会问他什么呢？我们想要的是一个数学证明，给出一个与 2 相加等于 4 的值。我们甚至可以省去那个人，直接用 <em>x</em> 的提议值作为我们的"证人"。如果有人告诉我们证人是 <em>2</em>，那么我们就可以代入等式、验证它是正确的，并判定这个重要问题已经被解决。</p>
+</div>
+<div class="paragraph">
+<p>在花费 bitcoin 时，我们要解决的重要问题是判断这次花费是否得到了控制这些 bitcoin 的人或人们的授权。那些执行 Bitcoin 共识规则的成千上万个全节点没法盘问人类证人，但它们可以接受完全由数据构成的 <em>witness（见证）</em> 来求解数学问题。例如，witness 为 <em>2</em> 时，就可以花费由以下脚本保护的 bitcoin：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>2 OP_ADD 4 OP_EQUAL</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>显然，允许任何能解出一道简单方程的人花费你的 bitcoin 是不安全的。正如我们将在 <a href="#c_signatures">[c_signatures]</a> 中看到的，一种不可伪造的数字签名方案使用一个只能由掌握某段秘密数据的人才能解出的方程。他们可以通过一个公开标识来引用该秘密数据。这个公开标识被称为 <em>public key（公钥）</em>，方程的解被称为 <em>signature（签名）</em>。</p>
+</div>
+<div class="paragraph">
+<p>下面的脚本包含一个公钥和一个操作码，要求一个对应的签名对花费交易中的数据进行承诺。就像我们前面简单例子中的数字 <em>2</em> 一样，签名就是我们的 witness：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;public key&gt; OP_CHECKSIG</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>witness 是用来求解保护 bitcoin 的数学问题的值，它们需要包含在它们所使用的那些交易中，全节点才能验证它们。在所有早期 Bitcoin 交易所用的 legacy 交易格式中，签名和其他数据被放置在 input script 字段中。然而，当开发者开始在 Bitcoin 上实现合约协议（例如 <a href="#original_tx_replacement">最初的基于 sequence 的交易替换</a> 中所见）时，他们发现把 witness 放在 input script 字段中存在若干显著问题。</p>
+</div>
+<div class="sect3">
+<h4 id="_循环依赖">循环依赖</h4>
+<div class="paragraph">
+<p>许多 Bitcoin 合约协议涉及一系列以非顺序方式签名的交易。例如，Alice 和 Bob 想要将资金存入一个只有双方签名才能花费的脚本中，同时也都希望在对方不响应时能拿回自己的钱。一个简单的解决方案是按相反顺序签名：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Tx<sub>0</sub> 将 Alice 和 Bob 的钱付入一个输出，该输出的脚本要求 Alice 和 Bob 双方签名才能花费。</p>
+</li>
+<li>
+<p>Tx<sub>1</sub> 花费上述输出生成两个输出，一个把钱退还 Alice，另一个把钱退还 Bob（减去少量交易手续费）。</p>
+</li>
+<li>
+<p>如果 Alice 和 Bob 在签 Tx<sub>0</sub> 之前就签好了 Tx<sub>1</sub>，那么他们都可以在任何时候取回退款。该协议不要求任何一方信任对方，使其成为一个 <em>trustless protocol（无需信任的协议）</em>。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>在 legacy 交易格式下，这种构造存在一个问题：包括含有签名的 input script 字段在内的所有字段，都被用来推导[.keep-together]#交易的#标识符（txid）。Tx<sub>0</sub> 的 txid 是 Tx<sub>1</sub> 输入中的 outpoint 的一部分。这意味着，在 Tx<sub>0</sub> 的两个签名都已知之前，Alice 和 Bob 无法构造 Tx<sub>1</sub>——但如果他们已经知道 Tx<sub>0</sub> 的签名，其中一方就可以在签退款交易之前就广播 Tx<sub>0</sub>，从而破坏退款保证。这就是 <em>循环依赖（circular dependency）</em>。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_第三方交易延展性">第三方交易延展性</h4>
+<div class="paragraph">
+<p>更复杂的一系列交易有时可以消除循环依赖，但很多协议接下来会遇到一个新问题：同一个脚本通常可以用不同方式被求解。例如，考虑 <a href="#witness_structure">Witness 结构</a> 中那个简单脚本：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>2 OP_ADD 4 OP_EQUAL</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>我们可以通过在 input script 中提供值 <em>2</em> 来让这个脚本通过，但在 Bitcoin 中把这个值压入栈的方式有好几种。下面只是其中几例：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>OP_2
+OP_PUSH1 0x02
+OP_PUSH2 0x0002
+OP_PUSH3 0x000002
+...
+OP_PUSHDATA1 0x0102
+OP_PUSHDATA1 0x020002
+...
+OP_PUSHDATA2 0x000102
+OP_PUSHDATA2 0x00020002
+...
+OP_PUSHDATA4 0x0000000102
+OP_PUSHDATA4 0x000000020002
+...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>每一种在 input script 中编码数字 <em>2</em> 的替代方式都会产生略有不同的交易，其 txid 完全不同。每个不同版本的交易都花费与其他版本相同的输入（outpoint），使它们彼此 <em>冲突</em>。一组冲突交易中只有一个版本可以被包含在合法的区块链中。</p>
+</div>
+<div class="paragraph">
+<p>设想 Alice 创建了一个版本的交易，其 input script 中使用 OP_2，输出付款给 Bob。Bob 随即把这个输出花费给 Carol。网络上的任何人都可以把 OP_2 替换为 OP_PUSH1 0x02，从而与 Alice 的原始版本构成冲突。如果冲突的版本被确认，那么 Alice 的原始版本就没有办法被包含到同一条区块链中，这意味着 Bob 的交易就没办法花费它的输出。即便 Alice、Bob 和 Carol 都没做错任何事，Bob 给 Carol 的付款也被无效化了。一个与该交易无关的人（第三方）能够更改（mutate）Alice 的交易，这就是 <em>不期望的第三方交易延展性（unwanted third-party transaction malleability）</em>。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>也有人确实希望自己的交易具有延展性，Bitcoin 为此提供了若干特性来支持，最显著的就是我们将在 <a href="#sighash_types">[sighash_types]</a> 中学习的签名哈希（sighash）。例如，Alice 可以使用 sighash 让 Bob 帮她支付一部分交易手续费。这会让 Alice 的交易发生变更，但只会以 Alice 希望的方式变更。出于这个原因，我们偶尔会在 <em>交易延展性</em> 这个术语前加上 <em>不期望的</em> 这一前缀。即便我们和其他 Bitcoin 技术作者使用较短的术语时，我们几乎一定指的是延展性的不期望那一类。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_第二方交易延展性">第二方交易延展性</h4>
+<div class="paragraph">
+<p>当 legacy 交易格式是唯一的交易格式时，开发者们提出了将第三方延展性最小化的提案，例如 BIP62。但是，即便他们能够完全消除第三方延展性，合约协议的用户仍会面临另一个问题：如果他们需要协议中其他参与者的签名，那个人可以生成另一个版本的签名，从而改变 txid。</p>
+</div>
+<div class="paragraph">
+<p>例如，Alice 和 Bob 已经将他们的钱存入一个需要双方签名才能花费的脚本。他们还创建了一笔退款交易，允许双方在任何时候取回自己的钱。Alice 决定她只想花一部分钱，于是她与 Bob 合作创建一串交易：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Tx<sub>0</sub> 包含来自 Alice 和 Bob 的签名，将其 bitcoin 花费到两个输出。第一个输出花掉 Alice 的部分钱；第二个输出将剩余的 bitcoin 返还到那个需要 Alice 和 [.keep-together]#Bob 签名的脚本。#在对这笔交易签名之前，他们创建一笔新的退款交易 Tx<sub>1</sub>。</p>
+</li>
+<li>
+<p>Tx<sub>1</sub> 把 Tx<sub>0</sub> 的第二个输出花费成两个新输出，一个给 Alice，对应她在联合资金中的份额，一个给 Bob，对应他的份额。Alice 和 Bob 在签 Tx<sub>0</sub> 之前先签 Tx<sub>1</sub>。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>这里没有循环依赖，并且如果我们忽略第三方交易延展性，这看起来应该提供给我们一个无需信任的协议。然而，Bitcoin 签名的一个特性是签名者在生成签名时必须选择一个大的随机数。选择不同的随机数会生成不同的签名，即便被签名的内容完全相同。这有点像，如果你为同一份合同的两份副本提供手写签名，每一个实际签名看起来都会略有差异。</p>
+</div>
+<div class="paragraph">
+<p>签名的这种可变性意味着：如果 Alice 试图广播 Tx<sub>0</sub>（它包含 Bob 的签名），Bob 可以生成另一个版本的签名，从而创建一个具有不同 txid 的冲突交易。如果 Bob 的替代版本 Tx<sub>0</sub> 被确认，那么 Alice 就无法使用预签名的 Tx<sub>1</sub> 来主张她的退款。这种变更被称为 <em>不期望的第二方交易延展性（unwanted second-party transaction malleability）</em>。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="segwit">隔离见证（Segregated Witness）</h4>
+<div class="paragraph">
+<p>早在 <a href="https://oreil.ly/---bp">2011 年</a>，协议开发者就已经知道如何解决循环依赖、第三方延展性和第二方延展性的问题。这个思路是：在计算交易 txid 时不把 input script 包含进去。回忆一下，对 input script 中所持数据的抽象名称就是 <em>witness</em>。在生成 txid 时把交易中其他数据与其 witness 分离开来的思路，就被称为 <em>隔离见证（segregated witness，segwit）</em>。</p>
+</div>
+<div class="paragraph">
+<p>实现 segwit 的最直观方法需要对 Bitcoin 共识规则进行不兼容旧版全节点的更改，也被称为 <em>hard fork（硬分叉）</em>。硬分叉伴随着诸多挑战，我们将在 <a href="#hard_forks">[hard_forks]</a> 中作进一步讨论。</p>
+</div>
+<div class="paragraph">
+<p>2015 年末，提出了一种实现 segwit 的另一种方法。它对共识规则进行向后兼容的更改，被称为 <em>soft fork（软分叉）</em>。向后兼容意味着，实现这一更改的全节点不能接受未实现更改的全节点会视为无效的任何区块。只要它们遵守这个规则，更新后的全节点可以拒绝旧版全节点会接受的区块，从而具备执行新共识规则的能力（但仅当较新的全节点代表了 Bitcoin 用户中的经济共识时——我们将在 <a href="#mining">[mining]</a> 中详细探讨升级 Bitcoin 共识规则的内容）。</p>
+</div>
+<div class="paragraph">
+<p>软分叉版的 segwit 方法基于 anyone-can-spend output script。一个以 0 到 16 之间的某个数字开头、后跟 2 到 40 字节数据的脚本被定义为 segwit output script 模板。这个数字表示其版本（例如 0 表示 segwit version 0，简称 <em>segwit v0</em>）。这段数据被称为 <em>witness program（见证程序）</em>。也可以把 segwit 模板包装在一个 P2SH commitment 中，但本章不讨论这种情况。</p>
+</div>
+<div class="paragraph">
+<p>从旧节点的角度来看，这些 output script 模板可以用空的 input script 来花费。从了解新 segwit 规则的新节点的角度来看，任何向 segwit output script 模板的付款都 <em>必须</em> 仅用空的 input script 来花费。注意这里的区别：旧节点 <em>允许</em> 空的 input script；新节点 <em>要求</em> 空的 input script。</p>
+</div>
+<div class="paragraph less_space pagebreak-before">
+<p>空的 input script 阻止 witness 影响 txid，从而消除了循环依赖、第三方交易延展性和第二方交易延展性。但是，由于不再能在 input script 中放数据，segwit output script 模板的用户需要一个新的字段。这个字段被称为 <em>witness structure（见证结构）</em>。</p>
+</div>
+<div class="paragraph">
+<p>引入 witness program 和 witness structure 让 Bitcoin 变得更复杂了，但这沿循了既有的抽象层级递增的趋势。回忆 <a href="#ch04_keys_addresses">[ch04_keys_addresses]</a> 中所述，原始 Bitcoin 白皮书描述的系统中，bitcoin 被收到 public key（pubkey）上，并通过 signature（sig）来花费。public key 定义了谁被 <em>授权</em> 花费这些 bitcoin（即控制对应私钥的人），signature 提供了花费交易确实来自控制私钥的人的 <em>认证</em>。为了让该系统更灵活，Bitcoin 最初的发行版引入了脚本，使 bitcoin 可以被收到 output script 上，并通过 input script 花费。后来在合约协议方面的经验启发了允许将 bitcoin 收到 witness program 上，并通过 witness structure 来花费。Bitcoin 不同版本中用到的术语和字段如 <a href="#terms_used_authorization_authentication">[terms_used_authorization_authentication]</a> 所示。</p>
+</div>
+<table id="terms_used_authorization_authentication">
+<caption>Bitcoin 不同部分中用于授权与认证数据的术语</caption>
+<thead>
+<tr>
+<th/>
+<th><p>授权</p></th>
+<th class="right"><p>认证</p></th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="fakeheader"><p><strong>白皮书</strong></p></td>
+<td><p>Public key</p></td>
+<td class="right"><p>Signature</p></td>
+</tr>
+<tr>
+<td  class="fakeheader"><p><strong>原始（Legacy）</strong></p></td>
+<td><p>Output script</p></td>
+<td class="right"><p>Input script</p></td>
+</tr>
+<tr>
+<td  class="fakeheader"><p><strong>Segwit</strong></p></td>
+<td><p>Witness program</p></td>
+<td class="right"><p>Witness structure</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_witness_结构的序列化">Witness 结构的序列化</h4>
+<div class="paragraph">
+<p>与输入和输出字段类似，witness structure 也包含其他字段，因此我们仍以 Alice 交易中这些字节的映射图开始，见 <a href="#alice_tx_witness_map">Alice 交易中 witness 结构的字节图</a>。</p>
+</div>
+<div id="alice_tx_witness_map" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0605.png" alt="A byte map of the witness from Alice&#8217;s transaction">
+</div>
+<div class="title">Figure 5. Alice 交易中 witness 结构的字节图</div>
+</div>
+<div class="paragraph">
+<p>与输入和输出字段不同，整个 witness structure 的开头并没有任何对其所包含 witness 栈总数的指示。相反，这个数量由 inputs 字段隐式确定——交易中每个输入都对应一个 witness 栈。</p>
+</div>
+<div class="paragraph">
+<p>某个输入对应的 witness 栈以其所含元素数量的计数开头。这些元素被称为 <em>witness items（见证项）</em>。我们将在 <a href="#c_authorization_authentication">[c_authorization_authentication]</a> 中详细探讨它们，但目前我们需要知道：每个 witness item 前都有一个 compactSize 整数表示其大小。</p>
+</div>
+<div class="paragraph">
+<p>Legacy 输入不包含任何 witness item，因此它们的 witness 栈完全由一个零计数（0x00）构成。</p>
+</div>
+<div class="paragraph">
+<p>Alice 的交易包含一个输入和一个 witness item。</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="lock_time">Lock Time</h3>
+<div class="paragraph">
+<p>序列化交易的最后一个字段是它的 lock time。这个字段是 Bitcoin 原始序列化格式的一部分，但最初只通过 Bitcoin 关于选择哪些交易上链的策略来执行。已知最早的 Bitcoin 软分叉添加了一条规则：从区块高度 31,000 开始，禁止在区块中包含某笔交易，除非该交易满足以下规则之一：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>交易表明自己有资格被包含在任何区块中，方法是把它的 lock time 设为 0。</p>
+</li>
+<li>
+<p>交易希望限制自己能被包含在哪些区块中，方法是把 lock time 设为小于 500,000,000 的值。此时，该交易只能被包含在高度等于或高于 lock time 的区块中。例如，lock time 为 123,456 的交易可以被包含在第 123,456 号区块或之后的任何区块中。</p>
+</li>
+<li>
+<p>交易希望限制自己可被纳入区块链的时刻，方法是把 lock time 设为大于等于 500,000,000 的值。此时，该字段被解析为 epoch 时间（自 1970-01-01T00:00 UTC 起经过的秒数），该交易只能被包含在 <em>median time past</em>（MTP）大于 lock time 的区块中。MTP 通常比当前时间晚一到两个小时。MTP 的规则在 <a href="#mtp">[mtp]</a> 中描述。</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="coinbase_transactions">Coinbase 交易</h3>
+<div class="paragraph">
+<p>每个区块中的第一笔交易是一种特殊情形。大多数较老的文档把它称为 <em>generation transaction（生成交易）</em>，但大多数较新的文档把它称为 <em>coinbase transaction（coinbase 交易）</em>（不要与名为 "Coinbase" 公司创建的交易混淆）。</p>
+</div>
+<div class="paragraph">
+<p>Coinbase 交易由包含该交易的区块的矿工创建，让矿工能够选择领取该区块中各笔交易支付的全部手续费。此外，截止到第 6,720,000 号区块为止，矿工还被允许领取一份补贴（subsidy），它由此前从未流通过的 bitcoin 组成，称为 <em>block subsidy（区块补贴）</em>。矿工可以为一个区块领取的总额——即手续费与补贴之和——被称为 <em>block reward（区块奖励）</em>。</p>
+</div>
+<div class="paragraph">
+<p>coinbase 交易的一些特殊规则包括：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>它只能有一个输入。</p>
+</li>
+<li>
+<p>这唯一的输入必须有一个 txid 全为零的空 outpoint，以及一个最大的 output index（0xffffffff）。这防止 coinbase 交易引用某个先前的交易输出——考虑到 coinbase 交易要支付手续费和补贴，这样的引用（至少）会令人困惑。</p>
+</li>
+<li>
+<p>在普通交易中本应包含 input script 的字段，在 coinbase 交易中被称为 <em>coinbase</em>。正是这个字段赋予了 coinbase 交易其名称。coinbase 字段必须至少 2 字节，且不超过 100 字节。这个脚本不会被执行，但 legacy 交易对签名校验操作（sigops）数量的限制对它仍然适用，因此放入其中的任何任意数据都应当以数据压栈类操作码作为前缀。自 BIP34 中定义的 2013 年软分叉以来，该字段开头的几个字节必须遵循我们将在 <a href="#duplicate_transactions">[duplicate_transactions]</a> 中描述的额外规则。</p>
+</li>
+<li>
+<p>所有输出的总额不得超过该区块中所有交易收取的手续费总和加上补贴。补贴最初为每个区块 50 BTC，每 210,000 个区块（约每 4 年）减半一次。补贴值向下取整到最近的 satoshi。</p>
+</li>
+<li>
+<p>自 BIP141 中定义的 2017 年 segwit 软分叉以来，任何包含花费 segwit 输出的交易的区块都必须在 coinbase 交易中包含一个输出，该输出对该区块中所有交易（包括它们的 witness）做出承诺。我们将在 <a href="#mining">[mining]</a> 中探讨这一 witness commitment。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>coinbase 交易可以有任何在普通交易中合法的其他输出。然而，花费这些输出的交易，必须在 coinbase 交易获得 100 次确认之后才能被包含在任何区块中。这被称为 <em>maturity rule（成熟规则）</em>，尚未获得 100 次确认的 coinbase 交易输出被称为 <em>immature（未成熟）</em>。</p>
+</div>
+<div class="paragraph">
+<p>大多数 Bitcoin 软件无需处理 coinbase 交易，但它们的特殊性质确实意味着它们偶尔会成为未设计应对它们的软件中出现异常问题的原因。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_weight_与_vbytes">Weight 与 Vbytes</h3>
+<div class="paragraph">
+<p>每个 Bitcoin 区块所能包含的交易数据量都是有限的，因此大多数 Bitcoin 软件需要能够度量它所创建或处理的交易。Bitcoin 现代的度量单位称为 <em>weight（重量）</em>。另一种 weight 的等价表示是 <em>vbytes（虚拟字节）</em>，4 个 weight 等于 1 个 vbyte，便于与 legacy Bitcoin 区块中使用的原始 <em>byte</em> 度量单位进行比较。</p>
+</div>
+<div class="paragraph">
+<p>每个区块的 weight 上限是 4,000,000。区块头占 240 个 weight。另一个字段——交易数量——占用 4 或 12 个 weight。剩余的所有 weight 都可以用于交易数据。</p>
+</div>
+<div class="paragraph">
+<p>要计算交易中某个字段的 weight，将该字段序列化后的字节数乘以一个系数。要计算一笔交易的 weight，将其所有字段的 weight 相加。一笔交易中各字段对应的系数如 <a href="#weight_factors">[weight_factors]</a> 所示。为了举例说明，我们也计算了本章示例交易（Alice 给 Bob）中每个字段的 weight。</p>
+</div>
+<div class="paragraph">
+<p>这些系数以及它们所作用的字段，是为了减少花费一个 UTXO 时所用的 weight 而选定的。这有助于抑制 <a href="#uneconomical_outputs">不经济输出与被禁止的尘埃</a> 中所述的不经济输出的产生。</p>
+</div>
+<table id="weight_factors">
+<caption>Bitcoin 交易中所有字段的 weight 系数</caption>
+<thead>
+<tr>
+<th><p>字段</p></th>
+<th><p>系数</p></th>
+<th><p>Alice 交易中的 weight</p></th>
+</tr> </thead>
+<tbody>
+<tr>
+<td><p>Version</p></td>
+<td><p>4</p></td>
+<td><p>16</p></td>
+</tr>
+<tr>
+<td><p>Marker &amp; Flag</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+</tr>
+<tr>
+<td><p>Inputs Count</p></td>
+<td><p>4</p></td>
+<td><p>4</p></td>
+</tr>
+<tr>
+<td><p>Outpoint</p></td>
+<td><p>4</p></td>
+<td><p>144</p></td>
+</tr>
+<tr>
+<td><p>Input script</p></td>
+<td><p>4</p></td>
+<td><p>4</p></td>
+</tr>
+<tr>
+<td><p>Sequence</p></td>
+<td><p>4</p></td>
+<td><p>16</p></td>
+</tr>
+<tr>
+<td><p>Outputs Count</p></td>
+<td><p>4</p></td>
+<td><p>4</p></td>
+</tr>
+<tr>
+<td><p>Amount</p></td>
+<td><p>4</p></td>
+<td><p>64（2 个输出）</p></td>
+</tr>
+<tr>
+<td><p>Output script</p></td>
+<td><p>4</p></td>
+<td><p>232（2 个输出，脚本不同）</p></td>
+</tr>
+<tr>
+<td><p>Witness Count</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr>
+<td><p>Witness items</p></td>
+<td><p>1</p></td>
+<td><p>66</p></td>
+</tr>
+<tr>
+<td><p>Lock time</p></td>
+<td><p>4</p></td>
+<td><p>16</p></td>
+</tr>
+<tr>
+<td><p><strong>合计</strong></p></td>
+<td><p><em>N/A</em></p></td>
+<td><p><strong>569</strong></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph less_space pagebreak-before">
+<p>我们可以通过从 Bitcoin Core 取得 Alice 交易的总 weight 来验证我们的计算：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ bitcoin-cli getrawtransaction 466200308696215bbc949d5141a49a41\
+38ecdfdfaa2a8029c1f9bcecd1f96177 2 | jq .weight
+569</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>本章开头 <a href="#alice_tx_serialized_reprint">Alice 的序列化交易</a> 中 Alice 的交易，用 weight units 表示后展示在 <a href="#alice_tx_weight_map">Alice 交易的字节图</a> 中。通过比较两张图中各字段的尺寸差异，你可以看出系数的作用。</p>
+</div>
+<div id="alice_tx_weight_map" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0606.png" alt="A weight map of Alice&#8217;s transaction">
+</div>
+<div class="title">Figure 6. Alice 交易的字节图</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="legacy_serialization">Legacy 序列化</h3>
+<div class="paragraph">
+<p>本章描述的序列化格式适用于截至本书撰写时大多数新的 Bitcoin 交易，但对许多交易而言，仍在使用一种更早的序列化格式。这种更早的格式被称为 <em>legacy 序列化</em>，它必须在 Bitcoin P2P 网络上被用于任何具有空 witness 结构的交易（这只对不花费任何 witness program 的交易有效）。</p>
+</div>
+<div class="paragraph">
+<p>Legacy 序列化不包含 marker、flag 和 witness structure 字段。</p>
+</div>
+<p class="fix_tracking2">
+在本章中，我们考察了交易中的每个字段，并发现它们如何向全节点传达有关用户之间转移 bitcoin 的细节。我们只是简略地看了 output script、input script 与 witness structure，它们用于指定和满足限制谁能花费哪些 bitcoin 的条件。理解如何构造和使用这些条件，对确保只有 Alice 才能花费她的 bitcoin 至关重要，因此它们将是下一章的主题。</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2026-06-12 15:53:51 +0800
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</body>
+</html>

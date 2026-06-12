@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<title>钱包恢复</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment the following line when using as a custom stylesheet */
+/* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700"; */
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+b,strong{font-weight:bold}
+abbr{font-size:.9em}
+abbr[title]{cursor:help;border-bottom:1px dotted #dddddf;text-decoration:none}
+dfn{font-style:italic}
+hr{height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type=checkbox],input[type=radio]{padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,::before,::after{box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;line-height:1;position:relative;cursor:auto;-moz-tab-size:4;-o-tab-size:4;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.square{list-style-type:square}
+ul.circle ul:not([class]),ul.disc ul:not([class]),ul.square ul:not([class]){list-style:inherit}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:1px solid #dedede;word-wrap:normal}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 0 0 .1em #fff;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin:0 auto;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:hsla(0,0%,100%,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details{margin-left:1.25rem}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
+details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
+details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class=paragraph]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock pre>code{display:block}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos,pre.pygments .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+pre.pygments span.linenos{display:inline-block;margin-right:.75em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
+table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
+table.frame-sides{border-width:0 1px}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+li>p:empty:only-child::before{content:"";display:inline-block}
+ul.checklist>li>p:first-child{margin-left:-1em}
+ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist>li>p:first-child>input[type=checkbox]:first-child{margin-right:.25em}
+ul.inline{display:flex;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]{border-bottom:1px dotted}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#header,#content,#footnotes,#footer{max-width:none}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media amzn-kf8,print{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/github.min.css">
+</head>
+<body class="article">
+<div id="header">
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="ch05_wallets">钱包恢复</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>创建公私钥对是比特币钱包能够接收和花费比特币的关键环节。但一旦丢失对私钥的访问，任何人都将永远无法花费收到对应公钥下的比特币。多年来，钱包与协议的开发者们一直致力于设计一种系统，让用户能够在出现问题后恢复对其比特币的访问，同时不会在其他时间损害安全性。</p>
+</div>
+<div class="paragraph">
+<p>In 本章中，我们将考察钱包为了防止数据丢失变成资金损失而采用的一些不同方法。有些解决方案几乎没有缺点，已被现代钱包普遍采用，我们会直接将其推荐为最佳实践。另一些解决方案则同时存在优点和缺点，因此不同钱包的作者会做出不同的权衡。在这种情况下，我们会介绍各种可选方案。</p>
+</div>
+<div class="sect2">
+<h3 id="_独立密钥生成">独立密钥生成</h3>
+<p class="fix_tracking2">
+实物现金钱包里装的就是现金，
+因此许多人误以为比特币钱包里装的就是比特币，这并不奇怪。事实上，许多人所说的
+比特币钱包——我们称之为<em>钱包数据库</em>，以便与钱包应用区分开——
+里面只包含密钥。这些密钥与区块链上记录的比特币相关联。通过向比特币全节点证明
+你掌控这些密钥，你就可以花费相应的比特币。
+</p>
+<div class="paragraph">
+<p>简单的钱包数据库既包含用于接收比特币的公钥，也包含用于创建授权花费这些比特币所需签名的私钥。其他钱包的数据库可能只包含公钥，或者只包含授权一笔花费交易所需的部分私钥。它们的钱包应用通过与外部工具（例如硬件签名设备或多重签名方案中的其他钱包）协作，来生成所需的签名。</p>
+</div>
+<div class="paragraph">
+<p>钱包应用可以独立生成它后续打算使用的每一把密钥，如 <a href="#Type0_wallet">非确定性密钥生成：钱包数据库中存放着一组独立生成的密钥。</a> 所示。早期所有的比特币钱包应用都是这样做的，但这要求用户在每次生成并分发新密钥时都备份钱包数据库——而生成新密钥的频率可能高达每收一笔款就生成一个新地址。如果未能及时备份钱包数据库，用户就会失去对那些尚未备份的密钥所接收资金的访问权。</p>
+</div>
+<div class="paragraph">
+<p>对每个独立生成的密钥，用户都需要备份大约 32 字节，外加一些额外开销。一些用户和钱包应用试图通过只使用一把密钥来最小化需要备份的数据量。虽然这样做可以是安全的，但会严重削弱该用户以及与其交易的所有人的隐私性。重视自己和同伴隐私的人会为每笔交易创建新的密钥对，由此产生的钱包数据库基本上只能用数字介质来备份。</p>
+</div>
+<div id="Type0_wallet" class="imageblock width-60">
+<div class="content">
+<img src="images/mbc3_0501.png" alt="Non-Deterministic Wallet">
+</div>
+<div class="title">Figure 1. 非确定性密钥生成：钱包数据库中存放着一组独立生成的密钥。</div>
+</div>
+<div class="paragraph">
+<p>现代钱包应用不再独立生成密钥，而是使用一种可重复的（确定性的）算法，从单个随机种子派生出所有密钥  。</p>
+</div>
+<div class="sect3">
+<h4 id="_确定性密钥生成">确定性密钥生成</h4>
+<div class="paragraph">
+<p>哈希函数  在输入相同时总会产生相同的输出，但只要输入有哪怕极小的变化，输出就会不同。如果哈希函数在密码学上是安全的，那么任何人都无法预测新的输出——即使他们知道新的输入也不行。</p>
+</div>
+<div class="paragraph">
+<p>这使我们能够将一个随机值转换为几乎无限多个看似随机的值。更有用的是，之后用同样的哈希函数再次对同样的输入（称为 <em>种子</em> ）进行运算，会产生同样的、看似随机的值：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># Collect some entropy (randomness)
+$ dd if=/dev/random count=1 status=none | sha256sum
+f1cc3bc03ef51cb43ee7844460fa5049e779e7425a6349c8e89dfbb0fd97bb73  -
+
+# Set our seed to the random value
+$ seed=f1cc3bc03ef51cb43ee7844460fa5049e779e7425a6349c8e89dfbb0fd97bb73
+
+# Deterministically generate derived values
+$ for i in {0..2} ; do echo "$seed + $i" | sha256sum ; done
+50b18e0bd9508310b8f699bad425efdf67d668cb2462b909fdb6b9bd2437beb3  -
+a965dbcd901a9e3d66af11759e64a58d0ed5c6863e901dfda43adcd5f8c744f3  -
+19580c97eb9048599f069472744e51ab2213f687d4720b0efc5bb344d624c3aa  -</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果我们把派生出的值用作私钥，那么之后只要用我们的种子配合之前所用的算法，就能再次生成完全相同的私钥。使用确定性密钥生成的用户，只需记录其种子以及所用确定性算法的引用，就能备份钱包中的所有密钥。例如，即使 Alice 在一百万个不同地址上收到了一百万枚比特币，要日后恢复对这些比特币的访问，她需要备份的也只是：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>f1cc 3bc0 3ef5 1cb4 3ee7 8444 60fa 5049
+e779 e742 5a63 49c8 e89d fbb0 fd97 bb73</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>基本的顺序式确定性密钥生成的逻辑示意图如 <a href="#Type1_wallet">确定性密钥生成：根据种子为钱包数据库派生出的确定性密钥序列。</a> 所示。然而，现代钱包应用采用了更巧妙的方法来实现这一点，可以将公钥的派生与对应私钥的派生分开，从而使私钥可以比公钥更安全地存储  。</p>
+</div>
+<div id="Type1_wallet" class="imageblock width-70">
+<div class="content">
+<img src="images/mbc3_0502.png" alt="Deterministic Wallet">
+</div>
+<div class="title">Figure 2. 确定性密钥生成：根据种子为钱包数据库派生出的确定性密钥序列。</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="public_child_key_derivation">公开子密钥派生</h4>
+<div class="paragraph">
+<p>在 <a href="#public_key_derivation">[public_key_derivation]</a> 中，我们学习了  如何使用椭圆曲线密码学（ECC）从一个私钥创建公钥。尽管椭圆曲线上的运算并不直观，但它们类似于普通算术中使用的加法、减法和乘法。换句话说，可以对公钥进行加减或乘运算。回想我们在 <a href="#public_key_derivation">[public_key_derivation]</a> 中用生成元 <em>G</em> 从私钥 <em>k</em> 生成公钥 <em>K</em> 的运算：</p>
+</div>
+<div class="stemblock">
+<div class="content">
+\[\begin{equation}
+{K = k \times G}
+\end{equation}\]
+</div>
+</div>
+<div class="paragraph">
+<p>通过在等式两边同时加上同一个值，就可以创建一对派生密钥，称为子密钥对：</p>
+</div>
+<div data-type="equation">
+<math xmlns="http://www.w3.org/1998/Math/MathML" alttext="upper K plus left-parenthesis 123 times upper G right-parenthesis equals equals left-parenthesis k plus 123 right-parenthesis times upper G" display="block">
+  <mrow>
+    <mi>K</mi>
+    <mo>+</mo>
+    <mo>(</mo>
+    <mn>123</mn>
+    <mo>×</mo>
+    <mi>G</mi>
+    <mo>)</mo>
+    <mo>==</mo>
+    <mo>(</mo>
+    <mi>k</mi>
+    <mo>+</mo>
+    <mn>123</mn>
+    <mo>)</mo>
+    <mo>×</mo>
+    <mi>G</mi>
+  </mrow>
+</math>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>在本书的方程中，对于 <em>K</em> = <em>k</em> × <em>G</em> 这类用来计算某个变量值的运算，我们使用单等号。我们用双等号来表示等式两边相等，或者表示如果两边不相等运算应当返回 false（而非 true）。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>由此带来的一个有趣后果是：对公钥加上 123 这件事可以完全用公开信息来完成。例如，Alice 生成公钥 <em>K</em> 并交给 Bob。Bob 不知道私钥，但他知道全局常量 <em>G</em>，所以他可以在公钥上加上任意值，产生一个派生的公开子密钥。如果他随后把自己加到公钥上的那个值告诉 Alice，她就可以把同样的值加到私钥上，从而得到与 Bob 所创建的公开子密钥相对应的派生私有子密钥。</p>
+</div>
+<div class="paragraph">
+<p>换句话说，即使你对父私钥一无所知，也可以创建子公钥。加到公钥上的值被称为 <em>key tweak</em>  。如果使用确定性算法来生成 key tweak，那么不知道私钥的人就可以从一个公开的父密钥派生出本质上无限的公开子密钥序列。掌握父私钥的人随后可以用相同的 key tweak 创建所有对应的私有子密钥。</p>
+</div>
+<div class="paragraph">
+<p>这种技术常用于将钱包应用的前端（不需要私钥）与签名操作（需要私钥）分离。例如，Alice 的前端把她的公钥分发给想要支付给她的人。之后，当她要花费收到的钱时，她可以把所用的 key tweak 提供给一个安全保管原始私钥的 <em>hardware signing device</em>（有时容易混淆地称为 <em>hardware wallet</em>） 。硬件签名器用这些 tweak 派生出所需的子私钥，并用它们对交易进行签名，再把已签名的交易返回给安全性较低的前端，由其广播到比特币网络。</p>
+</div>
+<div class="paragraph">
+<p>公开子密钥派生可以产生一个类似于前面所见 <a href="#Type1_wallet">确定性密钥生成：根据种子为钱包数据库派生出的确定性密钥序列。</a> 的线性密钥序列，但现代钱包应用还用了一个额外的技巧，可以提供一棵密钥树而不是单一序列，详见下一节  。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="hd_wallets">分层确定性（HD）密钥生成（BIP32）</h4>
+<div class="paragraph">
+<p>我们所知的每一个  现代比特币钱包都默认使用分层确定性（HD）密钥生成。该标准定义于 BIP32，使用确定性密钥生成以及可选的公开子密钥派生，配合一个能产生密钥树的算法。在这棵树中，任何一把密钥都可以作为一个子密钥序列的父密钥，而这些子密钥中的任何一把又可以成为另一段子密钥序列的父密钥（即原密钥的孙密钥）。树的深度没有任意限制。这种树结构如 <a href="#Type2_wallet">HD 钱包：从单个种子生成的一棵密钥树。</a> 所示。</p>
+</div>
+<div id="Type2_wallet" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0503.png" alt="HD wallet">
+</div>
+<div class="title">Figure 3. HD 钱包：从单个种子生成的一棵密钥树。</div>
+</div>
+<div class="paragraph">
+<p>这种树结构可以用来表达额外的组织含义，例如：某一特定子密钥分支用于接收进来的付款，而另一个分支用于接收外发付款的找零。密钥分支也可以用于企业场景，将不同分支分配给不同部门、子公司、特定职能或会计科目。</p>
+</div>
+<div class="paragraph">
+<p>我们将在 <a href="#hd_wallet_details">从种子创建 HD 钱包</a> 中对 HD 钱包做详细的探讨。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_种子与恢复码">种子与恢复码</h4>
+<div class="paragraph">
+<p>HD 钱包  是一种非常强大的机制，可以管理由单一种子派生出的大量密钥。如果你的钱包数据库出现损坏或丢失，你可以用你原始的种子重新生成钱包中的所有私钥  。但如果别人拿到了你的种子，他们同样能够生成所有的私钥，从而可以从单签名钱包中盗走全部比特币，并降低多重签名钱包中比特币的安全性。本节我们将介绍几种 <em>recovery code</em>（恢复码），它们的设计目的是让备份更简单、更安全。</p>
+</div>
+<div class="paragraph">
+<p>虽然种子本质上是很大的随机数，通常是 128 到 256 位，但大多数恢复码使用人类语言的单词。使用单词的一个主要动机是让恢复码易于记忆。例如，参见 <a href="#hex_seed_vs_recovery_words">分别用十六进制和英文单词编码的种子</a> 中分别用十六进制和单词编码的恢复码。</p>
+</div>
+<div id="hex_seed_vs_recovery_words" class="exampleblock">
+<div class="title">Example 1. 分别用十六进制和英文单词编码的种子</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>Hex-encoded:
+0C1E 24E5 9177 79D2 97E1 4D45 F14E 1A1A
+
+Word-encoded:
+army van defense carry jealous true
+garbage claim echo media make crunch</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>在某些情况下，能记住恢复码可能是一种很强大的功能  ，例如当你无法在不被第三方扣押或检查（从而可能盗走你比特币）的情况下携带实物（如写在纸上的恢复码）时。然而大多数情况下，仅依赖记忆是危险的：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>如果你忘记了恢复码，又失去了对原始钱包数据库的访问，你的比特币就永远丢失了。</p>
+</li>
+<li>
+<p>如果你死亡或重伤，而你的继承人无法访问你原始的钱包数据库，他们将无法继承你的比特币。</p>
+</li>
+<li>
+<p>如果有人认为你记住了某个能让他们拿到比特币的恢复码，他们可能会试图胁迫你交出这串码。截至本文撰写时，比特币贡献者 Jameson Lopp 已经
+<a href="https://oreil.ly/aw5XM">记录</a>
+了 100 多起针对比特币及其他数字资产疑似持有者的实体攻击事件，其中至少三人死亡，还有许多受害者被酷刑、被劫持，或家人受到威胁。</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>即使你使用的是为便于记忆而设计的恢复码，我们也强烈建议你考虑把它写下来。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>截至本文撰写时，几种  不同类型的恢复码被广泛使用：</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">BIP39</dt>
+<dd>
+<p>过去十年中最流行的恢复码生成方法  ，BIP39 涉及生成一个随机字节序列，添加校验和，并把数据编码为 12 至 24 个单词（可以本地化为用户的母语）。这些单词（加上一个可选的密码短语）会经过一个 <em>key-stretching function</em>（密钥扩展函数），其输出用作种子。BIP39 恢复码有几处不足，后来的方案试图加以解决。</p>
+</dd>
+<dt class="hdlist1">Electrum v2</dt>
+<dd>
+<p>用于 Electrum 钱包（2.0 及以上版本）的  这种基于单词的恢复码相比 BIP39 有若干优势。它不依赖一个必须由每个兼容程序的每个版本都实现的全局词表，而且其恢复码包含一个版本号，能提高可靠性和效率。与 BIP39 类似，它支持可选的密码短语（Electrum 称之为 <em>seed extension</em>），并使用相同的密钥扩展函数。</p>
+</dd>
+<dt class="hdlist1">Aezeed</dt>
+<dd>
+<p>用于 LND 钱包的  另一种基于单词的恢复码，相比 BIP39 有所改进。它包含两个版本号：一个是内部的，可以消除升级钱包应用时的若干问题（类似 Electrum v2 的版本号）；另一个是外部的，可以通过递增来改变恢复码底层的密码学特性。它还在恢复码中包含一个 <em>wallet birthday</em>，即一个指向用户创建钱包数据库日期的引用。这允许恢复过程查找与钱包相关的所有资金时无需扫描整条区块链，对注重隐私的轻量级客户端尤其有用。它支持在不需要把资金转移到新种子的情况下更改密码短语或修改恢复码的其他方面——用户只需备份新的恢复码即可。与 Electrum v2 相比的一个缺点是：和 BIP39 一样，它依赖于备份方和恢复方的软件支持相同的词表。</p>
+</dd>
+</dl>
+</div>
+<div class="dlist less_space pagebreak-before">
+<dl>
+<dt class="hdlist1">Muun</dt>
+<dd>
+<p>用于 Muun 钱包  的恢复码，该钱包默认要求花费交易由多把密钥签名。这是一种非单词形式的码，必须附带额外信息（Muun 目前以 PDF 形式提供）。这种恢复码与种子无关，而是用来解密 PDF 中所包含的私钥 [.keep-together]# # 。虽然与 BIP39、Electrum v2 和 Aezeed 的恢复码相比显得笨重，但它支持新钱包中越来越常见的新技术与标准，如 Lightning Network（LN）支持、output script descriptor 和 miniscript。</p>
+</dd>
+<dt class="hdlist1">SLIP39</dt>
+<dd>
+<p>作为 BIP39 的后继者  ，与 BIP39 有部分相同的作者，SLIP39 允许把单个种子用多个恢复码分发，分别存放在不同地点（或交给不同的人）保管。创建恢复码时，你可以指定恢复种子所需的恢复码数量。例如，你创建五个恢复码，但只需要其中三个就能恢复种子。SLIP39 支持可选密码短语，依赖全局词表，且没有直接提供版本管理。</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>本书撰写期间还提出了一种新的恢复码分发系统  ，与 SLIP39 有相似之处。Codex32 允许仅借助打印的说明、剪刀、精密刀、铜钉和一支笔——再加上隐私环境和几个小时空闲时间——就能创建和验证恢复码。或者，信任计算机的人也可以用数字设备上的软件即时创建恢复码。你最多可以创建 31 个恢复码存放在不同位置，并指定恢复种子所需的码的数量。作为一项新提案，Codex32 的细节在本书出版前可能会发生重大变化，因此我们鼓励所有对分布式恢复码感兴趣的读者了解其 <a href="https://oreil.ly/Xx_Zq">最新进展</a>  。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">恢复码密码短语</div>
+<div class="paragraph">
+<p>BIP39、 Electrum v2、Aezeed 和 SLIP39 这几种方案都可以与可选的密码短语配合使用。如果你只把这条密码短语保存在记忆中，其优缺点与记忆恢复码完全相同。然而，与恢复码使用密码短语的方式相关，还存在另一组特有的权衡。</p>
+</div>
+<div class="paragraph">
+<p>这几种方案中有三种（BIP39、Electrum v2 和 SLIP39）不会把可选的密码短语纳入用来防止录入错误的校验和。每一种密码短语（包括不使用密码短语）都会为 BIP32 密钥树生成一个种子，但树并不相同。不同的密码短语会生成不同的密钥。这一点从不同角度看可以是优点也可以是缺点：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>从正面看，如果有人拿到了你的恢复码（但没拿到密码短语），他们看到的将是一棵合法的 BIP32 密钥树。如果你为这种情形做了准备，并向不带密码短语的那棵树发送了一些比特币，他们就会盗走这些钱。虽然丢失部分比特币通常是坏事，但这也可以让你及时获知恢复码已经泄露，便于你调查并采取补救措施。能针对同一个恢复码创建多个看起来都合法的密码短语，是一种 <em>plausible deniability</em>（合理推诿）。</p>
+</li>
+<li>
+<p>从负面看，如果你被胁迫向攻击者交出恢复码（无论是否带密码短语），而对方没有得到他们预期数量的比特币，他们可能会继续胁迫你，直到你交出能解锁更多比特币的另一个密码短语。为合理推诿而设计就意味着你无法向攻击者证明你已经交出了全部信息，因此即使你把所有比特币都给了他们，他们仍可能继续施压。</p>
+</li>
+<li>
+<p>另一个缺点是错误检测能力下降。如果你在从备份恢复时输入了略有错误的密码短语，钱包无法对此发出警告。如果你预期有余额，当钱包应用在重建的密钥树上显示零余额时，你会知道哪里出了问题。然而新手用户可能会以为自己的钱永远丢失了，并做出愚蠢的举动，比如放弃并把恢复码扔掉。又或者，如果你本就预期是零余额，那你可能会在使用钱包应用多年之后，下一次用正确的密码短语恢复时才看到零余额。除非你能想起自己之前打错了哪个字，否则你的资金就此消失。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>与其他方案不同，Aezeed 的种子加密方案会对可选密码短语进行认证，如果你提供的值不正确就会返回错误。这消除了合理推诿，增加了错误检测，并使证明密码短语已被披露成为可能。</p>
+</div>
+<div class="paragraph">
+<p>许多用户和开发者对哪种方法更好意见不一，一些人强烈支持合理推诿，另一些人则更倾向于错误检测带给新手和受胁迫用户的安全性提升。我们认为只要恢复码继续被广泛使用  ，这场争论就会持续下去。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_备份非密钥数据">备份非密钥数据</h4>
+<div class="paragraph">
+<p>钱包数据库  中最重要的数据是它的私钥。如果你失去对私钥的访问，你就失去了花费比特币的能力。确定性密钥派生和恢复码为备份和恢复你的密钥及其所控制的比特币提供了一个相当稳健的方案。但是，必须考虑到许多钱包数据库存储的不仅仅是密钥——它们还存储了用户为每笔收发交易自己添加的信息。</p>
+</div>
+<div class="paragraph">
+<p>例如，当 Bob 在向 Alice 发送发票时创建一个新地址时，他会为生成的地址添加一个 <em>label</em>  ，以便把她的付款与他收到的其他付款区分开来。出于同样的原因，当 Alice 向 Bob 的地址付款时，她会把这笔交易标注为支付给 Bob。一些钱包还会在交易中添加其他有用信息，例如当前汇率，这在某些司法辖区计算税款时很有用。这些标签完全保存在各自的钱包中——不会共享到网络中——既保护了隐私，也避免让不必要的个人数据进入区块链。例子可参见 <a href="#alice_tx_labels">[alice_tx_labels]</a>。</p>
+</div>
+<table id="alice_tx_labels">
+<caption>Alice 的交易历史，每笔交易都有标签</caption>
+<thead>
+<tr>
+<th>日期</th>
+<th>标签</th>
+<th>BTC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>2023-01-01</p></td>
+<td><p>从 Joe 处购买比特币</p></td>
+<td><p>+0.00100</p></td>
+</tr>
+<tr>
+<td><p>2023-01-02</p></td>
+<td><p>支付给 Bob 的播客费</p></td>
+<td><p>−0.00075</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>然而，由于地址和交易标签只保存在各个用户自己的钱包数据库中，并且它们不是确定性的，因此无法仅凭恢复码恢复。如果恢复方式仅基于种子，那么用户能看到的只有一份大致的交易时间和比特币金额清单。这会让你很难弄清楚自己过去是如何使用资金的。想象一下查看一年前的银行或信用卡账单，上面有每笔交易的日期和金额，但"描述"一栏一片空白。</p>
+</div>
+<div class="paragraph">
+<p>钱包应该为用户提供一种便捷的方式来备份标签数据。这看上去理所当然，但有不少被广泛使用的钱包应用，虽然能轻松地创建和使用恢复码，却根本没有提供备份或恢复标签数据的途径。</p>
+</div>
+<div class="paragraph">
+<p>此外，钱包应用如果能提供一种标准化的标签导出格式，以便在其他应用（例如会计软件）中使用，可能会非常有用。BIP329 提出了一种这样的格式标准。</p>
+</div>
+<div class="paragraph">
+<p>实现了基本比特币支持之外协议的钱包应用可能还需要或希望存储其他数据。例如，截至 2023 年，越来越多的应用增加了通过 Lightning Network（LN）收发交易的支持。虽然 LN 协议提供了一种在数据丢失时恢复资金的方法，称为 <em>static channel backups</em>，但它不能保证一定成功。如果你钱包连接的节点意识到你丢失了数据，它可能就能从你这里盗走比特币。如果它在你丢失数据库的同时也丢失了自己的钱包数据库，而你们双方都没有充分的备份，那么双方都会损失资金。</p>
+</div>
+<div class="paragraph">
+<p>这再次说明，用户和钱包应用都需要做的不止是备份一个恢复码。</p>
+</div>
+<div class="paragraph">
+<p>少数钱包应用采用的一种解决方案是频繁地、自动地用从种子派生的某把密钥来加密钱包数据库，并创建完整备份。比特币密钥必须不可猜测，现代加密算法被认为非常安全，因此除了能生成种子的人之外，应该没有人能打开加密备份。这样就可以安全地把备份存放在不受信任的计算机上，比如云托管服务，甚至随机的网络节点上。</p>
+</div>
+<div class="paragraph">
+<p>之后，如果原始钱包数据库丢失，用户可以把恢复码输入钱包应用以恢复种子。然后应用就可以取回最新的备份文件，重新生成加密密钥，解密备份，并恢复用户所有的标签和其他协议相关数据  。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_备份密钥派生路径">备份密钥派生路径</h4>
+<div class="paragraph">
+<p>在一棵  BIP32 密钥树中，大约有四十亿把第一层密钥；其中每一把都可以再有自己的四十亿个子密钥，每个子密钥又可能各自有四十亿个子密钥，依此类推。钱包应用不可能生成 BIP32 树中所有密钥的哪怕一小部分，这意味着从数据丢失中恢复不仅需要知道恢复码、获取种子的算法（如 BIP39）和确定性密钥派生算法（如 BIP32），还需要知道你的钱包应用在密钥树中使用了哪些路径来生成它分发出去的具体密钥。</p>
+</div>
+<div class="paragraph">
+<p>这个问题有两种被采用的解决方案。第一种是使用标准路径。每当钱包应用想生成的地址类型发生变化时，就会有人创建一个 BIP 来规定要使用的密钥派生路径。例如，BIP44 把 <code>m/44'/0'/0'</code> 定义为用于 P2PKH 脚本（一种 legacy 地址）密钥的路径。实现该标准的钱包应用在初次启动以及从恢复码恢复后，都会使用该路径下的密钥。我们把这种方案称为 <em>implicit paths</em>（隐式路径） 。BIP 定义的若干常见隐式路径见 <a href="#bip_implicit_paths">[bip_implicit_paths]</a>。</p>
+</div>
+<table id="bip_implicit_paths">
+<caption>各 BIP 定义的隐式脚本路径</caption>
+<thead>
+<tr>
+<th>标准</th>
+<th>脚本</th>
+<th>BIP32 路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>BIP44</p></td>
+<td><p>P2PKH</p></td>
+<td><p><code>m/44'/0'/0'</code></p></td>
+</tr>
+<tr>
+<td><p>BIP49</p></td>
+<td><p>Nested P2WPKH</p></td>
+<td><p><code>m/49'/1'/0'</code></p></td>
+</tr>
+<tr>
+<td><p>BIP84</p></td>
+<td><p>P2WPKH</p></td>
+<td><p><code>m/84'/0'/0'</code></p></td>
+</tr>
+<tr>
+<td><p>BIP86</p></td>
+<td><p>P2TR Single-key</p></td>
+<td><p><code>m/86'/0'/0'</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph less_space pagebreak-before">
+<p>第二种方案是把路径信息和恢复码一起备份，明确指出哪个路径用于哪种脚本。我们把这种方案称为 <em>explicit paths</em>（显式路径） 。</p>
+</div>
+<div class="paragraph">
+<p>隐式路径的优点是用户无需记录自己使用了哪些路径。如果用户把恢复码输入到之前使用的同一款钱包应用（同版本或更高版本），它会自动为先前使用过的路径重新生成密钥。</p>
+</div>
+<div class="paragraph">
+<p>隐式脚本的缺点是不够灵活。输入恢复码时，钱包应用必须为它支持的每一条路径都生成密钥，并扫描区块链上涉及这些密钥的交易，否则可能会找不到用户的全部交易。对于支持很多功能、每个功能都有自己路径的钱包，如果用户只用过其中少数几项功能，这种做法是浪费的。</p>
+</div>
+<div class="paragraph">
+<p>对于不包含版本号的隐式路径恢复码（如 BIP39 和 SLIP39），当某个钱包应用的新版本不再支持某条旧路径时，它无法在恢复过程中向用户警告：你的部分资金可能找不到。反过来同样有这个问题：如果用户把恢复码输入到旧版软件中，旧软件就找不到新路径，而用户可能正是在这些新路径上接收过资金。包含版本信息的恢复码（如 Electrum v2 和 Aezeed）能检测到用户输入的是旧版还是新版恢复码，并将其引导到合适的资源。</p>
+</div>
+<div class="paragraph">
+<p>隐式路径的最后一个后果是：它只能包含通用信息（如标准化路径）或可从种子派生出的信息（如密钥）。对特定用户重要的非确定性信息无法通过恢复码来恢复。例如，Alice、Bob 和 Carol 收到的资金只能由其中两人签名才能花费。虽然 Alice 只需要 Bob 或 Carol 中一人的签名就能花费，但她需要他们两人的公钥才能在区块链上找到他们的联合资金。这意味着他们每个人都必须备份三个人全部的公钥。随着多重签名和其他高级脚本在比特币上变得越来越普遍，隐式路径的不灵活性也变得愈发突出。</p>
+</div>
+<div class="paragraph">
+<p>显式路径的优点是能够准确地描述哪些密钥应当与哪些脚本一起使用。无需支持过时脚本，没有前向或后向兼容性问题，任何额外信息（如其他用户的公钥）都可以直接包含进来。其缺点是要求用户在恢复码之外备份额外的信息。这些额外信息通常不会危及用户的安全性，因此不需要像恢复码那样高强度的保护，不过它可能会降低用户隐私，仍需要一定程度的保护。</p>
+</div>
+<div class="paragraph less_space pagebreak-before">
+<p>截至本文撰写时，几乎所有使用显式路径的钱包应用都使用 <em>output script descriptors</em> 标准（简称 <em>descriptors</em>），其规范见 BIP 380、381、382、383、384、385、386 和 389。Descriptor 描述了一个脚本，以及与该脚本一起使用的密钥（或密钥路径）。一些示例 descriptor 参见 <a href="#sample_descriptors">[sample_descriptors]</a>。</p>
+</div>
+<table id="sample_descriptors">
+<caption>来自 Bitcoin Core 文档的示例 descriptor（有省略）</caption>
+<thead>
+<tr>
+<th>Descriptor</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p><code>pkh(02c6…​9ee5)</code></p></td>
+<td><p>使用给定公钥的 P2PKH 脚本</p></td>
+</tr>
+<tr>
+<td><p><code>sh(multi(2,022f…​2a01,03ac…​ccbe))</code></p></td>
+<td><p>P2SH 多重签名，要求这两把密钥对应的两个签名</p></td>
+</tr>
+<tr>
+<td><p><code>pkh([d34db33f/44'/0'/0']xpub6ERA…​RcEL/1/*)</code></p></td>
+<td><p>BIP32 指纹为 <code>d34db33f</code> 的 P2PKH 脚本，其位于路径 <code>M/44'/0'/0'</code> 的扩展公钥（xpub）为 <code>xpub6ERA…​RcEL</code>，使用该 xpub 下 <code>M/1/*</code> 路径的密钥</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>长期以来，只为单签名脚本设计的钱包应用倾向于使用隐式路径。为多重签名或其他高级脚本设计的钱包应用则越来越多地采用基于 descriptor 的显式路径。两者兼顾的应用通常会同时遵循隐式路径的标准并提供 descriptor 支持  。</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_钱包技术栈详解">钱包技术栈详解</h3>
+<div class="paragraph">
+<p>现代钱包开发者可以从多种不同技术中选择，帮助用户创建和使用备份——而新的方案每年都在出现。我们不再对本章前面介绍的各个选项一一细述，本章余下部分将聚焦于截至 2023 年初我们认为在钱包中使用最广泛的一套技术栈：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>BIP39 恢复码</p>
+</li>
+<li>
+<p>BIP32 HD 密钥派生</p>
+</li>
+<li>
+<p>BIP44 风格的隐式路径</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>所有这些标准都从 2014 年或更早就开始存在，要找到使用它们的更多资源不会有任何困难。不过，如果你乐于尝鲜，我们鼓励你研究更现代的标准，它们可能提供额外的功能或更高的安全性。</p>
+</div>
+<div class="sect3">
+<h4 id="recovery_code_words">BIP39 恢复码</h4>
+<div class="paragraph">
+<p>BIP39  恢复码是一种单词序列，用于表示（编码）一个用作种子来派生确定性钱包的随机数。该单词序列足以重新生成种子，进而重新生成所有派生出的密钥。实现基于 BIP39 恢复码的确定性钱包的钱包应用，会在首次创建钱包时向用户展示 12 到 24 个单词的序列。这一单词序列就是钱包备份，可以用来在同一款或任意兼容的钱包应用中恢复并重新生成所有密钥。恢复码使得用户更容易备份，因为它们易于阅读和准确誊写。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>恢复码  经常被人与"brainwallet"混淆。两者并不一样。主要区别在于 brainwallet 由用户自己选择单词，而恢复码是由钱包随机创建后展示给用户的。这个重要区别使得恢复码安全得多，因为人类是非常糟糕的随机性来源。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>请注意，BIP39 只是恢复码标准的一种实现。BIP39 由 Trezor 硬件钱包背后的公司提出，与许多（虽然并非全部）其他钱包应用兼容。</p>
+</div>
+<div class="paragraph">
+<p>BIP39 定义了恢复码和种子的创建过程，我们在这里用九个步骤进行描述。为清晰起见，过程分为两部分：步骤 1 到 6 见 <a href="#generating_recovery_words">生成恢复码</a>，步骤 7 到 9 见 <a href="#recovery_to_seed">从恢复码到种子</a>。</p>
+</div>
+<div class="sect4">
+<h5 id="generating_recovery_words">生成恢复码</h5>
+<div class="paragraph">
+<p>恢复码  由钱包应用按照 BIP39 定义的标准化流程自动生成。钱包从一个熵源开始，添加校验和，然后将熵映射到词表：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>创建一个 128 到 256 位的随机序列（熵）。</p>
+</li>
+<li>
+<p>计算该随机序列的 SHA256 哈希，取其前 (熵长度/32) 位作为校验和。</p>
+</li>
+<li>
+<p>把校验和添加到随机序列的末尾。</p>
+</li>
+<li>
+<p>把结果分割成 11 位长度的片段。</p>
+</li>
+<li>
+<p>把每个 11 位的值映射到预定义的 2048 词词表中的一个单词。</p>
+</li>
+<li>
+<p>恢复码就是这一单词序列。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a href="#generating_entropy_and_encoding">生成熵并编码为恢复码。</a> 展示了如何使用熵生成 BIP39 恢复码。</p>
+</div>
+<div id="generating_entropy_and_encoding" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0504.png" alt="Generating entropy and encoding as a recovery code">
+</div>
+<div class="title">Figure 4. 生成熵并编码为恢复码。</div>
+</div>
+<div class="paragraph">
+<p><a href="#table_4-5">[table_4-5]</a> 展示了熵数据大小与恢复码单词数量之间的关系  。</p>
+</div>
+<table id="table_4-5">
+<caption>BIP39：熵与单词长度</caption>
+<thead>
+<tr>
+<th>熵（位）</th>
+<th>校验和（位）</th>
+<th>熵 <strong>+</strong> 校验和（位）</th>
+<th>恢复码单词数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>128</p></td>
+<td><p>4</p></td>
+<td><p>132</p></td>
+<td><p>12</p></td>
+</tr>
+<tr>
+<td><p>160</p></td>
+<td><p>5</p></td>
+<td><p>165</p></td>
+<td><p>15</p></td>
+</tr>
+<tr>
+<td><p>192</p></td>
+<td><p>6</p></td>
+<td><p>198</p></td>
+<td><p>18</p></td>
+</tr>
+<tr>
+<td><p>224</p></td>
+<td><p>7</p></td>
+<td><p>231</p></td>
+<td><p>21</p></td>
+</tr>
+<tr>
+<td><p>256</p></td>
+<td><p>8</p></td>
+<td><p>264</p></td>
+<td><p>24</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4 less_space pagebreak-before">
+<h5 id="recovery_to_seed">从恢复码到种子</h5>
+<div class="paragraph">
+<p>恢复码  表示长度为 128 到 256 位的熵。然后再通过
+<a href="https://oreil.ly/6lwbd">key-stretching function PBKDF2</a> 把这段熵派生为一个更长的（512 位）种子。生成的种子用于构建确定性钱包并派生其密钥。</p>
+</div>
+<div class="paragraph">
+<p>key-stretching 函数接收两个参数：熵和一个 <em>salt</em>  。salt 在 key-stretching 函数中的作用是增加构建查找表以进行暴力破解攻击的难度。在 BIP39 标准中，salt 还有另一个用途——它允许引入一个密码短语，作为保护种子的额外安全因子，我们将在 <a href="#recovery_passphrase">BIP39 中的可选密码短语</a> 中详细介绍。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>该 key-stretching 函数有 2048 轮哈希，使得用软件暴力破解恢复码略微更难一些。专用硬件受到的影响并不显著。对于需要猜出用户整条恢复码的攻击者来说，恢复码的长度（最少 128 位）已经提供了远超充裕的安全性。但在攻击者可能获知用户一小部分恢复码的情况下，key-stretching 通过减慢攻击者验证不同恢复码组合的速度，增加了一些安全性。BIP39 的参数即使在它差不多十年前首次发布时，按现代标准也算偏弱，这很可能是为了与配备低性能 CPU 的硬件签名设备兼容而妥协的结果。BIP39 的一些替代方案采用了更强的 key-stretching 参数，例如 Aezeed 使用更复杂的 Scrypt 算法做 32,768 轮哈希，尽管这样在硬件签名设备上运行起来可能不那么方便。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>步骤 7 到 9 描述的过程承接 <a href="#generating_recovery_words">生成恢复码</a> 中先前描述的过程：</p>
+</div>
+<ol start="7">
+  <li>PBKDF2 key-stretching 函数的第一个参数是步骤 6 产生的
+  <em>熵</em>。</li>
+
+  <li>PBKDF2 key-stretching 函数的第二个参数是
+  <em>salt</em>。salt 由常量字符串
+  "<code>mnemonic</code>" 与用户提供的可选密码短语字符串拼接而成。</li>
+
+  <li>PBKDF2 用 HMAC-SHA512 算法对恢复码和 salt 参数进行 2048
+  轮哈希扩展，最终输出一个 512 位的值。这个 512 位的值就是种子。</li>
+</ol>
+<div class="paragraph">
+<p><a href="#fig_5_7">从恢复码到种子。</a> 展示了如何用恢复码生成种子。</p>
+</div>
+<div id="fig_5_7" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0505.png" alt="From recovery code to seed">
+</div>
+<div class="title">Figure 5. 从恢复码到种子。</div>
+</div>
+<div class="paragraph">
+<p><a data-type="xref" href="#bip39_128_no_pass"
+data-xrefstyle="select: labelnumber">#bip39_128_no_pass</a>、
+<a data-type="xref" href="#bip39_128_w_pass"
+data-xrefstyle="select: labelnumber">#bip39_128_w_pass</a> 和
+<a data-type="xref" href="#bip39_256_no_pass"
+data-xrefstyle="select: labelnumber">#bip39_256_no_pass</a> 几张表展示了一些恢复码示例及其生成的种子  。</p>
+</div>
+<table id="bip39_128_no_pass">
+<caption>128 位熵的 BIP39 恢复码，无密码短语，所得种子</caption>
+<tbody>
+<tr>
+<td><p><strong>熵输入（128 位）</strong></p></td>
+<td><p><code>0c1e24e5917779d297e14d45f14e1a1a</code></p></td>
+</tr>
+<tr>
+<td><p><strong>恢复码（12 个单词）</strong></p></td>
+<td><p><code>army van defense carry jealous true garbage claim echo media make crunch</code></p></td>
+</tr>
+<tr>
+<td><p><strong>密码短语</strong></p></td>
+<td><p>（无）</p></td>
+</tr>
+<tr>
+<td><p><strong>种子（512 位）</strong></p></td>
+<td><p><code>5b56c417303faa3fcba7e57400e120a0ca83ec5a4fc9ffba757fbe63fbd77a89a1a3be4</code>
+<code>c67196f57c39a88b76373733891bfaba16ed27a813ceed498804c0570</code></p></td>
+</tr>
+</tbody>
+</table>
+
+<table id="bip39_128_w_pass" class="pagebreak-before less_space">
+<caption>128 位熵的 BIP39 恢复码，带密码短语，所得种子</caption>
+<tbody>
+<tr>
+<td><p><strong>熵输入（128 位）</strong></p></td>
+<td><p><code>0c1e24e5917779d297e14d45f14e1a1a</code></p></td>
+</tr>
+<tr>
+<td><p><strong>恢复码（12 个单词）</strong></p></td>
+<td><p><code>army van defense carry jealous true garbage claim echo media make crunch</code></p></td>
+</tr>
+<tr>
+<td><p><strong>密码短语</strong></p></td>
+<td><p>SuperDuperSecret</p></td>
+</tr>
+<tr>
+<td><p><strong>种子（512 位）</strong></p></td>
+<td><p><code>3b5df16df2157104cfdd22830162a5e170c0161653e3afe6c88defeefb0818c793dbb28</code>
+<code>ab3ab091897d0715861dc8a18358f80b79d49acf64142ae57037d1d54</code></p></td>
+</tr>
+</tbody>
+</table>
+<table id="bip39_256_no_pass">
+<caption>256 位熵的 BIP39 恢复码，无密码短语，所得种子</caption>
+<tbody>
+<tr>
+<td><p><strong>熵输入（256 位）</strong></p></td>
+<td><p><code>2041546864449caff939d32d574753fe684d3c947c3346713dd8423e74abcf8c</code></p></td>
+</tr>
+<tr>
+<td><p><strong>恢复码（24 个单词）</strong></p></td>
+<td><p><code>cake apple borrow silk endorse fitness top denial coil riot stay wolf
+luggage oxygen faint major edit measure invite love trap field dilemma oblige</code></p></td>
+</tr>
+<tr>
+<td><p><strong>密码短语</strong></p></td>
+<td><p>（无）</p></td>
+</tr>
+<tr>
+<td><p><strong>种子（512 位）</strong></p></td>
+<td><p><code>3269bce2674acbd188d4f120072b13b088a0ecf87c6e4cae41657a0bb78f5315b33b3</code>
+<code>a04356e53d062e55f1e0deaa082df8d487381379df848a6ad7e98798404</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">你需要多少熵？</div>
+<div class="paragraph">
+<p>BIP32 允许种子长度从 128 到 512 位。BIP39 接受 128 到 256 位的熵；Electrum v2 接受 132 位熵；Aezeed 接受 128 位熵；SLIP39 接受 128 或 256 位。这些数字的差异让人搞不清究竟需要多少熵才安全。我们来把这件事讲清楚。</p>
+</div>
+<div class="paragraph">
+<p>BIP32 扩展私钥由一个 256 位的密钥和一个 256 位的链码组成，共 512 位。这意味着扩展私钥的可能取值最多有 2<sup>512</sup> 种。如果你以超过 512 位的熵开始，你最终仍然只能得到一个包含 512 位熵的扩展私钥——所以即使前面提到的任何标准允许使用超过 512 位，也没有意义。</p>
+</div>
+<div class="paragraph">
+<p>不过，尽管扩展私钥有 2<sup>512</sup> 种不同取值，但常规私钥的数量只有（略少于）2<sup>256</sup> ——而真正保护你比特币的，是这些常规私钥。这意味着，如果你为种子使用超过 256 位的熵，你得到的私钥仍然只包含 256 位熵。未来可能会出现新的比特币相关协议，其中扩展密钥中的额外熵能提供额外安全性，但目前并非如此。</p>
+</div>
+<div class="paragraph">
+<p>比特币公钥的安全强度为 128 位。一台经典计算机（截至本文撰写时唯一可用于实际攻击的类型）的攻击者，要找到另一个用户公钥对应的私钥，需要在比特币椭圆曲线上执行约 2<sup>128</sup> 次运算。128 位安全强度意味着：使用超过 128 位熵看来没有明显好处（不过你需要确保你生成的私钥是从整个 2<sup>256</sup> 私钥范围内均匀选取的）。</p>
+</div>
+<div class="paragraph">
+<p>更高熵还有一个额外好处：如果你恢复码的固定比例部分（但不是整条码）被攻击者看到，熵越高，他们就越难猜出未看到的部分。例如，如果攻击者看到了 128 位码的一半（64 位），他们暴力破解剩下 64 位是可能的。如果他们看到了 256 位码的一半（128 位），暴力破解另一半就不可能了。我们不建议依赖这一点防御——要么把恢复码保护得非常严密，要么使用 SLIP39 这样的方案，让你能把恢复码分散到多个地点存放，而不必依赖单一码的安全性。</p>
+</div>
+<div class="paragraph">
+<p>截至 2023 年，大多数现代钱包为其恢复码生成 128 位熵（或接近 128 位的值，如 Electrum v2 的 132 位  ）。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="recovery_passphrase">BIP39 中的可选密码短语</h5>
+<div class="paragraph">
+<p>BIP39  标准允许在派生种子时使用一个可选密码短语。如果不使用密码短语，则恢复码会与常量字符串 "mnemonic" 组成的 salt 一起进行扩展，对于任一给定的恢复码都会生成一个特定的 512 位种子。如果使用密码短语，扩展函数会从同一条恢复码生成一个 <em>不同的</em> 种子。事实上，对于一条给定的恢复码，每一种可能的密码短语都会得到一个不同的种子。本质上不存在"错误的"密码短语。所有密码短语都是合法的，并且都会得到不同的种子，构成数量极其庞大的、尚未初始化的可能钱包集合。这个集合的规模（2<sup>512</sup>）如此之大，以至于实际上不可能通过暴力破解或意外猜中其中正在使用的某个钱包。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>在 BIP39 中没有"错误的"密码短语。每一条密码短语都对应某个钱包，除非该钱包曾被使用，否则就是空的。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>可选密码短语带来两个重要特性：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>第二因子（你所记忆的东西），使得恢复码单凭自身没有用处，从而保护恢复码免受随机窃贼的破坏。要防范精通技术的窃贼，你需要使用一条非常强的密码短语。</p>
+</li>
+<li>
+<p>一种合理推诿或"胁迫钱包（duress wallet）"机制：选定的某个密码短语对应一个只装有少量资金的钱包，用以转移攻击者的注意力，使其偏离那个装着大部分资金的"真正"钱包。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>需要注意的是，使用密码短语也会带来丢失资金的风险：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>如果钱包持有者丧失行为能力或死亡，且没有他人知道密码短语，那么种子就毫无用处，钱包中存放的全部资金都将永久丢失。</p>
+</li>
+<li>
+<p>反之，如果持有者把密码短语和种子备份在同一个地方，就违背了第二因子的初衷  。</p>
+</li>
+</ul>
+</div>
+<p class="fix_tracking2">
+密码短语非常有用，但应该只在结合精心规划的备份与恢复流程时使用，
+要考虑到持有者去世后，让其家人能够恢复加密货币遗产的情形。
+</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="hd_wallet_details">从种子创建 HD 钱包</h4>
+<div class="paragraph">
+<p>HD 钱包  由一个 <em>root seed</em>（根种子） 创建，根种子是一个 128 位、256 位或 512 位的随机数。最常见的做法是，这个种子由上一节所述的恢复码生成或解密而来。</p>
+</div>
+<div class="paragraph">
+<p>HD 钱包中的每一把密钥都是从这个根种子确定性地派生出来的，因此可以在任何兼容的 HD 钱包中由该种子重新生成整个 HD 钱包。这使得备份、恢复、导出和导入包含数千甚至上百万把密钥的 HD 钱包变得很容易——只需传递推导出根种子的恢复码即可。为 HD 钱包创建主密钥和主链码的过程如 <a href="#HDWalletFromSeed">从根种子创建主密钥和链码。</a> 所示。</p>
+</div>
+<div id="HDWalletFromSeed" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0506.png" alt="HDWalletFromRootSeed">
+</div>
+<div class="title">Figure 6. 从根种子创建主密钥和链码。</div>
+</div>
+<div class="paragraph">
+<p>把根种子输入 HMAC-SHA512 算法，所得哈希用于创建一个 <em>master private key</em>（主私钥）（<em>m</em>）和一个 <em>master chain code</em>（主链码）（<em>c</em>）。</p>
+</div>
+<div class="paragraph">
+<p>主私钥（<em>m</em>）随后使用我们在 <a href="#public_key_derivation">[public_key_derivation]</a> 中所见的常规椭圆曲线乘法过程 <em>m</em> × <em>G</em> 生成对应的主公钥（<em>M</em>）。</p>
+</div>
+<div class="paragraph">
+<p>主链码（<em>c</em>）则用于在从父密钥创建子密钥的函数中引入熵，下一节会看到这一点。</p>
+</div>
+<div class="sect4">
+<h5 id="_私有子密钥派生">私有子密钥派生</h5>
+<div class="paragraph">
+<p>HD 钱包  使用 <em>child key derivation</em>（CKD）函数从父密钥派生子密钥。</p>
+</div>
+<div class="paragraph">
+<p>CKD 函数基于一个单向哈希函数，<span class="keep-together">组合了：</span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>一把父私钥或公钥（未压缩密钥）</p>
+</li>
+<li>
+<p>一个称为链码的种子（256 位）</p>
+</li>
+<li>
+<p>一个索引号（32 位）</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>链码用于向过程中引入确定性的随机数据，使得仅知道索引和某把子密钥不足以派生其他子密钥。除非你也掌握链码，否则知道一把子密钥并不能让你找到它的兄弟密钥。最初的链码种子（位于树的根部）由种子生成，而后续的子链码则从各自的父链码派生。</p>
+</div>
+<div class="paragraph">
+<p>将这三项（父密钥、链码和索引）组合并哈希，即可生成子密钥，过程如下。</p>
+</div>
+<div class="paragraph">
+<p>父公钥、链码和索引号被组合并用 HMAC-SHA512 算法哈希，产生一个 512 位的哈希。将这个 512 位哈希分成两段 256 位。哈希输出的右半 256 位成为子密钥的链码。左半 256 位与父私钥相加，产生子私钥。在 <a href="#CKDpriv">扩展父私钥以创建子私钥。</a> 中，我们看到索引设为 0 时的演示，用以产生父密钥的"零号"（按索引为第一个）子密钥。</p>
+</div>
+<div id="CKDpriv" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0507.png" alt="ChildPrivateDerivation">
+</div>
+<div class="title">Figure 7. 扩展父私钥以创建子私钥。</div>
+</div>
+<div class="paragraph">
+<p>更改索引就可以扩展父密钥，按顺序创建其他子密钥（例如 Child 0、Child 1、Child 2，等等）。每把父密钥可以有 2,147,483,647（2<sup>31</sup>）个子密钥（2<sup>31</sup> 是整个 2<sup>32</sup> 范围的一半，因为另一半被保留给我们在本章后面会介绍的一类特殊派生）。</p>
+</div>
+<div class="paragraph">
+<p>将这个过程在树中往下一层重复，每个子密钥又可成为父密钥，创建自己的子密钥，可以一代接一代无限延伸。</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_使用派生出的子密钥">使用派生出的子密钥</h5>
+<div class="paragraph">
+<p>子私钥与非确定性（随机）密钥在外观上无法区分。由于派生函数是单向函数，子密钥无法用来反推父密钥。子密钥同样无法用来找到任何兄弟密钥。如果你拥有第 n 个子密钥，你无法找到它的兄弟，例如 n–1 或 n+1 子密钥，也无法找到序列中的其他任何子密钥。只有父密钥和链码才能派生出所有子密钥。没有子链码，子密钥也无法用来派生任何孙密钥。你需要同时拥有子私钥和子链码，才能开启一个新分支并派生孙密钥。</p>
+</div>
+<div class="paragraph">
+<p>那么子私钥单独可以用来做什么？它可以用来生成公钥和比特币地址，然后用于对交易签名，花费向该地址支付的任何资金。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>子私钥、对应的公钥和比特币地址，都与随机创建的密钥和地址无法区分。它们属于某个序列这一事实在创建它们的 HD 钱包函数之外是不可见的。一旦创建出来，它们就像"普通"密钥一样运作  。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_扩展密钥">扩展密钥</h5>
+<div class="paragraph">
+<p>正如  我们前面所见，密钥派生函数可以基于三个输入——密钥、链码和所需子密钥的索引——在树的任意层级创建子密钥。其中两个核心要素是密钥和链码，将它们组合在一起就称为 <em>extended key</em>（扩展密钥）。"extended key"这个术语也可以理解为"extensible key"（可扩展密钥），因为这样的密钥可以用来派生子密钥。</p>
+</div>
+<div class="paragraph">
+<p>扩展密钥的存储和表示就是密钥与链码的简单拼接。扩展密钥有两种类型。扩展私钥是私钥与链码的组合，可以用来派生子私钥（再由子私钥派生子公钥）。扩展公钥是公钥与链码，可以用来创建子公钥（<em>仅公钥</em>），如 <a href="#public_key_derivation">[public_key_derivation]</a> 所述。</p>
+</div>
+<div class="paragraph">
+<p>可以把扩展密钥视为 HD 钱包树形结构中某个分支的根。有了分支的根，就可以派生分支的其余部分。扩展私钥可以创建一整条完整分支，而扩展公钥 <em>只能</em> 创建一条公钥分支。</p>
+</div>
+<div class="paragraph">
+<p>扩展密钥使用 base58check 编码，以便在不同 BIP32 兼容钱包之间方便地导出和导入。扩展密钥的 base58check 编码使用一个特殊的版本号，使得它们在编码为 base58 字符后会带上"xprv"和"xpub"前缀，便于辨识。由于扩展密钥包含的字节远多于普通地址，它也比我们之前见过的其他 base58check 编码字符串长得多。</p>
+</div>
+<div class="paragraph">
+<p>下面是一个用 base58check 编码的扩展 <em>私钥</em> 示例：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>xprv9tyUQV64JT5qs3RSTJkXCWKMyUgoQp7F3hA1xzG6ZGu6u6Q9VMNjGr67Lctvy5P8oyaYAL9CA
+WrUE9i6GoNMKUga5biW6Hx4tws2six3b9c</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>下面是对应的、用 base58check 编码的扩展 <em>公钥</em>：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>xpub67xpozcx8pe95XVuZLHXZeG6XWXHpGq6Qv5cmNfi7cS5mtjJ2tgypeQbBs2UAR6KECeeMVKZBP
+LrtJunSDMstweyLXhRgPxdp14sk9tJPW9</pre>
+</div>
+</div>
+</div>
+<div class="sect4 less_space pagebreak-before">
+<h5 id="public__child_key_derivation">公开子密钥派生</h5>
+<div class="paragraph">
+<p>如  前面所述，HD 钱包一个非常有用的特性是：可以在 <em>没有</em> 私钥的情况下从父公钥派生公开子密钥。这给了我们两种派生子公钥的方式：从子私钥派生，或直接从父公钥派生。</p>
+</div>
+<div class="paragraph">
+<p>因此，扩展公钥可以用来派生 HD 钱包结构中某个分支下的所有 <em>公开</em> 密钥（且仅公开密钥）。</p>
+</div>
+<div class="paragraph">
+<p>这个捷径可以用来构建只含公钥的部署，比如服务器或应用拥有扩展公钥的副本，而完全没有任何私钥。这种部署可以产生无穷多的公钥和比特币地址，但无法花费支付到这些地址的任何资金。与此同时，在另一台更安全的服务器上，扩展私钥可以派生出所有对应的私钥，用于对交易签名并花费资金。</p>
+</div>
+<div class="paragraph">
+<p>这一方案的一个常见应用，是在为电子商务应用提供服务的 Web 服务器上安装扩展公钥。Web 服务器可以使用公钥派生函数为每笔交易创建一个新的比特币地址（例如为客户的购物车）。Web 服务器上不会有任何容易被盗的私钥。在没有 HD 钱包的情况下，唯一的做法是在另一台独立的安全服务器上生成成千上万个比特币地址，然后预先加载到电子商务服务器上。这种方法笨重，而且需要持续维护以确保电子商务服务器不会"用光"密钥。</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Mind the Gap</div>
+<div class="paragraph">
+<p>扩展公钥  大约可以生成 40 亿个直接子密钥，远超任何商店或应用所需。但是，钱包应用要生成全部 40 亿把密钥并在区块链上扫描涉及这些密钥的交易，所耗时间长得不切实际。因此，大多数钱包一次只生成少量密钥，扫描涉及这些密钥的付款，等先前的密钥被使用后再按顺序生成更多密钥。例如，Alice 的钱包先生成 100 把密钥；当它看到向第一把密钥的付款时，就生成第 101 把密钥。</p>
+</div>
+<div class="paragraph">
+<p>有时钱包应用会把密钥分发给某个之后决定不付款的人，从而在密钥链中产生一段空隙。只要钱包已经在该空隙之后生成了密钥，就能发现后续付款并继续生成更多密钥，这种情况是没问题的。在不引起问题的前提下，连续未收到付款的未用密钥的最大数量称为 <em>gap limit</em>（间隙上限）。</p>
+</div>
+<div class="paragraph">
+<p>当一个钱包应用已经分发完达到 gap limit 的所有密钥，且这些密钥都没有收到付款时，它对未来索取新密钥的请求有三种处理方式：</p>
+</div>
+<div class="olist arabic less_space pagebreak-before">
+<ol class="arabic">
+<li>
+<p>拒绝这些请求，从而不再接收任何付款。这显然是个令人不爽的选项，尽管实现起来最简单。</p>
+</li>
+<li>
+<p>在 gap limit 之外生成新密钥。这能确保每个请求付款的人都获得唯一的密钥，避免地址重用并改善隐私。然而，如果钱包需要从恢复码恢复，或者钱包持有者在使用其他装载了相同扩展公钥的软件，那些其他钱包就看不到在扩展间隙之后收到的任何付款。</p>
+</li>
+<li>
+<p>重新分发之前分发过的密钥，确保顺利恢复，但可能降低钱包持有者及其交易对手的隐私。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>面向在线商家的开源生产系统（如 BTCPay Server）试图通过使用非常大的 gap limit 并限制生成发票的速率来规避此问题。还有人提出了其他方案，例如要求付款方的钱包先构造（但不广播）一笔向可能被复用的地址付款的交易，然后再为实际交易收到一个新地址。但截至本文撰写时，这些其他方案尚未在生产环境中使用  。</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>这种方案的另一个常见应用是冷存储或硬件签名设备。在该场景中，扩展私钥可以保存在纸钱包或硬件设备上，而扩展公钥则可以保持在线。用户可以随意创建"接收"地址，而私钥则安全地离线保存。要花费这些资金，用户可以在离线的软件钱包应用或硬件签名设备上使用扩展私钥。<a href="#CKDpub">扩展父公钥以创建子公钥。</a> 演示了如何扩展父公钥以派生子公钥  。</p>
+</div>
+<div id="CKDpub" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0508.png" alt="ChildPublicDerivation">
+</div>
+<div class="title">Figure 8. 扩展父公钥以创建子公钥。</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_在网店中使用扩展公钥">在网店中使用扩展公钥</h4>
+<div class="paragraph">
+<p>让我们  通过看看 Gabriel 的网店，来了解 HD 钱包是如何被使用的。</p>
+</div>
+<div class="paragraph">
+<p>Gabriel 最初是把开网店当作业余爱好，基于一个简单的托管 WordPress 页面。他的店面相当基础，只有几个页面和一个带有单一比特币地址的订单表单。</p>
+</div>
+<div class="paragraph">
+<p>Gabriel 把他常用钱包生成的第一个比特币地址作为店铺的主比特币地址。客户使用表单提交订单并把款项发送到 Gabriel 公布的比特币地址，触发一封带订单详情的邮件给 Gabriel 处理。每周只有少量订单时，这个系统勉强够用，尽管它削弱了 Gabriel、他的客户以及他付款对象的隐私。</p>
+</div>
+<div class="paragraph">
+<p>然而，这家小网店相当成功，吸引了大量来自本地社区的订单。很快，Gabriel 就忙不过来了。所有订单都付到同一个地址，使得正确匹配订单和交易变得困难，特别是当多个同金额订单密集到来时。</p>
+</div>
+<div class="paragraph">
+<p>一笔典型比特币交易中，由接收方选择的元数据只有金额和付款地址。没有可以用来承载唯一发票编号的主题或留言字段。</p>
+</div>
+<div class="paragraph">
+<p>Gabriel 的 HD 钱包凭借其无需私钥即可派生公开子密钥的能力，提供了一个好得多的解决方案。Gabriel 可以在自己的网站上加载一个扩展公钥（xpub），用它为每个客户订单派生唯一地址。唯一地址立即改善了隐私，同时也为每个订单提供了一个唯一标识符，用来追踪哪些发票已被支付。</p>
+</div>
+<div class="paragraph">
+<p>使用 HD 钱包，Gabriel 可以从他的个人钱包应用中花费资金，而网站上加载的 xpub 只能生成地址和接收资金。HD 钱包的这一特性是非常棒的安全特性。Gabriel 的网站不包含任何私钥，因此即使网站被黑，攻击者也只能偷走 Gabriel 未来本应收到的资金，而不能偷走他过去已收到的资金。</p>
+</div>
+<div class="paragraph">
+<p>为了从他的 Trezor 硬件签名设备中导出 xpub，Gabriel 使用基于网页的 Trezor 钱包应用。导出公钥时必须接入 Trezor 设备。注意，大多数硬件签名设备永远不会导出私钥——私钥始终保留在设备上。</p>
+</div>
+<div class="paragraph">
+<p>Gabriel 把 xpub 复制到他网店的比特币支付处理软件中，比如被广泛使用的开源 BTCPay Server。</p>
+</div>
+<div class="sect4">
+<h5 id="_硬化子密钥派生">硬化子密钥派生</h5>
+<div class="paragraph">
+<p>从 xpub 派生  一条公钥分支的能力非常有用，但它伴随一种潜在风险。获得 xpub 并不能获得子私钥。然而，由于 xpub 包含链码，如果某把子私钥被泄露或被知晓，就可以结合该链码派生出所有其他子私钥。一把被泄露的子私钥加上父链码，就会暴露所有子私钥。更糟的是，子私钥加上父链码可以用来反推父私钥。</p>
+</div>
+<div class="paragraph">
+<p>为了对抗这种风险，HD 钱包提供了一种替代派生函数，称为 <em>hardened derivation</em>（硬化派生），它打破了父公钥与子链码之间的关系。硬化派生函数使用父 <em>私钥</em> 而不是父 <em>公钥</em> 来派生子链码。这在父/子序列中建立起一道"防火墙"，使得它产生的链码无法被用来危及父密钥或兄弟私钥。硬化派生函数看起来几乎和普通子私钥派生一模一样，只不过哈希函数的输入是父私钥而非父公钥，如 <a href="#CKDprime">子密钥的硬化派生；不使用父公钥。</a> 中所示。</p>
+</div>
+<div id="CKDprime" class="imageblock">
+<div class="content">
+<img src="images/mbc3_0509.png" alt="ChildHardPrivateDerivation">
+</div>
+<div class="title">Figure 9. 子密钥的硬化派生；不使用父公钥。</div>
+</div>
+<div class="paragraph">
+<p>当使用硬化的私有派生函数时，所产生的子私钥和链码与普通派生函数得到的完全不同。所得到的密钥"分支"可用来产生扩展公钥，且该扩展公钥不易受到攻击，因为它所含的链码无法被利用来揭露任何兄弟或父密钥的私钥。因此，硬化派生被用来在使用扩展公钥的层级之上"挖出"一道间隙。</p>
+</div>
+<div class="paragraph">
+<p>简而言之，如果你想利用 xpub 派生公钥分支的便利，又不希望承担链码泄露的风险，那你应当从硬化的父密钥而非普通的父密钥派生。作为最佳实践，主密钥的第一层子密钥总是通过硬化派生生成的，以防主密钥被破解。</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_普通派生和硬化派生的索引号">普通派生和硬化派生的索引号</h5>
+<div class="paragraph">
+<p>派生函数中使用的索引号  是一个 32 位整数。为了便于区分通过普通派生函数创建的密钥和通过硬化派生创建的密钥，这个索引号被分成两个范围。0 到 2<sup>31</sup> &#x2013; 1（0x0 到 0x7FFFFFFF）之间的索引号 <em>仅</em> 用于普通派生。2<sup>31</sup> 到 2<sup>32</sup> &#x2013; 1（0x80000000 到 0xFFFFFFFF）之间的索引号 <em>仅</em> 用于硬化派生。因此，如果索引号小于 2<sup>31</sup>，该子密钥是普通的；而如果索引号等于或大于 2<sup>31</sup>，该子密钥是硬化的。</p>
+</div>
+<div class="paragraph">
+<p>为了让索引号更易于阅读和显示，硬化子密钥的索引号从零开始显示，但带一个撇号。因此第一个普通子密钥显示为 0，而第一个硬化子密钥（索引 0x80000000）显示为 0&amp;#x27;。在序列中，第二个硬化密钥的索引为 0x80000001，显示为 1&amp;#x27;，依此类推。当你看到 HD 钱包的索引 i&amp;#x27; 时，它表示 2<sup>31</sup>+i。在常规 ASCII 文本中，这个撇号被替换为单引号或字母 <em>h</em>。对于诸如 output script descriptor 等情况，文本可能会在 shell 或其他上下文中使用，而单引号在这些地方有特殊含义，建议使用字母 <em>h</em>  。</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_hd_钱包密钥标识符路径">HD 钱包密钥标识符（路径）</h5>
+<div class="paragraph">
+<p>HD 钱包  中的密钥使用"路径"命名约定来标识，树的每一层之间用斜杠（/）分隔（参见 <a href="#table_4-8">[table_4-8]</a>）。从主私钥派生的私钥以"m"开头，从主公钥派生的公钥以"M"开头。因此，主私钥的第一个子私钥是 m/0，第一个子公钥是 M/0。第一个子密钥的第二个孙密钥是 m/0/1，依此类推。</p>
+</div>
+<div class="paragraph">
+<p>一把密钥的"祖先"是从右往左读，直到到达派生它的主密钥。例如，标识符 m/x/y/z 描述的是 m/x/y 的第 z 个子密钥，而 m/x/y 是 m/x 的第 y 个子密钥，m/x 又是 m 的第 x 个子密钥。</p>
+</div>
+<table id="table_4-8" class="pagebreak-before less_space">
+<caption>HD 钱包路径示例</caption>
+<thead>
+<tr>
+<th>HD 路径</th>
+<th>所描述的密钥</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>m/0</p></td>
+<td><p>主私钥（m）的第一个（0）子私钥</p></td>
+</tr>
+<tr>
+<td><p>m/0/0</p></td>
+<td><p>第一个子密钥（m/0）的第一个孙私钥</p></td>
+</tr>
+<tr>
+<td><p>m/0'/0</p></td>
+<td><p>第一个 <em>硬化</em> 子密钥（m/0'）的第一个普通孙私钥</p></td>
+</tr>
+<tr>
+<td><p>m/1/0</p></td>
+<td><p>第二个子密钥（m/1）的第一个孙私钥</p></td>
+</tr>
+<tr>
+<td><p>M/23/17/0/0</p></td>
+<td><p>第 24 个子密钥下，第 18 个孙密钥下，第一个曾孙密钥下，第一个玄孙公钥</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_在_hd_钱包树形结构中导航">在 HD 钱包树形结构中导航</h5>
+<div class="paragraph">
+<p>HD 钱包  的树形结构提供了极大的灵活性。每个父扩展密钥可以有 40 亿个子密钥：20 亿个普通子密钥和 20 亿个硬化子密钥。每一个子密钥又可以有 40 亿个子密钥，以此类推。树可以达到任意深度，世代数无限。然而，正是这种灵活性使得在这棵无穷大的树中导航变得相当困难。尤其困难的是在不同实现之间迁移 HD 钱包，因为内部分支与子分支的组织方式存在无穷可能。</p>
+</div>
+<div class="paragraph">
+<p>两个 BIP 通过为 HD 钱包树结构提出标准来解决这一复杂问题。BIP43  提议把第一个硬化子密钥的索引作为特殊标识符，用来表示这棵树结构的"用途"。基于 BIP43，HD 钱包应只使用树的一个第 1 层分支，该索引号通过定义其用途来标识树其余部分的结构和命名空间。例如，一个只使用 m/i&amp;#x27;/ 分支的 HD 钱包就意味着具有特定用途，并由索引号"i"标识该用途。</p>
+</div>
+<div class="paragraph">
+<p>在此基础上，BIP44  扩展性地提出了一个多账户结构，作为 BIP43 下的"purpose"号 44'。所有遵循 BIP44 结构的 HD 钱包都可以通过它们仅使用树的一个分支 m/44'/ 这一事实来识别。</p>
+</div>
+<div class="paragraph">
+<p>BIP44 规定其结构由五个预定义的树层级组成：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>m / purpose' / coin_type' / account' / change / address_index</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>第一层"purpose"始终设为 44'。第二层"coin_type"指定加密货币的类型，从而允许多币种 HD 钱包，每种货币在第二层下都有自己的子树。Bitcoin 是 m/44&amp;apos;/0&amp;apos;，Bitcoin Testnet 是 m/44&amp;apos;/1&amp;apos;。</p>
+</div>
+<div class="paragraph">
+<p>树的第三层是"account"，允许用户将钱包细分为独立的逻辑子账户，用于会计或组织目的。例如，一个 HD 钱包可能包含两个 Bitcoin"账户"：m/44&amp;#x27;/0&amp;#x27;/0&amp;#x27; 和 m/44&amp;#x27;/0&amp;#x27;/1&amp;#x27;。每个账户都是其子树的根。</p>
+</div>
+<div class="paragraph">
+<p>在第四层"change"上，HD 钱包有两棵子树，一棵用于创建接收地址，另一棵用于创建找零地址。注意，前几层使用硬化派生，而这一层使用普通派生。这是为了让这一层能够导出扩展公钥，用于非安全环境。可用地址由 HD 钱包作为第四层的子密钥派生，使树的第五层成为"address_index"。例如，主账户中用于收款的第三个接收地址是 M/44&amp;#x27;/0&amp;#x27;/0&amp;#x27;/0/2。<a href="#table_4-9">[table_4-9]</a> 给出了更多示例。</p>
+</div>
+<table id="table_4-9">
+<caption>BIP44 HD 钱包结构示例</caption>
+<thead>
+<tr>
+<th>HD 路径</th>
+<th>所描述的密钥</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p>M/44<code>'</code>/0<code>'</code>/0<code>'</code>/0/2</p></td>
+<td><p>主 Bitcoin 账户的第三个接收公钥</p></td>
+</tr>
+<tr>
+<td><p>M/44<code>'</code>/0<code>'</code>/3<code>'</code>/1/14</p></td>
+<td><p>第四个 Bitcoin 账户的第 15 个找零地址公钥</p></td>
+</tr>
+<tr>
+<td><p>m/44<code>'</code>/2<code>'</code>/0<code>'</code>/0/1</p></td>
+<td><p>Litecoin 主账户中第二个私钥，用于交易签名</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>许多人  把精力放在保护比特币免受盗窃和其他攻击上，但比特币丢失的主要原因之一——也许是 <em>最</em> 主要原因——是数据丢失。如果花费你比特币所需的密钥及其他关键数据丢失，这些比特币将永远无法被花费。没有人能为你找回。在本章中，我们考察了现代钱包应用用来帮助你防止数据丢失的各类系统。但请记住，是否真正使用现有系统做好备份并定期  测试它们，取决于你自己。</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2026-06-12 15:53:51 +0800
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</body>
+</html>
